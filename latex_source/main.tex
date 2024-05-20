@@ -1,0 +1,131 @@
+\documentclass{article}
+\makeatletter
+\let\@noitemerr\relax
+\makeatother
+
+% Definizione dei colori nell'analisi nomi-verbi
+\usepackage[dvipsnames]{xcolor}
+\newcommand{\NVclass}[1]{\textcolor{cyan}{#1}}
+\newcommand{\NVattr}[1]{\textcolor{ForestGreen}{#1}}
+\newcommand{\NVfunc}[1]{\textcolor{BurntOrange}{#1}}
+\newcommand{\NVactor}[1]{\textcolor{red}{#1}}
+\newcommand{\NVclassActor}[1]{\textcolor{Plum}{#1}}
+
+
+\usepackage{graphicx} % Required for inserting images
+\usepackage{float}
+\usepackage{array}
+
+% Definizione dello stile della pagina
+\usepackage[a4paper, outer=3cm, inner=3cm, top=4cm, bottom=4cm]{geometry}
+\newcommand\blankpage{
+    \null
+    \thispagestyle{empty}
+    \addtocounter{page}{-1}
+    \newpage}
+
+% Package usati per il frontespizio
+\usepackage{tikz}
+\usepackage{pgf-pie}
+\usepackage{pgfplots}
+\pgfplotsset{width=7cm,compat=1.8}
+\usetikzlibrary{patterns}
+
+% Package e commands per l'indice
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+\renewcommand*\contentsname{Indice}
+
+% Package usati per il footer
+\usepackage[twoside]{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\renewcommand{\headrulewidth}{0pt} % no line in header area
+\fancyfoot{}
+\renewcommand{\footrulewidth}{0.4pt}% default is 0pt
+\fancyfoot[C]{\thepage}
+\fancyfoot[LE,RO]{Elaborato Ingegneria del Software}
+
+% Package usato per il glossario
+\usepackage{amssymb}
+
+% Package usato per le tabelle
+\usepackage{tabularx}
+\newcolumntype{A}{>{\centering\arraybackslash}0{p{1cm}}}
+\newcolumntype{C}{>{\centering\arraybackslash}0{p{2cm}}}
+
+%Package e settings per il template use-case
+\usepackage{enumitem}
+\newlist{tabenum}{enumerate}{3}
+\setlist[tabenum,1]{label=\arabic*.}
+\setlist[tabenum,2]{label=\arabic{tabenumi}.\arabic*.}
+\setlist[tabenum,3]{label=\arabic{tabenumi}.\arabic{tabenumii}.\arabic*.}
+
+\usepackage[column=0]{cellspace}
+\setlength{\cellspacetoplimit}{\tabcolsep}
+\setlength{\cellspacebottomlimit}{\cellspacetoplimit}
+\addparagraphcolumntypes{X}
+
+% Template della tabella
+\newcommand\addrow[2]{#1 & #2\\ \hline}
+\newcommand\additemizedrow[2]{#1 &
+        \vspace{-5.5mm}
+        \begin{tabenum}
+            #2
+        \end{tabenum}
+        \\ \hline}
+
+% Definizione dei comandi
+\newcommand\name[1]{\addrow{\textbf{Caso d'uso}}{#1}}
+\newcommand\actor[1]{\addrow{Attore primario}{#1}}
+\newcommand\udescription[1]{\addrow{Descrizione}{#1}}
+\newcommand\precondition[1]{\addrow{Pre-Condizioni}{#1}}
+\newcommand\scenario[1]{\additemizedrow{Sequenza di eventi principale}{#1}}
+\newcommand\result[1]{\addrow{Post-Condizioni}{#1}}
+\newcommand\extensions[1]{\additemizedrow{Casi d'uso correlati}{#1}}
+\newcommand\exceptions[1]{\additemizedrow{Sequenza di eventi alternativi}{#1}}
+
+\newenvironment{usecase}{\tabularx{\textwidth}{|0{p{3cm}}|0{X}|}\hline}{\endtabularx}
+
+\begin{document}
+
+\input{titlepage}
+
+% Lasciato vuoto per tipografia
+\blankpage
+
+\thispagestyle{empty}
+\tableofcontents
+
+% Lasciato vuoto per tipografia
+\blankpage
+
+\clearpage
+
+\input{Chapter 1/chapter1}
+
+\input{Chapter 2/chapter2}
+
+\section {DOMANDE}
+
+\begin{itemize}
+    \item Controlla Sequence di CondividiViaggio forse troppo complesso
+    \item AggiungiAutomobile potrebbe essere inutile. Non sarebbe meglio come scenario alternativo?
+    \item Login forse è meglio che abbia come attore principale l'Utente per gestire il caso in cui un utente non registrato provi a fare login. Ma soprattutto, come cazzo va fatto che so due cose del dioporco
+\end{itemize}
+
+\section {TODO}
+
+\begin{itemize}
+    \item {Aggiusta diagramma CD "registrazione" a "registraUtente"}
+    \item {Aggiunta classe "Valutazione", sicuramente servono dei metodi }
+\end{itemize}
+
+\end{document}
+

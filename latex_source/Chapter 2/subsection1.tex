@@ -1,0 +1,21 @@
+\subsection{Analisi nomi-verbi}
+
+Si intende sviluppare un sistema software per la gestione di un servizio di carpooling destinato a facilitare la condivisione di viaggi per pendolari. 
+
+Questo sistema consentirà agli utenti di offrire posti disponibili nelle loro auto o di trovare un passaggio per le loro trasferte quotidiane o occasionali.
+Gli \NVactor{utenti} potranno \NVfunc{registrarsi al sistema} inserendo dati personali come \NVattr{nome}, \NVattr{cognome}, \NVattr{contatto telefonico}, \NVattr{indirizzo email}, \NVattr{tipo di automobile}, \NVattr{numero di posti disponibili}. Dopo la registrazione, \NVfunc{ogni utente potrà pubblicare i dettagli dei} \NVclass{viaggi} \NVfunc{che intende condividere}, includendo \NVattr{partenza}, \NVattr{destinazione}, \NVattr{data e ora di partenza}, e \NVattr{contributo richiesto per le spese di viaggio}.
+Il sistema permetterà agli \NVclassActor{utenti registrati} di \NVfunc{cercare un passaggio inserendo i loro criteri di ricerca ossia punto di partenza, destinazione e data}. I risultati mostreranno le corrispondenze disponibili. Gli utenti potranno \NVfunc{prenotare un posto} direttamente attraverso la piattaforma. La \NVclass{prenotazione} sarà un biglietto che contiene un \NVattr{ID}, \NVattr{riferimento del guidatore}, \NVattr{riferimento del passeggero} e \NVattr{costo del viaggio}.
+
+Per gli autisti, il sistema \NVfunc{fornirà una interfaccia grafica che mostra l’elenco delle sue prenotazioni con la possibilità di accettarle oppure eventualmente di poterle cancellare}. Sarà anche possibile per gli autisti \NVfunc{valutare i passeggeri a fine viaggio}, contribuendo così a mantenere un ambiente di viaggio sicuro e piacevole per tutti.
+\NVfunc{Il sistema includerà anche una funzionalità di feedback reciproco tra autisti e passeggeri} per mantenere un alto standard di fiducia e sicurezza nella community. 
+
+Il \NVactor{gestore dell’applicazione} invece, tramite una opportuna interfaccia grafica può \NVfunc{accedere a delle funzioni di reportistica, che permetto di visualizzare l’incasso totale, elenco di passeggeri e guidatori del sistema, con relativa valutazione}.
+
+
+\vspace{5mm}
+\textit{LEGENDA: \\
+\NVclass{$\blacksquare$} Classe \hfill
+\NVattr{$\blacksquare$} Attributo \hfill
+\NVfunc{$\blacksquare$} Funzionalità \hfill
+\NVactor{$\blacksquare$} Attore \hfill
+\NVclassActor{$\blacksquare$} Classe-Attore}
