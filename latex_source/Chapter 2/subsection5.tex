@@ -29,21 +29,15 @@
 \textbf{\textit{\underline{Casi d'uso di inclusione}}}:
 \begin{itemize}
     \item {UC10: GestisciPrenotazione}
-\end{itemize}
-
-
-\textbf{\textit{\underline{Casi d'uso di estensione}}}:
-\begin{itemize}
     \item {UC11: PrenotaViaggio}
 \end{itemize}
-
 
 \begin{tabularx}{\textwidth}{|0{p{4.5cm}}|0{p{2.7cm}}|0{p{4.3cm}}|0{X}|}
 \hline
 \textbf{Caso d'uso} & \textbf{Attori Primari} & \textbf{Incl./Ext.} & \textbf{Requisiti corrispondenti} \\ \hline
 UC1: Registrazione & Utente & - & $RF_1$ \\ \hline
 UC2: CondividiViaggio & Utente registrato & - & $RF_2$ \\ \hline
-UC3: RicercaViaggio & Utente registrato & - & $RF_3$ \\ \hline
+UC3: RicercaViaggio & Utente registrato & Incluso in PrenotaViaggio & $RF_3$ \\ \hline
 UC4: Login & Utente registrato & - & $RF_{10}$ \\ \hline
 UC5: ValutaUtente & Utente registrato & - & $RF_8$ \\ \hline
 UC6: VisualizzaPrenotazioni & Utente registrato & Incluso in GestisciPrenotazione & $RF_5$ \\ \hline
@@ -51,7 +45,7 @@ UC7: GeneraReportIncassi & Gestore dell'applicazione & - & $RF_9$ \\ \hline
 UC8: GeneraReportUtenti & Gestore dell'applicazione & - & $RF_9$ \\ \hline
 UC9: AggiornaDatiPersonali & Utente registrato & - & $RF_{11}$ \\ \hline
 UC10: GestisciPrenotazione & Utente registrato & Include VisualizzaPrenotazioni & $RF_{6\mbox{,}7}$ \\ \hline
-UC11: PrenotaViaggio & - & Estensione di RicercaViaggio & $RF_4$ \\ \hline
+UC11: PrenotaViaggio & - & Include RicercaViaggio & $RF_4$ \\ \hline
 \end{tabularx}
 
 \end{flushleft}
@@ -275,6 +269,7 @@ UC11: PrenotaViaggio & - & Estensione di RicercaViaggio & $RF_4$ \\ \hline
     \udescription{Un Utente registrato effettua la prenotazione di un posto per uno specifico viaggio}
     \precondition{L'Utente ha richiesto di prenotare un viaggio}
     \scenario{
+       \item {include(RicercaViaggio)}
        \item {L'Utente seleziona il viaggio che intende prenotare}
        \item {L'Utente effettua la prenotazione del viaggio}
        \item {Il sistema genera un biglietto contenente ID della prenotazione, riferimento al guidatore, riferimento al passeggero ed il costo richiesto per il viaggio}
