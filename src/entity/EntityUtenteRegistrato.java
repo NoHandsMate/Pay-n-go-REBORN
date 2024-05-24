@@ -1,8 +1,9 @@
 package entity;
 
-import database.ClienteRegistratoDAO;
+import database.UtenteRegistratoDAO;
+import database.UtenteRegistratoDAO;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class EntityUtenteRegistrato {
     private String nome;
@@ -11,19 +12,12 @@ public class EntityUtenteRegistrato {
     private String email;
     private String automobile;
     private int numPostiDisponibili;
-    private List<EntityViaggio> viaggiCondivisi;
-    private List<EntityPrenotazione> prenotazioni;
-    private List<EntityValutazione> valutazioni;
+    private ArrayList<EntityViaggio> viaggiCondivisi;
+    private ArrayList<EntityPrenotazione> prenotazioni;
+    private ArrayList<EntityValutazione> valutazioni;
 
 
-    public EntityUtenteRegistrato() {
-        this.nome = "";
-        this.cognome = "";
-        this.contattoTelefonico = "";
-        this.email = "";
-        this.automobile = "";
-        this.numPostiDisponibili = 0;
-    }
+    public EntityUtenteRegistrato() {}
 
     public EntityUtenteRegistrato(String nome, String cognome, String contattoTelefonico, String email, String automobile, int numPostiDisponibili) {
         this.nome = nome;
@@ -34,7 +28,7 @@ public class EntityUtenteRegistrato {
         this.numPostiDisponibili = numPostiDisponibili;
     }
 
-    public EntityUtenteRegistrato(ClienteRegistratoDAO clienteRegistratoDAO) {
+    public EntityUtenteRegistrato(UtenteRegistratoDAO utenteRegistratoDAO) {
         /* TODO */
     }
 
@@ -86,27 +80,27 @@ public class EntityUtenteRegistrato {
         this.numPostiDisponibili = numPostiDisponibili;
     }
 
-    public List<EntityValutazione> getValutazioni() {
+    public ArrayList<EntityValutazione> getValutazioni() {
         return valutazioni;
     }
 
-    public void setValutazioni(List<EntityValutazione> valutazioni) {
+    public void setValutazioni(ArrayList<EntityValutazione> valutazioni) {
         this.valutazioni = valutazioni;
     }
 
-    public List<EntityPrenotazione> getPrenotazioni() {
+    public ArrayList<EntityPrenotazione> getPrenotazioni() {
         return prenotazioni;
     }
 
-    public void setPrenotazioni(List<EntityPrenotazione> prenotazioni) {
+    public void setPrenotazioni(ArrayList<EntityPrenotazione> prenotazioni) {
         this.prenotazioni = prenotazioni;
     }
 
-    public List<EntityViaggio> getViaggiCondivisi() {
+    public ArrayList<EntityViaggio> getViaggiCondivisi() {
         return viaggiCondivisi;
     }
 
-    public void setViaggiCondivisi(List<EntityViaggio> viaggiCondivisi) {
+    public void setViaggiCondivisi(ArrayList<EntityViaggio> viaggiCondivisi) {
         this.viaggiCondivisi = viaggiCondivisi;
     }
 }
