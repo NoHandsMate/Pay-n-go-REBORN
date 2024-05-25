@@ -1,8 +1,4 @@
 package control;
-import database.DBManager;
-import entity.EntityControllerCarpooling;
-import entity.EntityUtenteRegistrato;
-import entity.EntityViaggio;
 
 
 public class ControllerGestore {

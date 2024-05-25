@@ -1,10 +1,8 @@
 package control;
-import entity.EntityControllerUtente;
 import entity.EntityPrenotazione;
 import entity.EntityUtenteRegistrato;
 import entity.EntityViaggio;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class ControllerUtente {
