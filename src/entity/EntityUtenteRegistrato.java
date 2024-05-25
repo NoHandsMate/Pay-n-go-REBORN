@@ -19,7 +19,10 @@ public class EntityUtenteRegistrato {
 
     public EntityUtenteRegistrato() {}
 
-    public EntityUtenteRegistrato(String nome, String cognome, String contattoTelefonico, String email, String automobile, int numPostiDisponibili) {
+    public EntityUtenteRegistrato(String nome, String cognome,
+                                  String contattoTelefonico, String email,
+                                  String automobile, int numPostiDisponibili) {
+
         this.nome = nome;
         this.cognome = cognome;
         this.contattoTelefonico = contattoTelefonico;
