@@ -26,3 +26,29 @@ w
 G.idea/sonarlint/issuestore/8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d,b\4\b4a0b63ce8560bbc5de0f9995c20cc861dc2adb3
 w
 G.idea/sonarlint/issuestore/a/5/a5cc2925ca8258af241be7e5b0381edf30266302,e\d\ed67eb178d523a4b3f117dcbe0eda5196367ceec
+K
+src/database/DBManager.java,a\9\a9db00ceceb394ec086e14711c60e305774b39fc
+Q
+!src/control/ControllerUtente.java,8\7\875d83e46531a70456c609e9d7603f860ec6022b
+R
+"src/control/ControllerGestore.java,a\a\aa5749d5dec3cec130464931e2b5a41bcb72fa3a
+Q
+!src/database/PrenotazioneDAO.java,9\c\9cc769eda15f1a4180d287d0fe398e03c20c7406
+V
+&src/entity/EntityControllerUtente.java,8\0\80cfa483ae30b733053c471e048c2e34a41e3fac
+P
+ src/boundary/registraUtente.java,0\9\096238abfdbfed2b8fc5d8857cd92916382806c2
+S
+#latex_source/Chapter 1/chapter1.tex,0\8\083ba6e0d28765d5128428fd5e087b3fb236a577
+V
+&latex_source/Chapter 2/subsection1.tex,c\9\c929d4f481789cc1adb768990386f069b7edad8d
+V
+&latex_source/Chapter 2/subsection2.tex,4\7\47d8a178d81af1dc453a2002f30efc83db7c5885
+V
+&latex_source/Chapter 2/subsection3.tex,e\1\e1caf4c6ee06c753514470e3b14c9802b23fe2da
+V
+&latex_source/Chapter 2/subsection4.tex,e\d\ed3cd60974cde302395c6d89d220d280fa6ceb0a
+U
+%src/database/UtenteRegistratoDAO.java,6\f\6faea8944048d0cf89b201a06cea8bb4206617c9
+Z
+*src/entity/EntityControllerCarpooling.java,d\4\d42bb4f2ef77d22f70b743016b2d6f17c66d3906
