@@ -4,6 +4,7 @@ import entity.EntityPrenotazione;
 
 public class PrenotazioneDAO {
 
+
     public boolean createPrenotazione() {
         return false;
     }

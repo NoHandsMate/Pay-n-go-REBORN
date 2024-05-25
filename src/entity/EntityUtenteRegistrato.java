@@ -10,6 +10,7 @@ public class EntityUtenteRegistrato {
     private String cognome;
     private String contattoTelefonico;
     private String email;
+    private String password;
     private String automobile;
     private int numPostiDisponibili;
     private ArrayList<EntityViaggio> viaggiCondivisi;
@@ -20,7 +21,7 @@ public class EntityUtenteRegistrato {
     public EntityUtenteRegistrato() {}
 
     public EntityUtenteRegistrato(String nome, String cognome,
-                                  String contattoTelefonico, String email,
+                                  String contattoTelefonico, String email, String password,
                                   String automobile, int numPostiDisponibili) {
 
         this.nome = nome;

@@ -1,7 +1,5 @@
 package entity;
 
-import entity.EntityUtenteRegistrato;
-
 public class EntityPrenotazione {
 
     private long id;
