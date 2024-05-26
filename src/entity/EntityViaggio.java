@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.ArrayList;
 
 public class EntityViaggio {
-
+    private long id;
     private String luogoPartenza;
     private String luogoDestinazione;
     private Date dataPartenza;

@@ -18,8 +18,6 @@ Q
 !src/entity/EntityValutazione.java,4\b\4bdaa3ebecf85ad5eb466fb81fa940af7aee8034
 R
 "src/entity/EntityPrenotazione.java,2\7\27e4df8491cc72a271f43f330b2e7608b2cdebd1
-V
-&src/database/ClienteRegistratoDAO.java,f\5\f59f663936395093b7e414942a4718a195e7d87f
 ]
 -.idea/sonarlint/securityhotspotstore/index.pb,8\8\88a9255124c95bdc913197c120a8d560edc59c8e
 w
@@ -36,8 +34,6 @@ Q
 !src/database/PrenotazioneDAO.java,9\c\9cc769eda15f1a4180d287d0fe398e03c20c7406
 V
 &src/entity/EntityControllerUtente.java,8\0\80cfa483ae30b733053c471e048c2e34a41e3fac
-P
- src/boundary/registraUtente.java,0\9\096238abfdbfed2b8fc5d8857cd92916382806c2
 S
 #latex_source/Chapter 1/chapter1.tex,0\8\083ba6e0d28765d5128428fd5e087b3fb236a577
 V
@@ -52,3 +48,9 @@ U
 %src/database/UtenteRegistratoDAO.java,6\f\6faea8944048d0cf89b201a06cea8bb4206617c9
 Z
 *src/entity/EntityControllerCarpooling.java,d\4\d42bb4f2ef77d22f70b743016b2d6f17c66d3906
+S
+#latex_source/Chapter 2/chapter2.tex,2\9\296d70105b97aec0864d35f92ed18d040129a155
+E
+latex_source/main.tex,5\2\5200054f037c7357ad59d4ac212a4740273d33e8
+L
+src/database/ViaggioDAO.java,e\0\e07deeab1131629cd1e63409a87a5c35e9e29fa1
