@@ -6,6 +6,7 @@ import database.UtenteRegistratoDAO;
 import java.util.ArrayList;
 
 public class EntityUtenteRegistrato {
+    private long id;
     private String nome;
     private String cognome;
     private String contattoTelefonico;

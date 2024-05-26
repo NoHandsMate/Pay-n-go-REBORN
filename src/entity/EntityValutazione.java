@@ -1,6 +1,7 @@
 package entity;
 
 public class EntityValutazione {
+    private long id;
     private int numeroStelle;
     private String descrizione;
 

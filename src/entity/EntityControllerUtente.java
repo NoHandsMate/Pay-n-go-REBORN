@@ -1,3 +1,5 @@
+//Classe Facade per l'Utente
+
 package entity;
 
 import database.UtenteRegistratoDAO;
@@ -5,6 +7,7 @@ import database.ViaggioDAO;
 import database.ValutazioneDAO;
 import database.PrenotazioneDAO;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class EntityControllerUtente {
@@ -23,8 +26,10 @@ public class EntityControllerUtente {
 
     public boolean loginUtente(String email, String password) {
 
+        //TODO se esiste l'utente, caricare tutte le informazioni dal database
+
         UtenteRegistratoDAO utenteDao = new UtenteRegistratoDAO();
-        EntityUtenteRegistrato queryResult = utenteDao.readUtenteRegistrato(email, password);
+        UtenteRegistratoDAO queryResult = utenteDao.readUtenteRegistrato(email, password);
 
         return queryResult != null; //ritorna un booleano: vero se il risultato è diverso da null, falso se viceversa
     }
@@ -53,12 +58,20 @@ public class EntityControllerUtente {
         return result;
     }
 
-    public EntityPrenotazione visualizzaPrenotazioni() {
+    public ArrayList<EntityPrenotazione> visualizzaPrenotazioni(long id_utente) {
 
 
-        EntityPrenotazione mammt = new EntityPrenotazione();
+        ArrayList<EntityPrenotazione> prenotazioniVisualizzate = new ArrayList<>();
+        prenotazioniVisualizzate =
 
-        return mammt;
+        /*PrenotazioneDAO queryResult = prenotazioneDao.readPrenotazione();
+        long id = queryResult.getId();
+        EntityUtenteRegistrato passeggero = queryResult.getPasseggero();
+        EntityViaggio viaggio = queryResult.getViaggio();
+        EntityPrenotazione prenotazioneVisualizzata = new EntityPrenotazione(id,passeggero,viaggio);*/
+
+
+        return prenotazioniVisualizzate;
     }
 
     public boolean gestisciPrenotazione() {

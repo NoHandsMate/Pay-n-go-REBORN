@@ -4,6 +4,7 @@ import entity.EntityUtenteRegistrato;
 import entity.EntityViaggio;
 import entity.EntityControllerUtente;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ControllerUtente {
@@ -75,27 +76,31 @@ public class ControllerUtente {
 
     //Si tratta di una prima bozza, c'è incertezza sul tipo di ritorno di questa funzione, a causa dell'interfacciamento
     //con la GUI
-    public EntityPrenotazione visualizzaPrenotazioni(){
+    public ArrayList<EntityPrenotazione> visualizzaPrenotazioni(long id_utente){
 
         //richiamao il metodo visualizzaPrenotazioni di EntityControllerUtente (Facade), con opportuno parametro di
         //ritorno
         EntityControllerUtente facadeUtenteRegistrato = new EntityControllerUtente();
-        EntityPrenotazione prenotazioneVisualizzata = facadeUtenteRegistrato.visualizzaPrenotazioni();
+        ArrayList<EntityPrenotazione> prenotazioniVisualizzate = facadeUtenteRegistrato.visualizzaPrenotazioni(id_utente);
 
-        return prenotazioneVisualizzata;
+        return prenotazioniVisualizzate;
     }
 
     public boolean gestisciPrenotazione(){
 
         //richiamo il metodo gestisciPrenotazione di EntityControllerUtente (Facade)
+        EntityControllerUtente facadeUtenteRegistrato = new EntityControllerUtente();
+        boolean result = facadeUtenteRegistrato.gestisciPrenotazione();
 
-
+        return result;
     }
 
     public EntityViaggio ricercaViaggio(){
 
-        //richiamare il metodo visualizzaPrenotazioni di EntityControllerUtente (Facade), con opportuno parametro di
+        //richiamo il metodo visualizzaPrenotazioni di EntityControllerUtente (Facade), con opportuno parametro di
         //ritorno
+        EntityControllerUtente facadeUtenteRegistrato = new EntityControllerUtente();
+        EntityViaggio = facadeUtenteRegistrato.ricercaViaggio()
 
         return null; //NON VA BENE QUESTO RETURN, ritornare ciò che ritorna il metodo richiamato
     }
