@@ -19,7 +19,6 @@ public class EntityPrenotazione {
 
     public void creaPrenotazione() {
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
-        prenotazioneDAO.
     }
 
     public long getId() {
