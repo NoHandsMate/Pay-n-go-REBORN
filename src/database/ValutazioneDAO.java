@@ -3,7 +3,7 @@ package database;
 import entity.EntityValutazione;
 
 public class ValutazioneDAO {
-
+    
     public boolean createValutazione() {
         return false;
     }

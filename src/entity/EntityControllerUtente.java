@@ -10,6 +10,16 @@ import database.PrenotazioneDAO;
 import java.util.ArrayList;
 import java.util.Date;
 
+
+
+/*
+* Creare classi information expert -(per ora solo per Utente) per contenere la lista di istanze della classe e relativi metodi
+* per aumentare il disaccoppiamento. La classe info expert deve contenere il currentUser così da slegare la facade
+* le classi DAO possono comunicare tra loro ma noi ce ne freghiamo e ci manteniamo i riferimenti alle chiavi esterne.
+*
+*
+* */
+
 public class EntityControllerUtente {
 
     public boolean registraUtente(String nome, String cognome, String contattoTelefonico, String email,

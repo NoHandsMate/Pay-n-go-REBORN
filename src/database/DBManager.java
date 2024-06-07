@@ -15,10 +15,17 @@ public class DBManager {
     public static final String userName = "dbmanager";
     public static final String password = "passwordsegretissima";
 
-    // Costruttore privato per non permettere la creazione erronea di un'istanza dall'esterno.
+    /**
+     * Costruttore privato per non permettere la creazione erronea di un'istanza dall'esterno.
+      */
     private DBManager() {}
 
-    // Metodo per ottenere una nuova connessione al Database.
+    /**
+     * Metodo per ottenere una nuova connessione al Database.
+     * @return la connessione instaurata.
+     * @throws ClassNotFoundException se la classe non viene trovata.
+     * @throws SQLException in caso di errore nella chiusura della connessione.
+     */
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
         Connection conn = null;
         Class.forName(driver);
@@ -27,7 +34,11 @@ public class DBManager {
         return conn;
     }
 
-    // Metodo per chiudere una connessione esistente al Database.
+    /**
+     * Metodo per chiudere una connessione esistente al Database.
+      * @param c connessione al database.
+     * @throws SQLException in caso di errore nella chiusura della connessione.
+     */
     public static void closeConnection(Connection c) throws SQLException {
         c.close();
     }
