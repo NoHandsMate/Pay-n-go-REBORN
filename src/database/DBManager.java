@@ -10,10 +10,10 @@ public class DBManager {
 
     // Credenziali di accesso al Database.
     public static final String url = "jdbc:mysql://localhost:3306/";
-    public static final String dbName = "payngo-db";
+    public static final String dbName = "payngo";
     public static final String driver = "com.mysql.cj.jdbc.Driver";
-    public static final String userName = "dbmanager";
-    public static final String password = "passwordsegretissima";
+    public static final String userName = "admin";
+    public static final String password = "payngo";
 
     /**
      * Costruttore privato per non permettere la creazione erronea di un'istanza dall'esterno.
@@ -43,8 +43,13 @@ public class DBManager {
         c.close();
     }
 
-    // Metodo per eseguire una query sul Database, ritorna il numero di righe del risultato della query o lancia
-    // un'eccezione in caso di fallimento.
+    /**
+     * Metodo per eseguire una query CREATE, UPDATE o DELETE sul Database.
+     * @param query la query da eseguire sul database.
+     * @return il numero di righe della tabella affette dalla query.
+     * @throws ClassNotFoundException se la classe non viene trovata.
+     * @throws SQLException in caso di errore nell'esecuzione della query.
+     */
     public static int executeQuery(String query) throws ClassNotFoundException, SQLException {
         Connection conn = getConnection();
         Statement statement = conn.createStatement();
@@ -54,7 +59,13 @@ public class DBManager {
         return ret;
     }
 
-    // Metodo per eseguire una query sul Database, ritorna il risultato della stessa.
+    /**
+     * Metodo per eseguire una query SELECT sul Database.
+     * @param query la query da eseguire sul database.
+     * @return il ResultSet contenente il risultato della query.
+     * @throws ClassNotFoundException se la classe non viene trovata.
+     * @throws SQLException in caso di errore nell'esecuzione della query.
+     */
     public static ResultSet selectQuery(String query) throws ClassNotFoundException, SQLException {
         Connection conn = getConnection();
         Statement statement = conn.createStatement();

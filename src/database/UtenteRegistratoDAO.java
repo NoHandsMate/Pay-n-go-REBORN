@@ -3,21 +3,18 @@ package database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class UtenteRegistratoDAO {
 
     private long id;
-    private long keyPrenotazioni;
-    private long keyViaggi;
-    private long keyValutazioni;
-
     private String nome;
     private String cognome;
     private String contattoTelefonico;
     private String email;
-    private String password;
     private String automobile;
     private int numPostiDisponibili;
+    private String password;
 
     public UtenteRegistratoDAO() {}
 

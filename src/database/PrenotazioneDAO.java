@@ -34,7 +34,7 @@ public class PrenotazioneDAO {
     }
 
     /**
-     * Funzione per impostare tutti i parametri dell'oggetto prenotazione dato e salvare tale istanza nel database.
+     * Funzione per impostare tutti i parametri dell'oggetto PrenotazioneDAO dato e salvare tale istanza nel database.
      * @param id l'identificativo della prenotazione.
      * @param idPasseggero l'identificativo dell'utente passeggero.
      * @param idViaggioPrenotato l'identificativo del viaggio prenotato.
@@ -80,7 +80,8 @@ public class PrenotazioneDAO {
                 return false;
             }
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante il caricamento dal database di una prenotazione con id %d.", id));
+            logger.info(String.format("Errore durante il caricamento dal database di una prenotazione con id %d.\n%s",
+                    id, e.getMessage()));
             return false;
         }
         return true;
@@ -101,8 +102,8 @@ public class PrenotazioneDAO {
             /* TODO: questo int rs, dato che non lo usiamo è inutile (?) Ci sono modi per usarli. */
             int rs = DBManager.executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante l'inserimento di [%d, %d, %d] nel database.",
-                    id, idPasseggero, idViaggioPrenotato));
+            logger.info(String.format("Errore durante l'inserimento della prenotazione [%d, %d, %d] nel database.\n%s",
+                    id, idPasseggero, idViaggioPrenotato, e.getMessage()));
             return false;
         }
         return true;
@@ -119,8 +120,8 @@ public class PrenotazioneDAO {
             /* TODO: questo int rs, dato che non lo usiamo è inutile (?) Ci sono modi per usarli. */
             int rs = DBManager.executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante l'eliminazione di [%d, %d, %d] dal database.",
-                    this.id, this.idPasseggero, this.idViaggioPrenotato));
+            logger.info(String.format("Errore durante l'eliminazione della prenotazione [%d, %d, %d] dal database.\n%s",
+                    this.id, this.idPasseggero, this.idViaggioPrenotato, e.getMessage()));
             return false;
         }
         return true;
