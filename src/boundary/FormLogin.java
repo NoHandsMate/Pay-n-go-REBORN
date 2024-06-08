@@ -2,6 +2,8 @@ package boundary;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class FormLogin extends JFrame {
     private JPanel loginPanel;
@@ -10,13 +12,19 @@ public class FormLogin extends JFrame {
     private JButton loginButton;
 
     public FormLogin() {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Login");
-        setSize(600, 400);
+        setSize(600, 300);
         setLocationRelativeTo(null);
         setResizable(false);
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(new JScrollPane(loginPanel), BorderLayout.CENTER);
+        loginButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.exit(0);
+            }
+        });
     }
 
     public static void main(String[] args) {

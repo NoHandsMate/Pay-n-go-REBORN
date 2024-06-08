@@ -19,7 +19,7 @@ public class FormRegistrazione extends JFrame {
 
     public FormRegistrazione() {
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registrazione");
         setSize(600, 400);
         setLocationRelativeTo(null);

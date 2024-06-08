@@ -24,7 +24,15 @@ public class HomePageLogoPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(pngLogoImage, 0, 0, this); // see javadoc for more info on the parameters
+        int imgWidth = 2437;
+        int imgHeight = 1112;
+        float aspectRatio = Math.min(((float) this.getWidth() / (float) imgWidth),
+                ((float) this.getHeight() / (float) imgHeight));
+        int newWidth = (int) (imgWidth * aspectRatio);
+        int newHeight = (int) (imgHeight * aspectRatio);
+        int newX = (this.getWidth() - newWidth) / 2;
+        int newY = (this.getHeight() - newHeight) / 2;
+        g.drawImage(pngLogoImage, newX, newY, newWidth, newHeight, this);
     }
 
 }
