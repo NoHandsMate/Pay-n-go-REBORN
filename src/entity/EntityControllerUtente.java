@@ -22,7 +22,7 @@ import java.util.Date;
 
 public class EntityControllerUtente {
 
-    public boolean registraUtente(String nome, String cognome, String contattoTelefonico, String email,
+   /* public boolean registraUtente(String nome, String cognome, String contattoTelefonico, String email,
                                   String automobile, int numPostiDisponibili, String password) {
 
         UtenteRegistratoDAO utenteDao = new UtenteRegistratoDAO();
@@ -39,7 +39,7 @@ public class EntityControllerUtente {
         //TODO se esiste l'utente, caricare tutte le informazioni dal database
 
         UtenteRegistratoDAO utenteDao = new UtenteRegistratoDAO();
-        UtenteRegistratoDAO queryResult = utenteDao.readUtenteRegistrato(email, password);
+        //UtenteRegistratoDAO queryResult = utenteDao.readUtenteRegistrato(email, password);
 
         return queryResult != null; //ritorna un booleano: vero se il risultato è diverso da null, falso se viceversa
     }
@@ -51,8 +51,8 @@ public class EntityControllerUtente {
                                   EntityUtenteRegistrato autista) {
 
         ViaggioDAO viaggioDao = new ViaggioDAO();
-        boolean result = viaggioDao.createViaggio(luogoPartenza, luogoDestinazione,dataPartenza,oraPartenza,
-                dataArrivo,oraArrivo,contributoSpese,autista);
+//        boolean result = viaggioDao.createViaggio(luogoPartenza, luogoDestinazione,dataPartenza,oraPartenza,
+//                dataArrivo,oraArrivo,contributoSpese,autista);
 
         return result;
     }
@@ -74,11 +74,11 @@ public class EntityControllerUtente {
         ArrayList<EntityPrenotazione> prenotazioniVisualizzate = new ArrayList<>();
         prenotazioniVisualizzate =
 
-        /*PrenotazioneDAO queryResult = prenotazioneDao.readPrenotazione();
+        PrenotazioneDAO queryResult = prenotazioneDao.readPrenotazione();
         long id = queryResult.getId();
         EntityUtenteRegistrato passeggero = queryResult.getPasseggero();
         EntityViaggio viaggio = queryResult.getViaggio();
-        EntityPrenotazione prenotazioneVisualizzata = new EntityPrenotazione(id,passeggero,viaggio);*/
+        EntityPrenotazione prenotazioneVisualizzata = new EntityPrenotazione(id,passeggero,viaggio);
 
 
         return prenotazioniVisualizzate;
@@ -98,4 +98,6 @@ public class EntityControllerUtente {
     public boolean valutaUtente() {
         return false;
     }
+
+    */
 }

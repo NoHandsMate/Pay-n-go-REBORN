@@ -9,6 +9,8 @@ import java.util.Date;
 
 public class ControllerUtente {
 
+    /*
+
     //Variabile statica univoca per implementare il pattern Singleton
     private static ControllerUtente uniqueInstance;
 
@@ -80,7 +82,7 @@ public class ControllerUtente {
 
         //richiamao il metodo visualizzaPrenotazioni di EntityControllerUtente (Facade), con opportuno parametro di
         //ritorno
-        /* TODO: Far esplodere e togliere id_utente: lo prendo a livelli inferiori*/
+        TODO: Far esplodere e togliere id_utente: lo prendo a livelli inferiori
         EntityControllerUtente facadeUtenteRegistrato = new EntityControllerUtente();
         ArrayList<EntityPrenotazione> prenotazioniVisualizzate = facadeUtenteRegistrato.visualizzaPrenotazioni(id_utente);
 
@@ -101,7 +103,7 @@ public class ControllerUtente {
         //richiamo il metodo visualizzaPrenotazioni di EntityControllerUtente (Facade), con opportuno parametro di
         //ritorno
         EntityControllerUtente facadeUtenteRegistrato = new EntityControllerUtente();
-        EntityViaggio = facadeUtenteRegistrato.ricercaViaggio();
+        //EntityViaggio = facadeUtenteRegistrato.ricercaViaggio();
 
         return null; //NON VA BENE QUESTO RETURN, ritornare ciò che ritorna il metodo richiamato
     }
@@ -111,4 +113,6 @@ public class ControllerUtente {
         //richiamare il metodo valutaUtente di EntityControllerUtente (Facade)
 
     }
+
+     */
 }

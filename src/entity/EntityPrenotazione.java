@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 public class EntityPrenotazione {
 
+    /*
     private long id;
     private EntityUtenteRegistrato passeggero;
     private EntityViaggio viaggioPrenotato;
-    /* TODO
-    *   Aggiustare i costruttori dell'entità per includere l'EntityViaggio viaggioPrenotato */
+    TODO: Aggiustare i costruttori dell'entità per includere l'EntityViaggio viaggioPrenotato
 
     public EntityPrenotazione() {}
 
@@ -25,7 +25,7 @@ public class EntityPrenotazione {
 
     public long getId() {
 
-        /* TODO: fai esplodere */
+        TODO: fai esplodere (ma utilizza perché sensato)
         // EntityPrenotazione ha una lista ArrayList<EntityPrenotazione> prenotazioni;
         ArrayList<PrenotazioneDAO> prenotazioniList = new ArrayList<>();
         int idViaggio = 1;
@@ -53,5 +53,5 @@ public class EntityPrenotazione {
         this.passeggero = passeggero;
     }
 
-
+     */
 }
