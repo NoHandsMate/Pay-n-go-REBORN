@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SonarLintProjectSettings">
+    <option name="fileExclusions">
+      <list>
+        <option value="DIRECTORY:mysql-connector-j-8.4.0" />
+      </list>
+    </option>
+  </component>
+</project>
