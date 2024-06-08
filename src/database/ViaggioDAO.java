@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Logger;
 
 public class ViaggioDAO {
@@ -24,9 +22,7 @@ public class ViaggioDAO {
     /**
      * Costruttore di default di ViaggioDAO, crea un'istanza vuota da popolare successivamente.
      */
-    public ViaggioDAO() {
-        super();
-    }
+    public ViaggioDAO() { }
 
     /**
      * Costruttore di ViaggioDAO che popola l'istanza in base all'id fornito con i dati già memorizzati nel database.
@@ -52,9 +48,8 @@ public class ViaggioDAO {
      * @return true in vaso di successo (in tal caso l'oggetto sarà stato valorizzato con i parametri dati), false
      * altrimenti (l'oggetto non sarà valorizzato).
      */
-    public boolean createPrenotazione(long id, String luogoPartenza, String luogoDestinazione,
-                                      LocalDateTime dataPartenza, LocalDateTime dataArrivo, float contributoSpese,
-                                      int idAutista) {
+    public boolean createViaggio(long id, String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
+                                 LocalDateTime dataArrivo, float contributoSpese, int idAutista) {
         boolean res = salvaInDB(id, luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese,
                 idAutista);
 
@@ -102,7 +97,7 @@ public class ViaggioDAO {
                 return false;
             }
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante il caricamento dal database di un viaggio con id %d.\n%s",
+            logger.info(String.format("Errore durante il caricamento dal database di un viaggio con id %d.%n%s",
                     id, e.getMessage()));
             return false;
         }
@@ -111,7 +106,7 @@ public class ViaggioDAO {
 
     /**
      * Funzione privata per salvare i dati di un viaggio nel database.
-     * @param id identificativo del viaggio.
+     * @param id l'identificativo del viaggio.
      * @param luogoPartenza il luogo di partenza del viaggio.
      * @param luogoDestinazione il luogo di destinazione del viaggio.
      * @param dataPartenza la data di partenza del viaggio.

@@ -2,6 +2,7 @@ package database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class PrenotazioneDAO {
@@ -80,7 +81,7 @@ public class PrenotazioneDAO {
                 return false;
             }
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante il caricamento dal database di una prenotazione con id %d.\n%s",
+            logger.info(String.format("Errore durante il caricamento dal database di una prenotazione con id %d.%n%s",
                     id, e.getMessage()));
             return false;
         }
@@ -89,9 +90,9 @@ public class PrenotazioneDAO {
 
     /**
      * Funzione privata per salvare i dati di una prenotazione nel database.
-     * @param id identificativo della prenotazione.
-     * @param idPasseggero identificativo del passeggero.
-     * @param idViaggioPrenotato identificativo del viaggio.
+     * @param id l'identificativo della prenotazione.
+     * @param idPasseggero l'identificativo del passeggero.
+     * @param idViaggioPrenotato l'identificativo del viaggio.
      * @return true in caso di successo, false altrimenti.
      */
     private boolean salvaInDB(long id, long idPasseggero, long idViaggioPrenotato) {
@@ -102,7 +103,7 @@ public class PrenotazioneDAO {
             /* TODO: questo int rs, dato che non lo usiamo è inutile (?) Ci sono modi per usarli. */
             int rs = DBManager.executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante l'inserimento della prenotazione [%d, %d, %d] nel database.\n%s",
+            logger.info(String.format("Errore durante l'inserimento della prenotazione [%d, %d, %d] nel database.%n%s",
                     id, idPasseggero, idViaggioPrenotato, e.getMessage()));
             return false;
         }
@@ -120,7 +121,7 @@ public class PrenotazioneDAO {
             /* TODO: questo int rs, dato che non lo usiamo è inutile (?) Ci sono modi per usarli. */
             int rs = DBManager.executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante l'eliminazione della prenotazione [%d, %d, %d] dal database.\n%s",
+            logger.info(String.format("Errore durante l'eliminazione della prenotazione [%d, %d, %d] dal database.%n%s",
                     this.id, this.idPasseggero, this.idViaggioPrenotato, e.getMessage()));
             return false;
         }

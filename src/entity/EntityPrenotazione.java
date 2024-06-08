@@ -2,6 +2,8 @@ package entity;
 
 import database.PrenotazioneDAO;
 
+import java.util.ArrayList;
+
 public class EntityPrenotazione {
 
     private long id;
@@ -22,6 +24,20 @@ public class EntityPrenotazione {
     }
 
     public long getId() {
+
+        /* TODO: fai esplodere */
+        // EntityPrenotazione ha una lista ArrayList<EntityPrenotazione> prenotazioni;
+        ArrayList<PrenotazioneDAO> prenotazioniList = new ArrayList<>();
+        int idViaggio = 1;
+        PrenotazioneDAO.popolaPrenotazioni(prenotazioniList, idViaggio);
+        for (PrenotazioneDAO prenotazioneDAO : prenotazioniList) {
+            EntityPrenotazione entityPrenotazione = new EntityPrenotazione(prenotazioneDAO);
+            if (entityPrenotazione.viaggioPrenotato.getId() == idViaggio) {
+                prenotazioni.append(entityPrenotazione);
+            }
+        }
+
+        this.idDPrenotazioni = prenotazioniList;
         return id;
     }
 

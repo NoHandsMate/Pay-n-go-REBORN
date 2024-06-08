@@ -1,7 +1,5 @@
 package database;
 
-import entity.EntityValutazione;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
@@ -19,9 +17,7 @@ public class ValutazioneDAO {
     /**
      * Costruttore di default di ValutazioneDAO, crea un'istanza vuota da popolare successivamente.
      */
-    public ValutazioneDAO() {
-        super();
-    }
+    public ValutazioneDAO() { }
 
     /**
      * Costruttore di ValutazioneDAO che popola l'istanza in base all'id fornito con i dati già memorizzati nel
@@ -45,7 +41,7 @@ public class ValutazioneDAO {
      * @return true in vaso di successo (in tal caso l'oggetto sarà stato valorizzato con i parametri dati), false
      * altrimenti (l'oggetto non sarà valorizzato).
      */
-    public boolean createPrenotazione(long id, int numeroStelle, String descrizione, long idUtente) {
+    public boolean createValutazione(long id, int numeroStelle, String descrizione, long idUtente) {
         boolean res = salvaInDB(id, numeroStelle, descrizione, idUtente);
 
         if (!res)
@@ -62,7 +58,7 @@ public class ValutazioneDAO {
      * Funzione per eliminare una valutazione dal database.
      * @return true in caso di successo, false altrimenti.
      */
-    public boolean deletePrenotazione() {
+    public boolean deleteValutazione() {
         return this.eliminaDaDB();
     }
 
