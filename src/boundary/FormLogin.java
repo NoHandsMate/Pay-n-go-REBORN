@@ -1,8 +1,6 @@
 package boundary;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
 
 public class FormLogin extends JFrame {
@@ -10,6 +8,7 @@ public class FormLogin extends JFrame {
     private JTextField emailField;
     private JPasswordField passwordField;
     private JButton loginButton;
+    private JButton backButton;
 
     public FormLogin() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
