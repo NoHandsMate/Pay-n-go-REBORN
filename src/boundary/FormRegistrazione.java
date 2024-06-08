@@ -16,6 +16,7 @@ public class FormRegistrazione extends JFrame {
     private JSpinner postiSpinner;
     private JButton registratiButton;
     private JTextField telefonoField;
+    private JPanel registrazionePanel;
 
     public FormRegistrazione() {
 
@@ -24,6 +25,7 @@ public class FormRegistrazione extends JFrame {
         setSize(600, 400);
         setLocationRelativeTo(null);
         setResizable(false);
+        getContentPane().add(new JScrollPane(registrazionePanel), BorderLayout.CENTER);
         registratiButton.addActionListener(actionEvent -> {
           boolean result = validateInput();
 
