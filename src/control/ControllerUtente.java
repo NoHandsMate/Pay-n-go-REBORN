@@ -1,11 +1,7 @@
 package control;
-import entity.EntityPrenotazione;
-import entity.EntityUtenteRegistrato;
-import entity.EntityViaggio;
-import entity.EntityControllerUtente;
 
-import java.util.ArrayList;
-import java.util.Date;
+
+import java.util.AbstractMap;
 
 public class ControllerUtente {
 
@@ -22,4 +18,12 @@ public class ControllerUtente {
     }
 
 
+    public static AbstractMap.SimpleEntry<Boolean, String> registraUtente(String nome, String cognome, String email,
+                                                                          String auto, char[] password, Integer postiDisp,
+                                                                          String telefono) {
+
+
+
+
+    }
 }

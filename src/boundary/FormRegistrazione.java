@@ -26,30 +26,43 @@ public class FormRegistrazione extends JFrame {
         setResizable(false);
         getContentPane().add(new JScrollPane(registrazionePanel), BorderLayout.CENTER);
         registratiButton.addActionListener(actionEvent -> {
-          AbstractMap.SimpleImmutableEntry<Boolean, String> result = validateInput();
+          AbstractMap.SimpleEntry<Boolean, String> result = validateInput();
 
           if (!result.getKey()) {
               JOptionPane.showMessageDialog(rootPane, result.getValue(),
                                        "Errore", JOptionPane.ERROR_MESSAGE);
           } else {
               /*TODO: Chiama il metodo registraUtente del controller*/
+
+              result = ControllerUtente.registraUtente(nomeField.getText(), cognomeField.getText(),
+                                                       emailField.getText(), autoField.getText(),
+                                                       passwordField.getPassword(), (Integer)postiSpinner.getValue(),
+                                                       telefonoField.getText());
+
+              if (!result.getKey()) {
+                  JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
+              } else {
+                  JOptionPane.showMessageDialog(rootPane, result.getValue(), "OK", JOptionPane.INFORMATION_MESSAGE);
+              }
+
           }
 
         });
     }
 
-    private AbstractMap.SimpleImmutableEntry<Boolean, String> validateInput() {
+    private AbstractMap.SimpleEntry<Boolean, String> validateInput() {
         if (nomeField.getText().isBlank() || cognomeField.getText().isBlank() ||
             emailField.getText().isBlank() || passwordField.getPassword().length == 0 ||
             telefonoField.getText().isBlank()) {
-            return new AbstractMap.SimpleImmutableEntry<>(false, "Riempi i campi obbligatori!");
+            return new AbstractMap.SimpleEntry<>(false, "Riempi i campi obbligatori!");
         }
 
-        if (!autoField.getText().isBlank() && (Integer) postiSpinner.getValue() == 0){
-            return new AbstractMap.SimpleImmutableEntry<>(false, "Il valore dei posti disponibili");
+        if (!autoField.getText().isBlank() && (Integer) postiSpinner.getValue() == 0 ||
+            (autoField.getText().isBlank() && (Integer) postiSpinner.getValue() != 0)) {
+            return new AbstractMap.SimpleEntry<>(false, "Il valore dei posti disponibili è incorretto");
         }
 
-        return new AbstractMap.SimpleImmutableEntry<>(true, "OK");
+        return new AbstractMap.SimpleEntry<>(true, "OK");
     }
 
 
