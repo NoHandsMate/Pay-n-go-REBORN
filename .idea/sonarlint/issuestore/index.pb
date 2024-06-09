@@ -17,3 +17,5 @@ J
 src/boundary/HomePage.form,1\4\1480c707c469585d379f1966e0ef355d5fb110d7
 S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+G
+src/boundary/Prova.java,e\f\ef3ab738c8d74b178c5dd3225f6c12b4cc7fa82b
