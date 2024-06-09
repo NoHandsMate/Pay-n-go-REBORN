@@ -15,7 +15,7 @@ public class HomePage extends JFrame {
     private Logger logger = Logger.getLogger("loggerHomePage");
 
     public HomePage() {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Pay n' Go REBORN - Homepage");
         setSize(600, 400);
         setLocationRelativeTo(null);

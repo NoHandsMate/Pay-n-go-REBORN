@@ -70,36 +70,6 @@ public class UtenteRegistratoDAO {
     }
 
     /**
-     * Funzione per impostare tutti i parametri dell'oggetto UtenteRegistratoDAO dato e salvare tale istanza nel
-     * database.
-     * @param id l'identificativo dell'utente registrato.
-     * @param nome il nome dell'utente registrato.
-     * @param cognome il cognome dell'utente registrato.
-     * @param contattoTelefonico il contatto telefonico dell'utente registrato.
-     * @param email l'email dell'utente registrato.
-     * @param password la password (bcrypt) dell'utente registrato.
-     * @return true in vaso di successo (in tal caso l'oggetto sarà stato valorizzato con i parametri dati), false
-     * altrimenti (l'oggetto non sarà valorizzato).
-     */
-    public boolean createUtenteRegistrato(long id, String nome, String cognome, String contattoTelefonico, String email,
-                                      String password) {
-        boolean res = salvaInDB(id, nome, cognome, contattoTelefonico, email, null, 0, password);
-
-        if (!res)
-            return false;
-
-        this.id = id;
-        this.nome = nome;
-        this.cognome = cognome;
-        this.contattoTelefonico = contattoTelefonico;
-        this.email = email;
-        this.automobile = null;
-        this.postiDisponibili = 0;
-        this.password = password;
-        return true;
-    }
-
-    /**
      * Funzione per eliminare un utente registrato dal database.
      * @return true in caso di successo, false altrimenti.
      */
@@ -154,31 +124,19 @@ public class UtenteRegistratoDAO {
     private boolean salvaInDB(long id, String nome, String cognome, String contattoTelefonico, String email,
                               String automobile, int postiDisponibili, String password) {
         String query;
-        if (automobile != null || postiDisponibili != 0) {
-            query = String.format("INSERT INTO utentiregistrati (idUtenteRegistrato, nome, cognome, " +
-                            "contattoTelefonico, email, automobile, postiDisponibili, password) VALUES " +
-                            "(%d, '%s', '%s', '%s', '%s', '%s', %d, '%s');", id, nome, cognome, contattoTelefonico,
-                            email, automobile, postiDisponibili, password);
-        } else {
-            query = String.format("INSERT INTO utentiregistrati (idUtenteRegistrato, nome, cognome, " +
-                            "contattoTelefonico, email, password) VALUES (%d, '%s', '%s', '%s', '%s', '%s');",
-                            id, nome, cognome, contattoTelefonico, email, password);
-        }
+        query = String.format("INSERT INTO utentiregistrati (idUtenteRegistrato, nome, cognome, contattoTelefonico, " +
+                        "email, automobile, postiDisponibili, password) VALUES " +
+                        "(%d, '%s', '%s', '%s', '%s', '%s', %d, '%s');", id, nome, cognome, contattoTelefonico, email,
+                        automobile, postiDisponibili, password);
 
         logger.info(query);
         try {
             /* TODO: questo int rs, dato che non lo usiamo è inutile (?) Ci sono modi per usarli. */
             int rs = DBManager.executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
-            if (automobile != null || postiDisponibili != 0) {
-                logger.info(String.format("Errore durante l'inserimento dell'utente registrato " +
-                                "[%d, '%s', '%s', '%s', '%s', '%s', %d, '%s'] nel database.%n%s", id, nome, cognome,
-                                contattoTelefonico, email, automobile, postiDisponibili, password, e.getMessage()));
-            } else {
-                logger.info(String.format("Errore durante l'inserimento dell'utente registrato " +
-                                "[%d, '%s', '%s', '%s', '%s', '%s'] nel database.%n%s", id, nome, cognome,
-                                contattoTelefonico, email, password, e.getMessage()));
-            }
+            logger.info(String.format("Errore durante l'inserimento dell'utente registrato " +
+                            "[%d, '%s', '%s', '%s', '%s', '%s', %d, '%s'] nel database.%n%s", id, nome, cognome,
+                            contattoTelefonico, email, automobile, postiDisponibili, password, e.getMessage()));
             return false;
         }
         return true;

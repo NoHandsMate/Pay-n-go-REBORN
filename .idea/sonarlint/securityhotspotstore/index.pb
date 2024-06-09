@@ -19,3 +19,19 @@ S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 G
 src/boundary/Prova.java,e\f\ef3ab738c8d74b178c5dd3225f6c12b4cc7fa82b
+L
+src/boundary/MainWindow.java,f\1\f1d78f0dc54491622d1bd454482f318596010a23
+L
+src/boundary/MainWindow.form,7\f\7f180278cd5cbef047addafe11768422f15a023d
+L
+src/database/ViaggioDAO.java,e\0\e07deeab1131629cd1e63409a87a5c35e9e29fa1
+_
+/src/exceptions/RegistrationFailedException.java,0\a\0ac8a932fc91525d1f2a7dbf7a818026a2abaac0
+U
+%src/exceptions/DatabaseException.java,7\1\715a22ac831ed5a4d007ccda9a6b6e4cc6f31001
+P
+ src/database/ValutazioneDAO.java,6\8\6892866e36eed47693dead7a2ac1ed8a0708da2f
+U
+%src/database/UtenteRegistratoDAO.java,6\f\6faea8944048d0cf89b201a06cea8bb4206617c9
+Q
+!src/database/PrenotazioneDAO.java,9\c\9cc769eda15f1a4180d287d0fe398e03c20c7406

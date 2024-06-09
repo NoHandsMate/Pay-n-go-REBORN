@@ -1,5 +1,8 @@
 package database;
 
+import exceptions.DatabaseException;
+
+import javax.xml.stream.FactoryConfigurationError;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -31,14 +34,14 @@ public class ViaggioDAO {
 
     /* TODO: E se non troviamo la prenotazione? Va creata l'eccezione custom apposita oppure sfruttiamo sempre il
         paradigma costruttore vuoto -> caricaDaDB(id) */
-    public ViaggioDAO(int id) {
-        boolean res = caricaDaDB(id);
+    public ViaggioDAO(int id) throws DatabaseException {
+        if (!caricaDaDB(id))
+            throw new DatabaseException("Errore nella creazione di ViaggioDAO");
         this.id = id;
     }
 
     /**
      * Funzione per impostare tutti i parametri dell'oggetto ViaggioDAO dato e salvare tale istanza nel database.
-     * @param id l'identificativo del viaggio.
      * @param luogoPartenza il luogo di partenza del viaggio.
      * @param luogoDestinazione il luogo di destinazione del viaggio.
      * @param dataPartenza la data di partenza del viaggio.
@@ -48,8 +51,10 @@ public class ViaggioDAO {
      * @return true in vaso di successo (in tal caso l'oggetto sarà stato valorizzato con i parametri dati), false
      * altrimenti (l'oggetto non sarà valorizzato).
      */
-    public boolean createViaggio(long id, String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
+    public boolean createViaggio(String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
                                  LocalDateTime dataArrivo, float contributoSpese, int idAutista) {
+
+
         boolean res = salvaInDB(id, luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese,
                 idAutista);
 
@@ -93,7 +98,7 @@ public class ViaggioDAO {
                 this.idAutista = rs.getLong("autista");
             }
             if (this.luogoPartenza == null && this.luogoDestinazione == null && this.dataPartenza == null &&
-                    this.dataArrivo == null && this.contributoSpese == 0f & this.idAutista == 0) {
+                    this.dataArrivo == null && this.contributoSpese == 0f && this.idAutista == 0) {
                 return false;
             }
         } catch (ClassNotFoundException | SQLException e) {
@@ -102,6 +107,40 @@ public class ViaggioDAO {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Funzione privata per cercare uno specifico viaggio nel database.
+     * @param luogoPartenza il luogo di partenza del viaggio.
+     * @param luogoDestinazione il luogo di destinazione del viaggio.
+     * @param dataPartenza la data di partenza del viaggio.
+     * @param dataArrivo la data di arrivo del viaggio.
+     * @param contributoSpese il contributo spese per la prenotazione del viaggio.
+     * @param idAutista l'identificativo dell'autista.
+     * @return l'id del viaggio (positivo) in caso di viaggio trovato, 0 in caso di viaggio non trovato, -1 altrimenti.
+     */
+    private long cercaInDB(String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
+                          LocalDateTime dataArrivo, float contributoSpese, int idAutista) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String dataPartenzaS = dataPartenza.format(dateTimeFormatter);
+        String dataArrivoS = dataArrivo.format(dateTimeFormatter);
+        String query = String.format("SELECT * FROM viaggi WHERE (luogoPartenza = '%s' AND luogoDestinazione = '%s' " +
+                "AND dataPartenza = '%s' AND dataArrivo = '%s' AND contributoSpese = %f AND autista = %d);",
+                luogoPartenza, luogoDestinazione, dataPartenzaS, dataArrivoS, contributoSpese, idAutista);
+        logger.info(query);
+        long idViaggio = -1;
+        try {
+            ResultSet rs = DBManager.selectQuery(query);
+            if (!rs.next())
+                return 0;
+            idViaggio = rs.getLong("idViaggio");
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.info(String.format("Errore nella ricerca del viaggio ['%s', '%s', '%s', '%s', %f, %d] nel " +
+                            "database%n%s", luogoDestinazione, luogoDestinazione, dataPartenzaS, dataArrivoS,
+                            contributoSpese, idAutista, e.getMessage()));
+            return -1;
+        }
+        return idViaggio;
     }
 
     /**

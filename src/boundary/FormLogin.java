@@ -22,7 +22,9 @@ public class FormLogin extends JFrame {
         loginButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.exit(0);
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.setVisible(true);
+                setVisible(false);
             }
         });
     }
