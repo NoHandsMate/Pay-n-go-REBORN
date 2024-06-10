@@ -85,7 +85,7 @@ public class ValutazioneDAO {
                 return false;
             }
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante il caricamento dal database di una valutazione con id %d.\n%s",
+            logger.info(String.format("Errore durante il caricamento dal database di una valutazione con id %d.%n%s",
                     id, e.getMessage()));
             return false;
         }
@@ -126,13 +126,13 @@ public class ValutazioneDAO {
      */
     private int salvaInDB(int numeroStelle, String descrizione, long idUtente) throws DatabaseException{
         String query = String.format("INSERT INTO valutazioni (numeroStelle, descrizione, idUtente) VALUES " +
-                "(%d, %s, %d);",numeroStelle, descrizione, idUtente);
+                "(%d, '%s', %d);",numeroStelle, descrizione, idUtente);
         logger.info(query);
         int rs;
         try {
             rs = DBManager.getInstance().executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
-            logger.warning(String.format("Errore durante l'inserimento della valutazione [%d, %s,%d] nel database.%n%s",
+            logger.warning(String.format("Errore durante l'inserimento della valutazione [%d, '%s' ,%d] nel database.%n%s",
                     numeroStelle, descrizione, idUtente, e.getMessage()));
             throw new DatabaseException("Errore nel salvataggio della prenotazione nel database.");
         }
@@ -150,7 +150,7 @@ public class ValutazioneDAO {
         try {
             rs = DBManager.getInstance().executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
-            logger.warning(String.format("Errore durante l'eliminazione della valutazione [%d, %s, %d] dal database.%n%s",
+            logger.warning(String.format("Errore durante l'eliminazione della valutazione [%d, '%s', %d] dal database.%n%s",
                     this.numeroStelle, this.descrizione, this.idUtente, e.getMessage()));
             throw new DatabaseException("Errore nell'eliminazione della valutazione dal database.");
         }

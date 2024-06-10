@@ -72,6 +72,44 @@ public class UtenteRegistratoDAO {
     }
 
     /**
+     * Funzione per aggiornare i dati relativi ad un utente registrato dal database.
+     * @param nome il nome dell'utente registrato.
+     * @param cognome il cognome dell'utente registrato.
+     * @param contattoTelefonico il contatto telefonico dell'utente registrato.
+     * @param email l'email dell'utente registrato.
+     * @param automobile l'automobile dell'utente registrato.
+     * @param postiDisponibili il numero di posti disponibili nell'automobile dell'utente registrato.
+     * @param password la password (bcrypt) dell'utente registrato.
+     * @return il numero di righe modificate nel database.
+     * @throws DatabaseException se non è stato possibile aggiornare l'utente registrato dal database.
+     */
+
+    public int updateUtenteRegistrato(String nome,
+                                       String cognome,
+                                       String contattoTelefonico,
+                                       String email,
+                                       String automobile,
+                                       int postiDisponibili,
+                                       String password) throws DatabaseException {
+        String query = String.format("UPDATE utentiregistrati SET (nome = '%s', cognome = '%s', " +
+                        "contattoTelefonico = '%s', email = '%s', automobile = '%s', postiDisponibili = %d, " +
+                        "password = '%s') WHERE (idUtenteRegistrato = %d);", nome, cognome, contattoTelefonico, email,
+                        automobile, postiDisponibili, password,this.idUtenteRegistrato);
+        logger.info(query);
+        int rs;
+        try {
+            rs = DBManager.getInstance().executeQuery(query);
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.warning(String.format("Errore durante l'aggiornamento dell'utente registrato " +
+                            "['%s', '%s', '%s', '%s', '%s', %d, '%s'] nel database.%n%s", nome, cognome,
+                    contattoTelefonico, email, automobile, postiDisponibili, password, e.getMessage()));
+            throw new DatabaseException("Errore nell'aggiornamento dell'utente registrato nel database.");
+        }
+        return rs;
+
+    }
+
+    /**
      * Funzione per eliminare un utente registrato dal database.
      * @throws DatabaseException se non è stato possibile eliminare l'utente registrato dal database.
      */
