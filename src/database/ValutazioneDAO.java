@@ -1,12 +1,14 @@
 package database;
 
+import exceptions.DatabaseException;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
 public class ValutazioneDAO {
 
-    private long id;
+    private long idValutazione;
     private int numeroStelle;
     private String descrizione;
     private long idUtente;
@@ -22,32 +24,33 @@ public class ValutazioneDAO {
     /**
      * Costruttore di ValutazioneDAO che popola l'istanza in base all'id fornito con i dati già memorizzati nel
      * database.
-     * @param id l'identificativo della prenotazione.
+     * @param idValutazione l'identificativo della valutazione.
      */
 
-    /* TODO: E se non troviamo la prenotazione? Va creata l'eccezione custom apposita oppure sfruttiamo sempre il
-        paradigma costruttore vuoto -> caricaDaDB(id) */
-    public ValutazioneDAO(int id) {
-        boolean res = caricaDaDB(id);
-        this.id = id;
+
+    public ValutazioneDAO(int idValutazione) throws DatabaseException {
+        if (!caricaDaDB(idValutazione))
+            throw new DatabaseException("Errore nella creazione di PrenotazioneDAO.");
+        this.idValutazione = idValutazione;
     }
 
     /**
      * Funzione per impostare tutti i parametri dell'oggetto ValutazioneDAO dato e salvare tale istanza nel database.
-     * @param id l'identificativo della valutazione.
      * @param numeroStelle il numero di stelle della valutazione.
      * @param descrizione la descrizione della valutazione.
      * @param idUtente l'identificativo dell'utente valutato.
      * @return true in vaso di successo (in tal caso l'oggetto sarà stato valorizzato con i parametri dati), false
      * altrimenti (l'oggetto non sarà valorizzato).
+     * @throws DatabaseException se si è verificato un errore nella creazione dell'oggetto ValutazioneDAO.
      */
-    public boolean createValutazione(long id, int numeroStelle, String descrizione, long idUtente) {
-        boolean res = salvaInDB(id, numeroStelle, descrizione, idUtente);
+    public boolean createValutazione(int numeroStelle, String descrizione, long idUtente) throws DatabaseException{
 
-        if (!res)
-            return false;
+        if (cercaInDB(numeroStelle, descrizione,idUtente) != 0)
+            throw new DatabaseException("Esiste già una valutazione identica nel database.");
+        if (salvaInDB(numeroStelle, descrizione,idUtente) == 0)
+            throw new DatabaseException("Non è stata aggiunta alcuna valutazione al database.");
 
-        this.id = id;
+        this.idValutazione = cercaInDB(numeroStelle,descrizione,idUtente);
         this.numeroStelle = numeroStelle;
         this.descrizione = descrizione;
         this.idUtente = idUtente;
@@ -56,12 +59,12 @@ public class ValutazioneDAO {
 
     /**
      * Funzione per eliminare una valutazione dal database.
-     * @return true in caso di successo, false altrimenti.
+     * @throws DatabaseException se non è stato possibile eliminare la prenotazione dal database.
      */
-    public boolean deleteValutazione() {
-        return this.eliminaDaDB();
+    public void deletePrenotazione() throws DatabaseException{
+        if (this.eliminaDaDB() == 0)
+            throw new DatabaseException("Non è stata trovata una valutazione corrispondente nel database.");
     }
-
     /**
      * Funzione privata per caricare i dati di una valutazione dal database.
      * @param id l'identificativo della valutazione.
@@ -72,7 +75,7 @@ public class ValutazioneDAO {
         logger.info(query);
         try {
             /* TODO: debug di ResultSet */
-            ResultSet rs = DBManager.selectQuery(query);
+            ResultSet rs = DBManager.getInstance().selectQuery(query);
             while (rs.next()) {
                 this.numeroStelle = rs.getInt("numeroStelle");
                 this.descrizione = rs.getString("descrizione");
@@ -82,51 +85,75 @@ public class ValutazioneDAO {
                 return false;
             }
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante il caricamento dal database di una valutazione con id %d.\n%s",
+            logger.info(String.format("Errore durante il caricamento dal database di una valutazione con id %d.%n%s",
                     id, e.getMessage()));
             return false;
         }
         return true;
     }
+    /**
+     * Funzione privata per cercare una specifico valutazione nel database.
+     * @param numeroStelle il numero di stelle relative alla valutazione
+     * @param descrizione il contenuto della valutazione
+     * @return l'id della valutazione (positivo) in caso di valutazione trovata, 0 in caso di valutazione non trovato.
+     * @throws DatabaseException se si è verificato un errore nella ricerca della valutazione nel database.
+     */
+
+    private long cercaInDB(int numeroStelle, String descrizione, long idUtente)
+            throws DatabaseException {
+        String query = String.format("SELECT * FROM valutazioni WHERE (idValutazione = %d AND numeroStelle = %d " +
+                        "AND descrizione = %d AND idUtente = %d);",numeroStelle, descrizione, idUtente);
+        logger.info(query);
+        long newIdValutazione;
+        try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
+            if (!rs.next())
+                return 0;
+            newIdValutazione = rs.getLong("idValutazione");
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.warning(String.format("Errore nella ricerca della valutazione [%d, %d] nel database.%n%s",
+                    numeroStelle, descrizione, idUtente, e.getMessage()));
+            throw new DatabaseException("Errore nella ricerca di una prenotazione nel database.");
+        }
+        return newIdValutazione;
+    }
 
     /**
      * Funzione privata per salvare i dati di una valutazione nel database.
-     * @param id l'identificativo della valutazione.
      * @param numeroStelle il numero di stelle della valutazione.
      * @param descrizione la descrizione della valutazione.
      * @param idUtente l'identificativo dell'utente valutato.
      * @return true in caso di successo, false altrimenti.
      */
-    private boolean salvaInDB(long id, int numeroStelle, String descrizione, long idUtente) {
-        String query = String.format("INSERT INTO valutazioni (idValutazioni, passeggero, viaggioPrenotato) VALUES " +
-                "(%d, %d, '%s', %d);", id, numeroStelle, descrizione, idUtente);
+    private int salvaInDB(int numeroStelle, String descrizione, long idUtente) throws DatabaseException{
+        String query = String.format("INSERT INTO valutazioni (numeroStelle, descrizione, idUtente) VALUES " +
+                "(%d, '%s', %d);",numeroStelle, descrizione, idUtente);
         logger.info(query);
+        int rs;
         try {
-            /* TODO: questo int rs, dato che non lo usiamo è inutile (?) Ci sono modi per usarli. */
-            int rs = DBManager.executeQuery(query);
+            rs = DBManager.getInstance().executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante l'inserimento della valutazione [%d, %d, '%s', %d] nel " +
-                            "database.\n%s", id, numeroStelle, descrizione, idUtente, e.getMessage()));
-            return false;
+            logger.warning(String.format("Errore durante l'inserimento della valutazione [%d, '%s' ,%d] nel database.%n%s",
+                    numeroStelle, descrizione, idUtente, e.getMessage()));
+            throw new DatabaseException("Errore nel salvataggio della prenotazione nel database.");
         }
-        return true;
+        return rs;
     }
 
     /**
      * Funzione privata per eliminare una valutazione dal database.
      * @return true in caso di successo, false altrimenti.
      */
-    private boolean eliminaDaDB() {
-        String query = String.format("DELETE FROM valutazioni WHERE (idValutazioni = %d);", this.id);
+    private int eliminaDaDB() throws DatabaseException {
+        String query = String.format("DELETE FROM valutazioni WHERE (idValutazioni = %d);", this.idValutazione);
         logger.info(query);
+        int rs;
         try {
-            /* TODO: questo int rs, dato che non lo usiamo è inutile (?) Ci sono modi per usarli. */
-            int rs = DBManager.executeQuery(query);
+            rs = DBManager.getInstance().executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante l'eliminazione della valutazione [%d, %d, '%s', %d] " +
-                    "dal database.\n%s", this.id, this.numeroStelle, this.descrizione, this.idUtente, e.getMessage()));
-            return false;
+            logger.warning(String.format("Errore durante l'eliminazione della valutazione [%d, '%s', %d] dal database.%n%s",
+                    this.numeroStelle, this.descrizione, this.idUtente, e.getMessage()));
+            throw new DatabaseException("Errore nell'eliminazione della valutazione dal database.");
         }
-        return true;
+        return rs;
     }
 }

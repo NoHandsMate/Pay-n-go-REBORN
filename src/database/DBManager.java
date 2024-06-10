@@ -1,5 +1,7 @@
 package database;
 
+import entity.FacadeEntityUtente;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -15,10 +17,19 @@ public class DBManager {
     public static final String userName = "admin";
     public static final String password = "payngo";
 
+    private static DBManager uniqueInstance;
+
     /**
      * Costruttore privato per non permettere la creazione erronea di un'istanza dall'esterno.
       */
     private DBManager() {}
+
+    public static DBManager getInstance() {
+        if (uniqueInstance == null) {
+            uniqueInstance = new DBManager();
+        }
+        return uniqueInstance;
+    }
 
     /**
      * Metodo per ottenere una nuova connessione al Database.
@@ -26,7 +37,9 @@ public class DBManager {
      * @throws ClassNotFoundException se la classe non viene trovata.
      * @throws SQLException in caso di errore nella chiusura della connessione.
      */
-    public static Connection getConnection() throws ClassNotFoundException, SQLException {
+
+
+    public Connection getConnection() throws ClassNotFoundException, SQLException {
         Connection conn = null;
         Class.forName(driver);
         conn = DriverManager.getConnection(url+dbName,userName,password);
@@ -39,7 +52,7 @@ public class DBManager {
       * @param c connessione al database.
      * @throws SQLException in caso di errore nella chiusura della connessione.
      */
-    public static void closeConnection(Connection c) throws SQLException {
+    public void closeConnection(Connection c) throws SQLException {
         c.close();
     }
 
@@ -50,7 +63,7 @@ public class DBManager {
      * @throws ClassNotFoundException se la classe non viene trovata.
      * @throws SQLException in caso di errore nell'esecuzione della query.
      */
-    public static int executeQuery(String query) throws ClassNotFoundException, SQLException {
+    public int executeQuery(String query) throws ClassNotFoundException, SQLException {
         Connection conn = getConnection();
         Statement statement = conn.createStatement();
         int ret = statement.executeUpdate(query);
@@ -66,28 +79,11 @@ public class DBManager {
      * @throws ClassNotFoundException se la classe non viene trovata.
      * @throws SQLException in caso di errore nell'esecuzione della query.
      */
-    public static ResultSet selectQuery(String query) throws ClassNotFoundException, SQLException {
+    public ResultSet selectQuery(String query) throws ClassNotFoundException, SQLException {
         Connection conn = getConnection();
         Statement statement = conn.createStatement();
         ResultSet result = statement.executeQuery(query);
 
         return result;
     }
-
-    /*
-    public static Integer updateQueryReturnGeneratedKey(String query) throws ClassNotFoundException, SQLException {
-        Integer result = null;
-        Connection conn = getConnection();
-        Statement statement = conn.createStatement();
-        statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
-
-        ResultSet rs = statement.getGeneratedKeys();
-        if (rs.next()){
-            result = rs.getInt(1);
-        }
-
-        conn.close();
-        return result;
-    }
-    */
 }
