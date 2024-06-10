@@ -29,13 +29,13 @@ public class ViaggioDAO {
 
     /**
      * Costruttore di ViaggioDAO che popola l'istanza in base all'id fornito con i dati già memorizzati nel database.
-     * @param id l'identificativo della prenotazione.
+     * @param idViaggio l'identificativo della prenotazione.
      * @throws DatabaseException se non è stato possibile creare un'istanza di ViaggioDAO.
      */
-    public ViaggioDAO(int id) throws DatabaseException {
-        if (!caricaDaDB(id))
+    public ViaggioDAO(int idViaggio) throws DatabaseException {
+        if (!caricaDaDB(idViaggio))
             throw new DatabaseException("Errore nella creazione di ViaggioDAO.");
-        this.idViaggio = id;
+        this.idViaggio = idViaggio;
     }
 
     /**
@@ -78,12 +78,12 @@ public class ViaggioDAO {
 
     /**
      * Funzione privata per caricare i dati di un viaggio dal database.
-     * @param id l'identificativo del viaggio.
+     * @param idViaggio l'identificativo del viaggio.
      * @return true in caso di successo, false altrimenti.
      * @throws DatabaseException se si è verificato un errore nel caricamento del viaggio dal database.
      */
-    private boolean caricaDaDB(long id) throws DatabaseException{
-        String query = String.format("SELECT * from viaggi WHERE (idViaggio = %d);", id);
+    private boolean caricaDaDB(long idViaggio) throws DatabaseException{
+        String query = String.format("SELECT * from viaggi WHERE (idViaggio = %d);", idViaggio);
         logger.info(query);
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)){
             while (rs.next()) {
@@ -100,7 +100,7 @@ public class ViaggioDAO {
             }
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante il caricamento dal database di un viaggio con id %d.%n%s",
-                    id, e.getMessage()));
+                    idViaggio, e.getMessage()));
             throw new DatabaseException("Errore nel caricamento di un viaggio dal database.");
         }
         return true;
@@ -131,18 +131,18 @@ public class ViaggioDAO {
                 "AND dataPartenza = '%s' AND dataArrivo = '%s' AND contributoSpese LIKE %s AND autista = %d);",
                 luogoPartenza, luogoDestinazione, dataPartenzaS, dataArrivoS, contributoSpeseS, idAutista);
         logger.info(query);
-        long idViaggio;
+        long newIdViaggio;
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
             if (!rs.next())
                 return 0;
-            idViaggio = rs.getLong("idViaggio");
+            newIdViaggio = rs.getLong("idViaggio");
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore nella ricerca del viaggio ['%s', '%s', '%s', '%s', %s, %d] nel " +
                             "database.%n%s", luogoDestinazione, luogoDestinazione, dataPartenzaS, dataArrivoS,
                             contributoSpeseS, idAutista, e.getMessage()));
             throw new DatabaseException("Errore nella ricerca di un viaggio nel database.");
         }
-        return idViaggio;
+        return newIdViaggio;
     }
 
     /**

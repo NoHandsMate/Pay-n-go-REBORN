@@ -22,13 +22,13 @@ public class PrenotazioneDAO {
     /**
      * Costruttore di PrenotazioneDAO che popola l'istanza in base all'id fornito con i dati già memorizzati nel
      *      * database.
-     * @param id l'identificativo della prenotazione.
+     * @param idPrenotazione l'identificativo della prenotazione.
      * @throws DatabaseException se non è stato possibile creare un'istanza di PrenotazioneDAO.
      */
-    public PrenotazioneDAO(int id) throws DatabaseException {
-        if (!caricaDaDB(id))
+    public PrenotazioneDAO(int idPrenotazione) throws DatabaseException {
+        if (!caricaDaDB(idPrenotazione))
             throw new DatabaseException("Errore nella creazione di PrenotazioneDAO.");
-        this.idPrenotazione = id;
+        this.idPrenotazione = idPrenotazione;
     }
 
     /**
@@ -98,17 +98,17 @@ public class PrenotazioneDAO {
         String query = String.format("SELECT * FROM prenotazioni WHERE (passeggero = %d AND viaggioPrenotato = %d);",
                 idPasseggero, idViaggioPrenotato);
         logger.info(query);
-        long idPrenotazione;
+        long newIdPrenotazione;
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
             if (!rs.next())
                 return 0;
-            idPrenotazione = rs.getLong("idPrenotazione");
+            newIdPrenotazione = rs.getLong("idPrenotazione");
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore nella ricerca della prenotazione [%d, %d] nel database.%n%s",
                     idPasseggero, idViaggioPrenotato, e.getMessage()));
             throw new DatabaseException("Errore nella ricerca di una prenotazione nel database.");
         }
-        return idPrenotazione;
+        return newIdPrenotazione;
     }
 
     /**
