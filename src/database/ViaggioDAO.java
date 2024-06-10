@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 public class ViaggioDAO {
 
-    private long id;
+    private long idViaggio;
     private String luogoPartenza;
     private String luogoDestinazione;
     private LocalDateTime dataPartenza;
@@ -35,7 +35,7 @@ public class ViaggioDAO {
     public ViaggioDAO(int id) throws DatabaseException {
         if (!caricaDaDB(id))
             throw new DatabaseException("Errore nella creazione di ViaggioDAO.");
-        this.id = id;
+        this.idViaggio = id;
     }
 
     /**
@@ -46,11 +46,9 @@ public class ViaggioDAO {
      * @param dataArrivo la data di arrivo del viaggio.
      * @param contributoSpese il contributo spese per la prenotazione del viaggio.
      * @param idAutista l'identificativo dell'autista.
-     * @return true in vaso di successo (in tal caso l'oggetto sarà stato valorizzato con i parametri dati), false
-     * altrimenti (l'oggetto non sarà valorizzato).
      * @throws DatabaseException se si è verificato un errore nella creazione dell'oggetto ViaggioDAO.
      */
-    public boolean createViaggio(String luogoPartenza,
+    public void createViaggio(String luogoPartenza,
                                  String luogoDestinazione,
                                  LocalDateTime dataPartenza,
                                  LocalDateTime dataArrivo,
@@ -61,13 +59,12 @@ public class ViaggioDAO {
         if (salvaInDB(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese, idAutista) == 0)
             throw new DatabaseException("Non è stato aggiunto alcun viaggio al database.");
 
-        this.id = cercaInDB(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese, idAutista);
+        this.idViaggio = cercaInDB(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese, idAutista);
         this.luogoPartenza = luogoPartenza;
         this.luogoDestinazione = luogoDestinazione;
         this.dataPartenza = dataPartenza;
         this.dataArrivo = dataArrivo;
         this.idAutista = idAutista;
-        return true;
     }
 
     /**
@@ -191,7 +188,7 @@ public class ViaggioDAO {
      * @throws DatabaseException se non è stato possibile eliminare il viaggio dal database.
      */
     private int eliminaDaDB() throws  DatabaseException {
-        String query = String.format("DELETE FROM viaggi WHERE (idViaggio = %d);", this.id);
+        String query = String.format("DELETE FROM viaggi WHERE (idViaggio = %d);", this.idViaggio);
         logger.info(query);
         int rs;
         try {
@@ -202,7 +199,7 @@ public class ViaggioDAO {
             String dataArrivoS = this.dataArrivo.format(dateTimeFormatter);
             String contributoSpeseS = String.format("%.2f", this.contributoSpese).replace(",", ".");
             logger.warning(String.format("Errore durante l'eliminazione del viaggio [%d, '%s', '%s', '%s', '%s', %s, %d] " +
-                            "dal database.%n%s", this.id, this.luogoPartenza, this.luogoDestinazione, dataPartenzaS,
+                            "dal database.%n%s", this.idViaggio, this.luogoPartenza, this.luogoDestinazione, dataPartenzaS,
                             dataArrivoS, contributoSpeseS, this.idAutista, e.getMessage()));
             throw new DatabaseException("Errore nell'eliminazione del viaggio dal database.");
         }

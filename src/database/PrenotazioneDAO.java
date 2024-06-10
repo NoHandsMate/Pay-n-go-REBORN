@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class PrenotazioneDAO {
 
-    private long id;
+    private long idPrenotazione;
     private long idPasseggero;
     private long idViaggioPrenotato;
 
@@ -28,7 +28,7 @@ public class PrenotazioneDAO {
     public PrenotazioneDAO(int id) throws DatabaseException {
         if (!caricaDaDB(id))
             throw new DatabaseException("Errore nella creazione di PrenotazioneDAO.");
-        this.id = id;
+        this.idPrenotazione = id;
     }
 
     /**
@@ -46,7 +46,7 @@ public class PrenotazioneDAO {
         if (salvaInDB(idPasseggero, idViaggioPrenotato) == 0)
             throw new DatabaseException("Non è stata aggiunta alcuna prenotazione al database.");
 
-        this.id = cercaInDB(idPasseggero, idViaggioPrenotato);
+        this.idPrenotazione = cercaInDB(idPasseggero, idViaggioPrenotato);
         this.idPasseggero = idPasseggero;
         this.idViaggioPrenotato = idViaggioPrenotato;
         return true;
@@ -140,14 +140,14 @@ public class PrenotazioneDAO {
      * @throws DatabaseException se non è stato possibile eliminare la prenotazione dal database.
      */
     private int eliminaDaDB() throws DatabaseException {
-        String query = String.format("DELETE FROM prenotazioni WHERE (idPrenotazione = %d);", this.id);
+        String query = String.format("DELETE FROM prenotazioni WHERE (idPrenotazione = %d);", this.idPrenotazione);
         logger.info(query);
         int rs;
         try {
             rs = DBManager.executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante l'eliminazione della prenotazione [%d, %d, %d] dal database.%n%s",
-                    this.id, this.idPasseggero, this.idViaggioPrenotato, e.getMessage()));
+                    this.idPrenotazione, this.idPasseggero, this.idViaggioPrenotato, e.getMessage()));
             throw new DatabaseException("Errore nell'eliminazione della prenotazione dal database.");
         }
         return rs;

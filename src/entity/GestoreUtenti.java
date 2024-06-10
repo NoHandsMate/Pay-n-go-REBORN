@@ -7,23 +7,23 @@ import java.util.Arrays;
 
 public class GestoreUtenti {
 
-    private GestoreUtenti uniqueIstance;
+    private static GestoreUtenti uniqueInstance;
 
     private GestoreUtenti() {}
 
-    public GestoreUtenti getIstance() {
-        if (uniqueIstance == null) {
-            uniqueIstance = new GestoreUtenti();
+    public static GestoreUtenti getInstance() {
+        if (uniqueInstance == null) {
+            uniqueInstance = new GestoreUtenti();
         }
-        return uniqueIstance;
+        return uniqueInstance;
     }
 
-    public static void registraUtente(String nome, String cognome, String email,
+    public void registraUtente(String nome, String cognome, String email,
                                String auto, char[] password, Integer postiDisp,
                                String telefono) throws RegistrationFailedException {
 
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
-        boolean res = utenteDAO.createUtenteRegistrato(nome, cognome, telefono, email, auto,
+         boolean res = utenteDAO.createUtenteRegistrato(nome, cognome, telefono, email, auto,
                                                        postiDisp, Arrays.toString(password));
 
         if (!res)

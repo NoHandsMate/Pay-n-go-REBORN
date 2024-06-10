@@ -20,12 +20,13 @@ public class ControllerUtente {
     }
 
 
-    public static AbstractMap.SimpleEntry<Boolean, String> registraUtente(String nome, String cognome, String email,
+    public AbstractMap.SimpleEntry<Boolean, String> registraUtente(String nome, String cognome, String email,
                                                                           String auto, char[] password, Integer postiDisp,
                                                                           String telefono) {
 
         try {
-            FacadeEntityUtente.registraUtente(nome, cognome, email, auto, password, postiDisp, telefono);
+
+            FacadeEntityUtente.getInstance().registraUtente(nome, cognome, email, auto, password, postiDisp, telefono);
         } catch (RegistrationFailedException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }

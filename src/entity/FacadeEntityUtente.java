@@ -17,10 +17,11 @@ public class FacadeEntityUtente {
         return uniqueInstance;
     }
 
-    public static void registraUtente(String nome, String cognome, String email, String auto, char[] password,
+
+    public void registraUtente(String nome, String cognome, String email, String auto, char[] password,
                                       Integer postiDisp, String telefono) throws RegistrationFailedException {
 
-        GestoreUtenti.registraUtente(nome, cognome, email, auto, password, postiDisp, telefono);
+        GestoreUtenti.getInstance().registraUtente(nome, cognome, email, auto, password, postiDisp, telefono);
     }
 
 }

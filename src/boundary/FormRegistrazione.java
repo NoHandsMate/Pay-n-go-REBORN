@@ -34,10 +34,11 @@ public class FormRegistrazione extends JFrame {
           } else {
               /*TODO: Chiama il metodo registraUtente del controller*/
 
-              result = ControllerUtente.registraUtente(nomeField.getText(), cognomeField.getText(),
-                                                       emailField.getText(), autoField.getText(),
-                                                       passwordField.getPassword(), (Integer)postiSpinner.getValue(),
-                                                       telefonoField.getText());
+
+              result = ControllerUtente.getInstance().registraUtente(nomeField.getText(), cognomeField.getText(),
+                      emailField.getText(), autoField.getText(),
+                      passwordField.getPassword(), (Integer) postiSpinner.getValue(),
+                      telefonoField.getText());
 
               if (!result.getKey()) {
                   JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
