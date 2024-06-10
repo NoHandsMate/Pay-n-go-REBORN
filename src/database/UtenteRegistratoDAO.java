@@ -90,7 +90,7 @@ public class UtenteRegistratoDAO {
         String query = String.format("SELECT * from utentiregistrati WHERE (idUtenteRegistrato = %d);",
                 idUtenteRegistrato);
         logger.info(query);
-        try (ResultSet rs = DBManager.selectQuery(query)) {
+        try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
             while (rs.next()) {
                 this.nome = rs.getString("nome");
                 this.cognome = rs.getString("cognome");
@@ -122,7 +122,7 @@ public class UtenteRegistratoDAO {
         String query = String.format("SELECT * FROM utentiregistrati WHERE (email = '%s');", email);
         logger.info(query);
         long newIdUtenteRegistrato;
-        try (ResultSet rs = DBManager.selectQuery(query)) {
+        try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
             if (!rs.next())
                 return 0;
             newIdUtenteRegistrato = rs.getLong("idUtenteRegistrato");
@@ -162,7 +162,7 @@ public class UtenteRegistratoDAO {
         logger.info(query);
         int rs;
         try {
-            rs = DBManager.executeQuery(query);
+            rs = DBManager.getInstance().executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante l'inserimento dell'utente registrato " +
                             "['%s', '%s', '%s', '%s', '%s', %d, '%s'] nel database.%n%s", nome, cognome,
@@ -182,7 +182,7 @@ public class UtenteRegistratoDAO {
         logger.info(query);
         int rs;
         try {
-            rs = DBManager.executeQuery(query);
+            rs = DBManager.getInstance().executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
             if (this.automobile != null || this.postiDisponibili != 0) {
                 logger.info(String.format("Errore durante l'eliminazione dell'utente registrato " +

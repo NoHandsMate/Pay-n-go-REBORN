@@ -70,7 +70,7 @@ public class PrenotazioneDAO {
     private boolean caricaDaDB(long id) throws DatabaseException {
         String query = String.format("SELECT * from prenotazioni WHERE (idPrenotazione = %d);", id);
         logger.info(query);
-        try (ResultSet rs = DBManager.selectQuery(query)){
+        try (ResultSet rs = DBManager.getInstance().selectQuery(query)){
             while (rs.next()) {
                 this.idPasseggero = rs.getLong("passeggero");
                 this.idViaggioPrenotato = rs.getLong("viaggioPrenotato");
@@ -87,7 +87,7 @@ public class PrenotazioneDAO {
     }
 
     /**
-     * Funzione privata per cercare una specifico prenotazione nel database.
+     * Funzione privata per cercare una specifica prenotazione nel database.
      * @param idPasseggero l'identificativo dell'utente passeggero.
      * @param idViaggioPrenotato l'identificativo del viaggio prenotato.
      * @return l'id della prenotazione (positivo) in caso di viaggio trovato, 0 in caso di viaggio non trovato.
@@ -99,7 +99,7 @@ public class PrenotazioneDAO {
                 idPasseggero, idViaggioPrenotato);
         logger.info(query);
         long idPrenotazione;
-        try (ResultSet rs = DBManager.selectQuery(query)) {
+        try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
             if (!rs.next())
                 return 0;
             idPrenotazione = rs.getLong("idPrenotazione");
@@ -125,7 +125,7 @@ public class PrenotazioneDAO {
         logger.info(query);
         int rs;
         try {
-            rs = DBManager.executeQuery(query);
+            rs = DBManager.getInstance().executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante l'inserimento della prenotazione [%d, %d] nel database.%n%s",
                     idPasseggero, idViaggioPrenotato, e.getMessage()));
@@ -144,7 +144,7 @@ public class PrenotazioneDAO {
         logger.info(query);
         int rs;
         try {
-            rs = DBManager.executeQuery(query);
+            rs = DBManager.getInstance().executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante l'eliminazione della prenotazione [%d, %d, %d] dal database.%n%s",
                     this.idPrenotazione, this.idPasseggero, this.idViaggioPrenotato, e.getMessage()));
