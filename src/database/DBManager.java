@@ -70,7 +70,6 @@ public class DBManager {
         Connection conn = getConnection();
         Statement statement = conn.createStatement();
         ResultSet result = statement.executeQuery(query);
-        conn.close();
 
         return result;
     }

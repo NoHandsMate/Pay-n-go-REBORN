@@ -3,6 +3,8 @@ package entity;
 import exceptions.RegistrationFailedException;
 import database.UtenteRegistratoDAO;
 
+import java.util.Arrays;
+
 public class GestoreUtenti {
 
     private GestoreUtenti uniqueIstance;
@@ -22,7 +24,7 @@ public class GestoreUtenti {
 
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         boolean res = utenteDAO.createUtenteRegistrato(nome, cognome, telefono, email, auto,
-                                                       postiDisp, password.toString());
+                                                       postiDisp, Arrays.toString(password));
 
         if (!res)
             throw new RegistrationFailedException("Registrazione Utente fallita");

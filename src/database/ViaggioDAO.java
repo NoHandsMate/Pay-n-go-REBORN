@@ -2,7 +2,6 @@ package database;
 
 import exceptions.DatabaseException;
 
-import javax.xml.stream.FactoryConfigurationError;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -19,7 +18,8 @@ public class ViaggioDAO {
     private float contributoSpese;
     private long idAutista;
 
-    /* TODO: rimuovi logging delle query eseguite dopo il testing. */
+    private static final String DATETIMEFORMAT = "yyyy-MM-dd HH:mm:ss";
+
     private final Logger logger = Logger.getLogger("loggerViaggioDAO");
 
     /**
@@ -30,13 +30,11 @@ public class ViaggioDAO {
     /**
      * Costruttore di ViaggioDAO che popola l'istanza in base all'id fornito con i dati già memorizzati nel database.
      * @param id l'identificativo della prenotazione.
+     * @throws DatabaseException se non è stato possibile creare un'istanza di ViaggioDAO.
      */
-
-    /* TODO: E se non troviamo la prenotazione? Va creata l'eccezione custom apposita oppure sfruttiamo sempre il
-        paradigma costruttore vuoto -> caricaDaDB(id) */
     public ViaggioDAO(int id) throws DatabaseException {
         if (!caricaDaDB(id))
-            throw new DatabaseException("Errore nella creazione di ViaggioDAO");
+            throw new DatabaseException("Errore nella creazione di ViaggioDAO.");
         this.id = id;
     }
 
@@ -50,18 +48,20 @@ public class ViaggioDAO {
      * @param idAutista l'identificativo dell'autista.
      * @return true in vaso di successo (in tal caso l'oggetto sarà stato valorizzato con i parametri dati), false
      * altrimenti (l'oggetto non sarà valorizzato).
+     * @throws DatabaseException se si è verificato un errore nella creazione dell'oggetto ViaggioDAO.
      */
-    public boolean createViaggio(String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
-                                 LocalDateTime dataArrivo, float contributoSpese, int idAutista) {
+    public boolean createViaggio(String luogoPartenza,
+                                 String luogoDestinazione,
+                                 LocalDateTime dataPartenza,
+                                 LocalDateTime dataArrivo,
+                                 float contributoSpese,
+                                 int idAutista) throws DatabaseException {
+        if (cercaInDB(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese, idAutista) != 0)
+            throw new DatabaseException("Esiste già un viaggio identico nel database.");
+        if (salvaInDB(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese, idAutista) == 0)
+            throw new DatabaseException("Non è stato aggiunto alcun viaggio al database.");
 
-
-        boolean res = salvaInDB(id, luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese,
-                idAutista);
-
-        if (!res)
-            return false;
-
-        this.id = id;
+        this.id = cercaInDB(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese, idAutista);
         this.luogoPartenza = luogoPartenza;
         this.luogoDestinazione = luogoDestinazione;
         this.dataPartenza = dataPartenza;
@@ -72,23 +72,23 @@ public class ViaggioDAO {
 
     /**
      * Funzione per eliminare un viaggio dal database.
-     * @return true in caso di successo, false altrimenti.
+     * @throws DatabaseException se non è stato possibile eliminare il viaggio dal database.
      */
-    public boolean deleteViaggio() {
-        return this.eliminaDaDB();
+    public void deleteViaggio() throws DatabaseException {
+        if (this.eliminaDaDB() == 0)
+            throw new DatabaseException("Non è stato trovato un viaggio corrispondente nel database.");
     }
 
     /**
      * Funzione privata per caricare i dati di un viaggio dal database.
      * @param id l'identificativo del viaggio.
      * @return true in caso di successo, false altrimenti.
+     * @throws DatabaseException se si è verificato un errore nel caricamento del viaggio dal database.
      */
-    private boolean caricaDaDB(long id) {
-        String query = String.format("SELECT * from viaggi WHERE (id = %d);", id);
+    private boolean caricaDaDB(long id) throws DatabaseException{
+        String query = String.format("SELECT * from viaggi WHERE (idViaggio = %d);", id);
         logger.info(query);
-        try {
-            /* TODO: debug di ResultSet */
-            ResultSet rs = DBManager.selectQuery(query);
+        try (ResultSet rs = DBManager.selectQuery(query)){
             while (rs.next()) {
                 this.luogoPartenza = rs.getString("luogoPartenza");
                 this.luogoDestinazione = rs.getString("luogoDestinazione");
@@ -102,9 +102,9 @@ public class ViaggioDAO {
                 return false;
             }
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante il caricamento dal database di un viaggio con id %d.%n%s",
+            logger.warning(String.format("Errore durante il caricamento dal database di un viaggio con id %d.%n%s",
                     id, e.getMessage()));
-            return false;
+            throw new DatabaseException("Errore nel caricamento di un viaggio dal database.");
         }
         return true;
     }
@@ -117,84 +117,96 @@ public class ViaggioDAO {
      * @param dataArrivo la data di arrivo del viaggio.
      * @param contributoSpese il contributo spese per la prenotazione del viaggio.
      * @param idAutista l'identificativo dell'autista.
-     * @return l'id del viaggio (positivo) in caso di viaggio trovato, 0 in caso di viaggio non trovato, -1 altrimenti.
+     * @return l'id del viaggio (positivo) in caso di viaggio trovato, 0 in caso di viaggio non trovato.
+     * @throws DatabaseException se si è verificato un errore nella ricerca del viaggio nel database.
      */
-    private long cercaInDB(String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
-                          LocalDateTime dataArrivo, float contributoSpese, int idAutista) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private long cercaInDB(String luogoPartenza,
+                           String luogoDestinazione,
+                           LocalDateTime dataPartenza,
+                           LocalDateTime dataArrivo,
+                           float contributoSpese,
+                           int idAutista) throws DatabaseException {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATETIMEFORMAT);
         String dataPartenzaS = dataPartenza.format(dateTimeFormatter);
         String dataArrivoS = dataArrivo.format(dateTimeFormatter);
+        String contributoSpeseS = String.format("%.2f", contributoSpese).replace(",", ".");
         String query = String.format("SELECT * FROM viaggi WHERE (luogoPartenza = '%s' AND luogoDestinazione = '%s' " +
-                "AND dataPartenza = '%s' AND dataArrivo = '%s' AND contributoSpese = %f AND autista = %d);",
-                luogoPartenza, luogoDestinazione, dataPartenzaS, dataArrivoS, contributoSpese, idAutista);
+                "AND dataPartenza = '%s' AND dataArrivo = '%s' AND contributoSpese LIKE %s AND autista = %d);",
+                luogoPartenza, luogoDestinazione, dataPartenzaS, dataArrivoS, contributoSpeseS, idAutista);
         logger.info(query);
-        long idViaggio = -1;
-        try {
-            ResultSet rs = DBManager.selectQuery(query);
+        long idViaggio;
+        try (ResultSet rs = DBManager.selectQuery(query)) {
             if (!rs.next())
                 return 0;
             idViaggio = rs.getLong("idViaggio");
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore nella ricerca del viaggio ['%s', '%s', '%s', '%s', %f, %d] nel " +
-                            "database%n%s", luogoDestinazione, luogoDestinazione, dataPartenzaS, dataArrivoS,
-                            contributoSpese, idAutista, e.getMessage()));
-            return -1;
+            logger.warning(String.format("Errore nella ricerca del viaggio ['%s', '%s', '%s', '%s', %s, %d] nel " +
+                            "database.%n%s", luogoDestinazione, luogoDestinazione, dataPartenzaS, dataArrivoS,
+                            contributoSpeseS, idAutista, e.getMessage()));
+            throw new DatabaseException("Errore nella ricerca di un viaggio nel database.");
         }
         return idViaggio;
     }
 
     /**
      * Funzione privata per salvare i dati di un viaggio nel database.
-     * @param id l'identificativo del viaggio.
      * @param luogoPartenza il luogo di partenza del viaggio.
      * @param luogoDestinazione il luogo di destinazione del viaggio.
      * @param dataPartenza la data di partenza del viaggio.
      * @param dataArrivo la data di arrivo del viaggio.
      * @param contributoSpese il contributo spese per la prenotazione del viaggio.
      * @param idAutista l'identificativo dell'autista.
-     * @return true in caso di successo, false altrimenti.
+     * @return il numero di righe inserite nel database.
+     * @throws DatabaseException se non è stato possibile salvare il viaggio nel database.
      */
-    private boolean salvaInDB(long id, String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
-                              LocalDateTime dataArrivo, float contributoSpese, long idAutista) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private int salvaInDB(String luogoPartenza,
+                          String luogoDestinazione,
+                          LocalDateTime dataPartenza,
+                          LocalDateTime dataArrivo,
+                          float contributoSpese,
+                          long idAutista) throws DatabaseException{
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATETIMEFORMAT);
         String dataPartenzaS = dataPartenza.format(dateTimeFormatter);
         String dataArrivoS = dataArrivo.format(dateTimeFormatter);
-        String query = String.format("INSERT INTO viaggi (idViaggio, luogoPartenza, luogoDestinazione, dataPartenza, " +
-                "dataArrivo, contributoSpese, autista ) VALUES (%d, '%s', '%s', '%s', '%s', %f, %d);",
-                id, luogoPartenza, luogoDestinazione, dataPartenzaS, dataArrivoS, contributoSpese, idAutista);
+        String contributoSpeseS = String.format("%.2f", contributoSpese).replace(",", ".");
+        String query = String.format("INSERT INTO viaggi (luogoPartenza, luogoDestinazione, dataPartenza, " +
+                "dataArrivo, contributoSpese, autista) VALUES ('%s', '%s', '%s', '%s', %s, %d);", luogoPartenza,
+                luogoDestinazione, dataPartenzaS, dataArrivoS, contributoSpeseS, idAutista);
         logger.info(query);
+        int rs;
         try {
-            /* TODO: questo int rs, dato che non lo usiamo è inutile (?) Ci sono modi per usarli. */
-            int rs = DBManager.executeQuery(query);
+            rs = DBManager.executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante l'inserimento del viaggio [%d, '%s', '%s', '%s', '%s', %f, %d] " +
-                            "nel database.\n%s", id, luogoPartenza, luogoDestinazione, dataPartenzaS, dataArrivoS,
-                            contributoSpese, idAutista, e.getMessage()));
-            return false;
+            logger.warning(String.format("Errore durante l'inserimento del viaggio ['%s', '%s', '%s', '%s', %s, %d] " +
+                            "nel database.%n%s", luogoPartenza, luogoDestinazione, dataPartenzaS, dataArrivoS,
+                            contributoSpeseS, idAutista, e.getMessage()));
+            throw new DatabaseException("Errore nel salvataggio del viaggio nel database.");
         }
-        return true;
+        return rs;
     }
 
     /**
      * Funzione privata per eliminare un viaggio dal database.
-     * @return true in caso di successo, false altrimenti.
+     * @return il numero di righe eliminate dal database.
+     * @throws DatabaseException se non è stato possibile eliminare il viaggio dal database.
      */
-    private boolean eliminaDaDB() {
-        String query = String.format("DELETE FROM prenotazioni WHERE (idPrenotazione = %d);", this.id);
+    private int eliminaDaDB() throws  DatabaseException {
+        String query = String.format("DELETE FROM viaggi WHERE (idViaggio = %d);", this.id);
         logger.info(query);
+        int rs;
         try {
-            /* TODO: questo int rs, dato che non lo usiamo è inutile (?) Ci sono modi per usarli. */
-            int rs = DBManager.executeQuery(query);
+            rs = DBManager.executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATETIMEFORMAT);
             String dataPartenzaS = this.dataPartenza.format(dateTimeFormatter);
             String dataArrivoS = this.dataArrivo.format(dateTimeFormatter);
-            logger.info(String.format("Errore durante l'eliminazione del viaggio [%d, '%s', '%s', '%s', '%s', %f, %d] " +
-                            "dal database.\n%s", this.id, this.luogoPartenza, this.luogoDestinazione, dataPartenzaS,
-                            dataArrivoS, this.contributoSpese, this.idAutista, e.getMessage()));
-            return false;
+            String contributoSpeseS = String.format("%.2f", this.contributoSpese).replace(",", ".");
+            logger.warning(String.format("Errore durante l'eliminazione del viaggio [%d, '%s', '%s', '%s', '%s', %s, %d] " +
+                            "dal database.%n%s", this.id, this.luogoPartenza, this.luogoDestinazione, dataPartenzaS,
+                            dataArrivoS, contributoSpeseS, this.idAutista, e.getMessage()));
+            throw new DatabaseException("Errore nell'eliminazione del viaggio dal database.");
         }
-        return true;
+        return rs;
     }
 
 }

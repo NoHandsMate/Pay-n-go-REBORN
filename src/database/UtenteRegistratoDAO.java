@@ -51,7 +51,7 @@ public class UtenteRegistratoDAO {
      * @return true in vaso di successo (in tal caso l'oggetto sarà stato valorizzato con i parametri dati), false
      * altrimenti (l'oggetto non sarà valorizzato).
      */
-    public boolean createUtenteRegistrato(long id, String nome, String cognome, String contattoTelefonico, String email,
+    public boolean createUtenteRegistrato(String nome, String cognome, String contattoTelefonico, String email,
                                       String automobile, int postiDisponibili, String password) {
         boolean res = salvaInDB(id, nome, cognome, contattoTelefonico, email, automobile, postiDisponibili, password);
 

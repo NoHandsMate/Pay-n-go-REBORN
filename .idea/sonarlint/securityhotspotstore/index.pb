@@ -35,3 +35,11 @@ U
 %src/database/UtenteRegistratoDAO.java,6\f\6faea8944048d0cf89b201a06cea8bb4206617c9
 Q
 !src/database/PrenotazioneDAO.java,9\c\9cc769eda15f1a4180d287d0fe398e03c20c7406
+Q
+!src/control/ControllerUtente.java,8\7\875d83e46531a70456c609e9d7603f860ec6022b
+R
+"src/entity/FacadeEntityUtente.java,6\e\6e53ae71997ae0b066dba38143dbfeb1f464f0fb
+M
+src/entity/GestoreUtenti.java,c\2\c21748290c2fa7dc42d947abc09d9b0eadabea36
+K
+src/database/DBManager.java,a\9\a9db00ceceb394ec086e14711c60e305774b39fc
