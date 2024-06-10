@@ -1,13 +1,15 @@
 package database;
 
 
+import exceptions.DatabaseException;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
 public class UtenteRegistratoDAO {
 
-    private long id;
+    private long idUtenteRegistrato;
     private String nome;
     private String cognome;
     private String contattoTelefonico;
@@ -16,7 +18,6 @@ public class UtenteRegistratoDAO {
     private int postiDisponibili;
     private String password;
 
-    /* TODO: rimuovi logging delle query eseguite dopo il testing. */
     private final Logger logger = Logger.getLogger("loggerUtenteRegistratoDAO");
 
     /**
@@ -27,20 +28,18 @@ public class UtenteRegistratoDAO {
     /**
      * Costruttore di UtenteRegistratoDAO che popola l'istanza in base all'id fornito con i dati già memorizzati nel
      * database.
-     * @param id l'identificativo dell'utente registrato.
+     * @param idUtenteRegistrato l'identificativo dell'utente registrato.
+     * @throws DatabaseException se non è stato possibile creare un'istanza di UtenteRegistratoDAO.
      */
-
-    /* TODO: E se non troviamo la prenotazione? Va creata l'eccezione custom apposita oppure sfruttiamo sempre il
-        paradigma costruttore vuoto -> caricaDaDB(id) */
-    public UtenteRegistratoDAO(int id) {
-        boolean res = caricaDaDB(id);
-        this.id = id;
+    public UtenteRegistratoDAO(int idUtenteRegistrato) throws DatabaseException {
+        if (!caricaDaDB(idUtenteRegistrato))
+            throw new DatabaseException("Errore nella creazione di UtenteRegistratoDAO.");
+        this.idUtenteRegistrato = idUtenteRegistrato;
     }
 
     /**
      * Funzione per impostare tutti i parametri dell'oggetto UtenteRegistratoDAO dato e salvare tale istanza nel
      * database.
-     * @param id l'identificativo dell'utente registrato.
      * @param nome il nome dell'utente registrato.
      * @param cognome il cognome dell'utente registrato.
      * @param contattoTelefonico il contatto telefonico dell'utente registrato.
@@ -48,17 +47,21 @@ public class UtenteRegistratoDAO {
      * @param automobile l'automobile dell'utente registrato.
      * @param postiDisponibili il numero di posti disponibili nell'automobile dell'utente registrato.
      * @param password la password (bcrypt) dell'utente registrato.
-     * @return true in vaso di successo (in tal caso l'oggetto sarà stato valorizzato con i parametri dati), false
-     * altrimenti (l'oggetto non sarà valorizzato).
+     * @throws DatabaseException se si è verificato un errore nella creazione dell'oggetto UtenteRegistratoDAO.
      */
-    public boolean createUtenteRegistrato(String nome, String cognome, String contattoTelefonico, String email,
-                                      String automobile, int postiDisponibili, String password) {
-        boolean res = salvaInDB(id, nome, cognome, contattoTelefonico, email, automobile, postiDisponibili, password);
+    public void createUtenteRegistrato(String nome,
+                                       String cognome,
+                                       String contattoTelefonico,
+                                       String email,
+                                       String automobile,
+                                       int postiDisponibili,
+                                       String password) throws DatabaseException {
+        if (cercaInDB(email) != 0)
+            throw new DatabaseException("Esiste già un utente associato alla mail data nel database.");
+        if (salvaInDB(nome, cognome, contattoTelefonico, email, automobile, postiDisponibili, password) == 0)
+            throw new DatabaseException("Non è stato aggiunto alcun utente registrato al database.");
 
-        if (!res)
-            return false;
-
-        this.id = id;
+        this.idUtenteRegistrato = cercaInDB(email);
         this.nome = nome;
         this.cognome = cognome;
         this.contattoTelefonico = contattoTelefonico;
@@ -66,28 +69,28 @@ public class UtenteRegistratoDAO {
         this.automobile = automobile;
         this.postiDisponibili = postiDisponibili;
         this.password = password;
-        return true;
     }
 
     /**
      * Funzione per eliminare un utente registrato dal database.
-     * @return true in caso di successo, false altrimenti.
+     * @throws DatabaseException se non è stato possibile eliminare l'utente registrato dal database.
      */
-    public boolean deleteUtenteRegistrato() {
-        return this.eliminaDaDB();
+    public void deleteUtenteRegistrato() throws DatabaseException {
+        if (this.eliminaDaDB() == 0)
+            throw new DatabaseException("Non è stato trovato un utente registrato corrispondente nel database.");
     }
 
     /**
      * Funzione privata per caricare i dati di un utente registrato dal database.
-     * @param id l'identificativo dell'utente registrato.
+     * @param idUtenteRegistrato l'identificativo dell'utente registrato.
      * @return true in caso di successo, false altrimenti.
+     * @throws DatabaseException se si è verificato un errore nel caricamento dell'utente registrato dal database.
      */
-    private boolean caricaDaDB(long id) {
-        String query = String.format("SELECT * from utentiregistrati WHERE (id = %d);", id);
+    private boolean caricaDaDB(long idUtenteRegistrato) throws DatabaseException {
+        String query = String.format("SELECT * from utentiregistrati WHERE (idUtenteRegistrato = %d);",
+                idUtenteRegistrato);
         logger.info(query);
-        try {
-            /* TODO: debug di ResultSet */
-            ResultSet rs = DBManager.selectQuery(query);
+        try (ResultSet rs = DBManager.selectQuery(query)) {
             while (rs.next()) {
                 this.nome = rs.getString("nome");
                 this.cognome = rs.getString("cognome");
@@ -102,16 +105,37 @@ public class UtenteRegistratoDAO {
                 return false;
             }
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante il caricamento dal database di un utente registrato con id %d." +
-                            "%n%s", id, e.getMessage()));
-            return false;
+            logger.warning(String.format("Errore durante il caricamento dal database di un utente registrato con " +
+                    "idUtenteRegistrato %d.%n%s", idUtenteRegistrato, e.getMessage()));
+            throw new DatabaseException("Errore nel caricamento di un utente registrato dal database.");
         }
         return true;
     }
 
     /**
+     * Funzione privata per cercare uno specifico utente registrato nel database.
+     * @param email l'email associata all'utente registrato.
+     * @return l'id del viaggio (positivo) in caso di viaggio trovato, 0 in caso di viaggio non trovato.
+     * @throws DatabaseException se si è verificato un errore nella ricerca del viaggio nel database.
+     */
+    private long cercaInDB(String email) throws DatabaseException {
+        String query = String.format("SELECT * FROM utentiregistrati WHERE (email = '%s');", email);
+        logger.info(query);
+        long newIdUtenteRegistrato;
+        try (ResultSet rs = DBManager.selectQuery(query)) {
+            if (!rs.next())
+                return 0;
+            newIdUtenteRegistrato = rs.getLong("idUtenteRegistrato");
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.warning(String.format("Errore nella ricerca dell'utente associato alla mail '%s' nel database.%n%s",
+                    email, e.getMessage()));
+            throw new DatabaseException("Errore nella ricerca di un utente registrato nel database.");
+        }
+        return newIdUtenteRegistrato;
+    }
+
+    /**
      * Funzione privata per salvare i dati di un utente registrato nel database.
-     * @param id l'identificativo dell'utente registrato.
      * @param nome il nome dell'utente registrato.
      * @param cognome il cognome dell'utente registrato.
      * @param contattoTelefonico il contatto telefonico dell'utente registrato.
@@ -119,53 +143,60 @@ public class UtenteRegistratoDAO {
      * @param automobile l'automobile dell'utente registrato.
      * @param postiDisponibili il numero di posti disponibili nell'automobile dell'utente registrato.
      * @param password la password (bcrypt) dell'utente registrato.
-     * @return true in caso di successo, false altrimenti.
+     * @return il numero di righe inserite nel database.
+     * @throws DatabaseException se non è stato possibile salvare l'utente registrato nel database.
      */
-    private boolean salvaInDB(long id, String nome, String cognome, String contattoTelefonico, String email,
-                              String automobile, int postiDisponibili, String password) {
+    private int salvaInDB(String nome,
+                              String cognome,
+                              String contattoTelefonico,
+                              String email,
+                              String automobile,
+                              int postiDisponibili,
+                              String password) throws DatabaseException {
         String query;
-        query = String.format("INSERT INTO utentiregistrati (idUtenteRegistrato, nome, cognome, contattoTelefonico, " +
+        query = String.format("INSERT INTO utentiregistrati (nome, cognome, contattoTelefonico, " +
                         "email, automobile, postiDisponibili, password) VALUES " +
-                        "(%d, '%s', '%s', '%s', '%s', '%s', %d, '%s');", id, nome, cognome, contattoTelefonico, email,
+                        "('%s', '%s', '%s', '%s', '%s', %d, '%s');", nome, cognome, contattoTelefonico, email,
                         automobile, postiDisponibili, password);
 
         logger.info(query);
+        int rs;
         try {
-            /* TODO: questo int rs, dato che non lo usiamo è inutile (?) Ci sono modi per usarli. */
-            int rs = DBManager.executeQuery(query);
+            rs = DBManager.executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante l'inserimento dell'utente registrato " +
-                            "[%d, '%s', '%s', '%s', '%s', '%s', %d, '%s'] nel database.%n%s", id, nome, cognome,
+            logger.warning(String.format("Errore durante l'inserimento dell'utente registrato " +
+                            "['%s', '%s', '%s', '%s', '%s', %d, '%s'] nel database.%n%s", nome, cognome,
                             contattoTelefonico, email, automobile, postiDisponibili, password, e.getMessage()));
-            return false;
+            throw new DatabaseException("Errore nel salvataggio dell'utente registrato nel database.");
         }
-        return true;
+        return rs;
     }
 
     /**
      * Funzione privata per eliminare un utente registrato dal database.
-     * @return true in caso di successo, false altrimenti.
+     * @return il numero di righe eliminate dal database.
+     * @throws DatabaseException se non è stato possibile eliminare l'utente registrato dal database.
      */
-    private boolean eliminaDaDB() {
-        String query = String.format("DELETE FROM utentiregistrati WHERE (idUtenteRegistrato = %d);", this.id);
+    private int eliminaDaDB() throws DatabaseException {
+        String query = String.format("DELETE FROM utentiregistrati WHERE (idUtenteRegistrato = %d);", this.idUtenteRegistrato);
         logger.info(query);
+        int rs;
         try {
-            /* TODO: questo int rs, dato che non lo usiamo è inutile (?) Ci sono modi per usarli. */
-            int rs = DBManager.executeQuery(query);
+            rs = DBManager.executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
             if (this.automobile != null || this.postiDisponibili != 0) {
                 logger.info(String.format("Errore durante l'eliminazione dell'utente registrato " +
-                                "[%d, '%s', '%s', '%s', '%s', '%s', %d, '%s'] dal database.%n%s", this.id, this.nome,
+                                "[%d, '%s', '%s', '%s', '%s', '%s', %d, '%s'] dal database.%n%s", this.idUtenteRegistrato, this.nome,
                                 this.cognome, this.contattoTelefonico, this.email, this.automobile,
                                 this.postiDisponibili, this.password, e.getMessage()));
             } else {
                 logger.info(String.format("Errore durante l'eliminazione dell'utente registrato " +
-                                "[%d, '%s', '%s', '%s', '%s', '%s'] dal database.%n%s", this.id, this.nome,
+                                "[%d, '%s', '%s', '%s', '%s', '%s'] dal database.%n%s", this.idUtenteRegistrato, this.nome,
                                 this.cognome, this.contattoTelefonico, this.email, this.password, e.getMessage()));
             }
-            return false;
+            throw new DatabaseException("Errore nell'eliminazione dell'utente registrato dal database.");
         }
-        return true;
+        return rs;
     }
 
 }
