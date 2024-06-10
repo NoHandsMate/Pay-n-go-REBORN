@@ -85,7 +85,7 @@ public class ViaggioDAO {
     private boolean caricaDaDB(long id) throws DatabaseException{
         String query = String.format("SELECT * from viaggi WHERE (idViaggio = %d);", id);
         logger.info(query);
-        try (ResultSet rs = DBManager.selectQuery(query)){
+        try (ResultSet rs = DBManager.getInstance().selectQuery(query)){
             while (rs.next()) {
                 this.luogoPartenza = rs.getString("luogoPartenza");
                 this.luogoDestinazione = rs.getString("luogoDestinazione");
@@ -132,7 +132,7 @@ public class ViaggioDAO {
                 luogoPartenza, luogoDestinazione, dataPartenzaS, dataArrivoS, contributoSpeseS, idAutista);
         logger.info(query);
         long idViaggio;
-        try (ResultSet rs = DBManager.selectQuery(query)) {
+        try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
             if (!rs.next())
                 return 0;
             idViaggio = rs.getLong("idViaggio");
@@ -172,7 +172,7 @@ public class ViaggioDAO {
         logger.info(query);
         int rs;
         try {
-            rs = DBManager.executeQuery(query);
+            rs = DBManager.getInstance().executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante l'inserimento del viaggio ['%s', '%s', '%s', '%s', %s, %d] " +
                             "nel database.%n%s", luogoPartenza, luogoDestinazione, dataPartenzaS, dataArrivoS,
@@ -192,7 +192,7 @@ public class ViaggioDAO {
         logger.info(query);
         int rs;
         try {
-            rs = DBManager.executeQuery(query);
+            rs = DBManager.getInstance().executeQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATETIMEFORMAT);
             String dataPartenzaS = this.dataPartenza.format(dateTimeFormatter);
