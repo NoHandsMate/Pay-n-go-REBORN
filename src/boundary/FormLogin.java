@@ -1,9 +1,12 @@
 package boundary;
 
+import control.ControllerUtente;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.AbstractMap;
 
 public class FormLogin extends JFrame {
     private JPanel loginPanel;
@@ -19,14 +22,57 @@ public class FormLogin extends JFrame {
         setResizable(false);
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(new JScrollPane(loginPanel), BorderLayout.CENTER);
-        loginButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
+        loginButton.addActionListener(actionEvent -> {
+
+            AbstractMap.SimpleEntry<Boolean, String> result = validateInput();
+
+            if (!result.getKey()) {
+                JOptionPane.showMessageDialog(loginPanel, result.getValue(), "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+
+                /*TODO: Chiamata al loginUtente del Controller*/
+
+
                 MainWindow mainWindow = new MainWindow();
                 mainWindow.setVisible(true);
                 setVisible(false);
             }
-        });
+
+
+        })
+    }
+
+    private AbstractMap.SimpleEntry<Boolean, String> validateInput() {
+
+        if (emailField.getText().isBlank()) {
+            return new AbstractMap.SimpleEntry<>(false, "Il campo email non può essere vuoto");
+        }
+
+        if (emailField.getText().indexOf('@') < 0) {
+            return new AbstractMap.SimpleEntry<>(false, "La email è invalida");
+        }
+
+        boolean empty = checkEmptyPassword();
+
+        if (empty)
+            return new AbstractMap.SimpleEntry<>(false, "Il campo password non può essere vuoto");
+
+        return new AbstractMap.SimpleEntry<>(true, "OK");
+    }
+
+    private boolean checkEmptyPassword() {
+
+        boolean empty = true;
+        for(char c : passwordField.getPassword()) {
+            if (c != 0) {
+                empty = false;
+            }
+            if (c == 0) {
+                empty = true;
+            }
+        }
+
+        return empty;
     }
 
     public static void main(String[] args) {

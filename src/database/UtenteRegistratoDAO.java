@@ -119,6 +119,40 @@ public class UtenteRegistratoDAO {
     }
 
     /**
+     * Funzione per cercare un utente registrato data una mail ed una password
+     * @param email l'email da utilizzare per la ricerca
+     * @param password la password da utilizzare per la ricerca
+     * @throws DatabaseException se si è verificato un errore nella ricerca
+     */
+    public void readUtenteRegistrato(String email, String password) throws DatabaseException {
+        String query = String.format("SELECT * from utentiregistrati WHERE (email = '%s' AND password = '%s')", email, password);
+        logger.info(query);
+
+        try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
+            while (rs.next()) {
+                this.idUtenteRegistrato = rs.getInt("idUtenteRegistrato");
+                this.nome = rs.getString("nome");
+                this.cognome = rs.getString("cognome");
+                this.contattoTelefonico = rs.getString("contattoTelefonico");
+                this.email = email;
+                this.automobile = rs.getString("automobile");
+                this.postiDisponibili = rs.getInt("postiDisponibili");
+                this.password = password;
+            }
+            if (this.nome == null && this.cognome == null && this.contattoTelefonico == null && this.email == null &&
+                    this.automobile == null && this.postiDisponibili == 0 && this.password == null) {
+                throw new DatabaseException("Non è stato possibile trovare l'utente nel database.");
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.warning(String.format("Errore durante il caricamento dal database di un utente registrato con " +
+                    "idUtenteRegistrato %d.%n%s", idUtenteRegistrato, e.getMessage()));
+            throw new DatabaseException("Errore nel caricamento di un utente registrato dal database.");
+        }
+
+        return true;
+    }
+
+    /**
      * Funzione privata per caricare i dati di un utente registrato dal database.
      * @param idUtenteRegistrato l'identificativo dell'utente registrato.
      * @return true in caso di successo, false altrimenti.

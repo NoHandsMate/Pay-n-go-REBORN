@@ -108,8 +108,8 @@ public class FormRegistrazione extends JFrame {
             return new AbstractMap.SimpleEntry<>(false, "Il contatto telefonico contiene caratteri non validi");
         }
 
-        if (passwordField.getPassword().length > 50) {
-            return new AbstractMap.SimpleEntry<>(false, "La password supera la lunghezza massima di 50 caratteri");
+        if (passwordField.getPassword().length > 50 || passwordField.getPassword().length < 4) {
+            return new AbstractMap.SimpleEntry<>(false, "La password deve essere compresa tra 4 e 50 caratteri");
         }
 
         if (autoField.getText().length() > 50) {

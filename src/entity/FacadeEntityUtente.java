@@ -2,6 +2,7 @@
 
 package entity;
 
+import exceptions.LoginUserException;
 import exceptions.RegistrationFailedException;
 
 public class FacadeEntityUtente {
@@ -24,4 +25,8 @@ public class FacadeEntityUtente {
         GestoreUtenti.getInstance().registraUtente(nome, cognome, email, auto, password, postiDisp, telefono);
     }
 
+    public void loginUtente(String email, char[] password) throws LoginUserException {
+
+        GestoreUtenti.getInstance().loginUtente(email, password);
+    }
 }

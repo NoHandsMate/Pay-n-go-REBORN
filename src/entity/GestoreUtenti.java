@@ -1,9 +1,10 @@
 package entity;
 
 import exceptions.DatabaseException;
+import exceptions.LoginUserException;
 import exceptions.RegistrationFailedException;
 import database.UtenteRegistratoDAO;
-
+import dto.utenteCorrente;
 import java.util.Arrays;
 
 public class GestoreUtenti {
@@ -30,6 +31,15 @@ public class GestoreUtenti {
                     postiDisp, Arrays.toString(password));
         } catch (DatabaseException e) {
             throw new RegistrationFailedException("Registrazione Utente fallita");
+        }
+    }
+
+    public void loginUtente(String email, char[] password) throws LoginUserException {
+        UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
+        try {
+            utenteDAO.readUtenteRegistrato(email, Arrays.toString(password));
+        } catch (DatabaseException e) {
+            throw new LoginUserException("Login Utente fallito: " + e.getMessage());
         }
     }
 }
