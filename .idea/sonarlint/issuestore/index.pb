@@ -43,3 +43,11 @@ M
 src/entity/GestoreUtenti.java,c\2\c21748290c2fa7dc42d947abc09d9b0eadabea36
 K
 src/database/DBManager.java,a\9\a9db00ceceb394ec086e14711c60e305774b39fc
+K
+src/dto/utenteCorrente.java,7\3\73760fee9832d4a069db699cb70f182a4107caa5
+M
+src/entity/EntityViaggio.java,f\4\f4bcc32634fb363e75c244a598554d2938876dda
+R
+"src/entity/EntityPrenotazione.java,2\7\27e4df8491cc72a271f43f330b2e7608b2cdebd1
+V
+&src/entity/EntityUtenteRegistrato.java,e\1\e15a331179af5f88c324265f0170d3e1d13fe1e4
