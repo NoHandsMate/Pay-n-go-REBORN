@@ -6,6 +6,8 @@ import entity.FacadeEntityUtente;
 import exceptions.LoginUserException;
 import exceptions.RegistrationFailedException;
 
+import dto.*;
+
 public class ControllerUtente {
 
     //Variabile statica univoca per implementare il pattern Singleton

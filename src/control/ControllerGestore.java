@@ -1,5 +1,7 @@
 package control;
 
+import dto.*;
+
 
 public class ControllerGestore {
 
