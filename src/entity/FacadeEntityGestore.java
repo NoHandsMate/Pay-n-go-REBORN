@@ -23,6 +23,6 @@ public class FacadeEntityGestore {
     }
 
     public void GeneraReportUtenti() throws ReportUtentiFailedException {
-        GestoreUtenti.getInstance().GeneraReportUtenti();
+        GestoreUtenti.getInstance().generaReportUtenti();
     }
 }

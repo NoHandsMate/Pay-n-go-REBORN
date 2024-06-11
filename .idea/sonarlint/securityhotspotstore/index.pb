@@ -71,3 +71,7 @@ B
 src/dto/MyDto.java,9\1\91f93fc4af8fbded340e6da23ef5d0b3da443bea
 K
 src/dto/UtenteCorrente.java,3\6\36931f7e93bfbc47c381afb7d1754919dfbf2b79
+]
+-src/boundary/MainWindowCircularLogoPanel.java,d\8\d86efd3a1d43e52f83e0ced833ecb141bb15d21c
+G
+src/boundary/Prova.form,a\d\add1e7faee9c5604c374736808a1eabefff76f52
