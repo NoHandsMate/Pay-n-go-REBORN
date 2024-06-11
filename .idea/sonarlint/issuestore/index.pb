@@ -75,3 +75,8 @@ K
 -src/boundary/MainWindowCircularLogoPanel.java,d\8\d86efd3a1d43e52f83e0ced833ecb141bb15d21c
 G
 src/boundary/Prova.form,a\d\add1e7faee9c5604c374736808a1eabefff76f52
+:
+
+.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
+9
+	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
