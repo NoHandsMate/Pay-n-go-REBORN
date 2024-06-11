@@ -22,16 +22,18 @@ public class ControllerGestore {
     }
 
 
-    public AbstractMap.SimpleEntry<Boolean, String> generaReportIncassi(){
+    public AbstractMap.SimpleEntry<Boolean, Object> generaReportIncassi(){
+
+        Float reportIncassi;
 
         try {
 
-            FacadeEntityGestore.getInstance().GeneraReportIncassi();
+             reportIncassi = FacadeEntityGestore.getInstance().GeneraReportIncassi();
         } catch (ReportIncassiFailedException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
 
-        return new AbstractMap.SimpleEntry<>(true, "Report incassi generato con successo");
+        return new AbstractMap.SimpleEntry<>(true, reportIncassi);
     }
 
     public AbstractMap.SimpleEntry<Boolean, String> generaReportUtenti(){

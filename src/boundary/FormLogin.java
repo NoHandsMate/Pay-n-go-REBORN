@@ -1,6 +1,7 @@
 package boundary;
 
 import control.ControllerUtente;
+import dto.utenteCorrente;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +33,7 @@ public class FormLogin extends JFrame {
                 if (Boolean.FALSE.equals(result.getKey())) {
                     JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
                 } else {
+
                     MainWindow mainWindow = new MainWindow();
                     mainWindow.setVisible(true);
                     setVisible(false);

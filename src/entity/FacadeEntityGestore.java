@@ -17,8 +17,9 @@ public class FacadeEntityGestore {
     }
 
 
-    public void GeneraReportIncassi() throws ReportIncassiFailedException {
-        GestoreViaggi.getInstance().GeneraReportIncassi();
+    public Float GeneraReportIncassi() throws ReportIncassiFailedException {
+        return GestoreViaggi.getInstance().GeneraReportIncassi();
+
     }
 
     public void GeneraReportUtenti() throws ReportUtentiFailedException {

@@ -1,6 +1,7 @@
 package control;
 
 
+import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import entity.FacadeEntityUtente;
 import exceptions.LoginUserException;
@@ -45,5 +46,16 @@ public class ControllerUtente {
 
         return new AbstractMap.SimpleEntry<>(true, "Login effettuato con successo");
     }
+
+    /*public AbstractMap.SimpleEntry<Boolean, String> condividiViaggio(String luogoPartenza,
+                                                                     String luogoDestinazione,
+                                                                     LocalDateTime dataPartenza,
+                                                                     LocalDateTime dataArrivo,
+                                                                     float contributoSpese,
+                                                                     int idAutista){
+
+
+
+    }*/
 
 }

@@ -63,3 +63,5 @@ S
 #src/entity/FacadeEntityGestore.java,2\7\271d92bc3da21613fd3ccb70cbac14eace3d085d
 M
 src/entity/GestoreViaggi.java,f\1\f1d9b24feb6994803ea09a9b800a3619c41a5139
+V
+&src/exceptions/LoginUserException.java,1\7\17801d142a84a3e8d75d88beef3ebf0223b85b53

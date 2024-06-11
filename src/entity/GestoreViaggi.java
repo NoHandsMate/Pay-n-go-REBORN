@@ -13,7 +13,7 @@ public class GestoreViaggi {
         return uniqueInstance;
     }
 
-    public void GeneraReportIncassi(){
-
+    public Float GeneraReportIncassi(){
+        return 0f;
     }
 }
