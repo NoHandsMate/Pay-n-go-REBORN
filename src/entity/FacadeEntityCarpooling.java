@@ -1,9 +1,25 @@
 package entity;
 
+import exceptions.RegistrationFailedException;
+
 public class FacadeEntityCarpooling {
 
-    public FacadeEntityCarpooling() {}
+    private static FacadeEntityCarpooling uniqueInstance;
 
-    public void GeneraReportIncassi() {}
-    public void GeneraReportUtenti() {}
+    private FacadeEntityCarpooling() {}
+
+    public static FacadeEntityCarpooling getInstance() {
+        if (uniqueInstance == null) {
+            uniqueInstance = new FacadeEntityCarpooling();
+        }
+        return uniqueInstance;
+    }
+
+
+    public void GeneraReportIncassi() throws RegistrationFailedException {
+
+    }
+    public void GeneraReportUtenti() throws RegistrationFailedException {
+
+    }
 }

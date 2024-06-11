@@ -5,7 +5,6 @@ import java.util.AbstractMap;
 import entity.FacadeEntityUtente;
 import exceptions.LoginUserException;
 import exceptions.RegistrationFailedException;
-
 import dto.*;
 
 public class ControllerUtente {
@@ -44,4 +43,5 @@ public class ControllerUtente {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
     }
+
 }

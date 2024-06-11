@@ -1,5 +1,3 @@
-//Classe Facade per l'Utente
-
 package entity;
 
 import exceptions.LoginUserException;
