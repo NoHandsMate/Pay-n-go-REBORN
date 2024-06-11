@@ -6,6 +6,7 @@ import java.util.AbstractMap;
 import entity.FacadeEntityUtente;
 import exceptions.LoginUserException;
 import exceptions.RegistrationFailedException;
+import exceptions.CondivisioneViaggioFailedException;
 import dto.*;
 
 public class ControllerUtente {
@@ -54,11 +55,17 @@ public class ControllerUtente {
                                                                      LocalDateTime dataPartenza,
                                                                      LocalDateTime dataArrivo,
                                                                      float contributoSpese){
+        //Prelievo idAutista (chi sta condividendo il viaggio) dal DTO
+        long idAutista = UtenteCorrente.getInstance().getIdUtenteCorrente();
 
-        FacadeEntityUtente.getInstance().condividiViaggio(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo,
-                contributoSpese,idAutista);
+        try {
+            FacadeEntityUtente.getInstance().condividiViaggio(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo,
+                    contributoSpese, idAutista);
+        } catch (CondivisioneViaggioFailedException e){
+            return new AbstractMap.SimpleEntry<>(false, e.getMessage());
+        }
 
-
+        return new AbstractMap.SimpleEntry<>(true, "Viaggio condiviso con successo");
 
     }
 

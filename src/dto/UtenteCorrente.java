@@ -8,6 +8,7 @@ public class UtenteCorrente {
     private String nome;
     private String cognome;
 
+
     private UtenteCorrente() {}
 
     public static UtenteCorrente getInstance() {

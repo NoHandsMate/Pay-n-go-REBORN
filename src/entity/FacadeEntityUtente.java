@@ -2,6 +2,9 @@ package entity;
 
 import exceptions.LoginUserException;
 import exceptions.RegistrationFailedException;
+import exceptions.CondivisioneViaggioFailedException;
+
+import java.time.LocalDateTime;
 
 public class FacadeEntityUtente {
 
@@ -26,5 +29,14 @@ public class FacadeEntityUtente {
     public void loginUtente(String email, char[] password) throws LoginUserException {
 
         GestoreUtenti.getInstance().loginUtente(email, password);
+    }
+
+    public void condividiViaggio(String luogoPartenza,
+                                 String luogoDestinazione,
+                                 LocalDateTime dataPartenza,
+                                 LocalDateTime dataArrivo,
+                                 float contributoSpese,long idAutista) throws CondivisioneViaggioFailedException {
+
+
     }
 }
