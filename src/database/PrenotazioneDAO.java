@@ -153,4 +153,16 @@ public class PrenotazioneDAO {
         return rs;
     }
 
+    public long getIdPrenotazione() {
+        return idPrenotazione;
+    }
+
+    public long getIdPasseggero() {
+        return idPasseggero;
+    }
+
+    public long getIdViaggioPrenotato() {
+        return idViaggioPrenotato;
+    }
+
 }

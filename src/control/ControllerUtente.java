@@ -42,6 +42,8 @@ public class ControllerUtente {
         } catch (LoginUserException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
+
+        return new AbstractMap.SimpleEntry<>(true, "Login effettuato con successo");
     }
 
 }

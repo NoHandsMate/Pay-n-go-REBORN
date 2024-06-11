@@ -273,68 +273,33 @@ public class UtenteRegistratoDAO {
         return idUtenteRegistrato;
     }
 
-    public void setIdUtenteRegistrato(long idUtenteRegistrato) {
-        this.idUtenteRegistrato = idUtenteRegistrato;
-    }
 
     public String getNome() {
         return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public String getCognome() {
         return cognome;
     }
 
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
-    }
-
     public String getContattoTelefonico() {
         return contattoTelefonico;
-    }
-
-    public void setContattoTelefonico(String contattoTelefonico) {
-        this.contattoTelefonico = contattoTelefonico;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getAutomobile() {
         return automobile;
-    }
-
-    public void setAutomobile(String automobile) {
-        this.automobile = automobile;
     }
 
     public int getPostiDisponibili() {
         return postiDisponibili;
     }
 
-    public void setPostiDisponibili(int postiDisponibili) {
-        this.postiDisponibili = postiDisponibili;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Logger getLogger() {
-        return logger;
     }
 }
 

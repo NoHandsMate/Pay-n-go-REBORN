@@ -206,4 +206,31 @@ public class ViaggioDAO {
         return rs;
     }
 
+    public long getIdViaggio() {
+        return idViaggio;
+    }
+
+    public String getLuogoPartenza() {
+        return luogoPartenza;
+    }
+
+    public String getLuogoDestinazione() {
+        return luogoDestinazione;
+    }
+
+    public LocalDateTime getDataPartenza() {
+        return dataPartenza;
+    }
+
+    public LocalDateTime getDataArrivo() {
+        return dataArrivo;
+    }
+
+    public float getContributoSpese() {
+        return contributoSpese;
+    }
+
+    public long getIdAutista() {
+        return idAutista;
+    }
 }

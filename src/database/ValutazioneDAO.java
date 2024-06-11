@@ -156,4 +156,20 @@ public class ValutazioneDAO {
         }
         return rs;
     }
+
+    public long getIdValutazione() {
+        return idValutazione;
+    }
+
+    public int getNumeroStelle() {
+        return numeroStelle;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public long getIdUtente() {
+        return idUtente;
+    }
 }
