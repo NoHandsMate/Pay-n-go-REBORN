@@ -236,15 +236,14 @@ public class UtenteRegistratoDAO {
 
     /**
      *
-     * @param nome
-     * @param cognome
-     * @param contattoTelefonico
-     * @param email
-     * @param automobile
-     * @param postiDisponibili
-     * @param password
-     * @return
-     * @throws DatabaseException
+     * @param nome il nome dell'utente registrato.
+     * @param cognome il cognome dell'utente registrato.
+     * @param contattoTelefonico il contatto telefonico dell'utente registrato.
+     * @param email l'email dell'utente registrato.
+     * @param automobile l'automobile dell'utente registrato.
+     * @param postiDisponibili il numero di posti disponibili nell'automobile dell'utente registrato.
+     * @param password la password (bcrypt) dell'utente registrato.
+     * @throws DatabaseException se non è stato possibile aggiornare l'utente registrato dal database.
      */
     private int aggiornaInDB(String nome,
                              String cognome,

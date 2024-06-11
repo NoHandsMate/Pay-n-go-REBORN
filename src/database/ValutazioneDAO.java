@@ -30,7 +30,7 @@ public class ValutazioneDAO {
 
     public ValutazioneDAO(int idValutazione) throws DatabaseException {
         if (!caricaDaDB(idValutazione))
-            throw new DatabaseException("Errore nella creazione di PrenotazioneDAO.");
+            throw new DatabaseException("Errore nella creazione di PrenotazioneDAO.",false);
         this.idValutazione = idValutazione;
     }
 
@@ -46,9 +46,9 @@ public class ValutazioneDAO {
     public boolean createValutazione(int numeroStelle, String descrizione, long idUtente) throws DatabaseException{
 
         if (cercaInDB(numeroStelle, descrizione,idUtente) != 0)
-            throw new DatabaseException("Esiste già una valutazione identica nel database.");
+            throw new DatabaseException("Esiste già una valutazione identica.",true);
         if (salvaInDB(numeroStelle, descrizione,idUtente) == 0)
-            throw new DatabaseException("Non è stata aggiunta alcuna valutazione al database.");
+            throw new DatabaseException("Non è stata aggiunta alcuna valutazione al database.",false);
 
         this.idValutazione = cercaInDB(numeroStelle,descrizione,idUtente);
         this.numeroStelle = numeroStelle;
@@ -63,31 +63,30 @@ public class ValutazioneDAO {
      */
     public void deletePrenotazione() throws DatabaseException{
         if (this.eliminaDaDB() == 0)
-            throw new DatabaseException("Non è stata trovata una valutazione corrispondente nel database.");
+            throw new DatabaseException("Non è stata trovata una valutazione corrispondente.",false);
     }
     /**
      * Funzione privata per caricare i dati di una valutazione dal database.
      * @param id l'identificativo della valutazione.
      * @return true in caso di successo, false altrimenti.
      */
-    private boolean caricaDaDB(long id) {
+    private boolean caricaDaDB(long id) throws DatabaseException {
         String query = String.format("SELECT * from valutazioni WHERE (id = %d);", id);
         logger.info(query);
-        try {
             /* TODO: debug di ResultSet */
-            ResultSet rs = DBManager.getInstance().selectQuery(query);
-            while (rs.next()) {
-                this.numeroStelle = rs.getInt("numeroStelle");
-                this.descrizione = rs.getString("descrizione");
-                this.idUtente = rs.getLong("utente");
-            }
+            try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
+                while (rs.next()) {
+                    this.numeroStelle = rs.getInt("numeroStelle");
+                    this.descrizione = rs.getString("descrizione");
+                    this.idUtente = rs.getLong("utente");
+                }
             if (this.numeroStelle == 0 && this.descrizione == null && this.idUtente == 0) {
                 return false;
             }
         } catch (ClassNotFoundException | SQLException e) {
-            logger.info(String.format("Errore durante il caricamento dal database di una valutazione con id %d.%n%s",
-                    id, e.getMessage()));
-            return false;
+            logger.warning(String.format("Errore durante il caricamento dal database di una valutazione con " +
+                    "idValutazione %d.%n%s", idValutazione, e.getMessage()));
+            throw new DatabaseException("Errore nel caricamento di una valutazione dal database.", false);
         }
         return true;
     }
@@ -102,7 +101,7 @@ public class ValutazioneDAO {
     private long cercaInDB(int numeroStelle, String descrizione, long idUtente)
             throws DatabaseException {
         String query = String.format("SELECT * FROM valutazioni WHERE (idValutazione = %d AND numeroStelle = %d " +
-                        "AND descrizione = %d AND idUtente = %d);",numeroStelle, descrizione, idUtente);
+                        "AND descrizione = '%s' AND idUtente = %d);",this.idValutazione,numeroStelle, descrizione, idUtente);
         logger.info(query);
         long newIdValutazione;
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
@@ -110,9 +109,9 @@ public class ValutazioneDAO {
                 return 0;
             newIdValutazione = rs.getLong("idValutazione");
         } catch (ClassNotFoundException | SQLException e) {
-            logger.warning(String.format("Errore nella ricerca della valutazione [%d, %d] nel database.%n%s",
+            logger.warning(String.format("Errore nella ricerca della valutazione [%d,'%s',%d] nel database.%n%s",
                     numeroStelle, descrizione, idUtente, e.getMessage()));
-            throw new DatabaseException("Errore nella ricerca di una prenotazione nel database.");
+            throw new DatabaseException("Errore nella ricerca di una prenotazione nel database.",false);
         }
         return newIdValutazione;
     }
@@ -134,7 +133,7 @@ public class ValutazioneDAO {
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante l'inserimento della valutazione [%d, '%s' ,%d] nel database.%n%s",
                     numeroStelle, descrizione, idUtente, e.getMessage()));
-            throw new DatabaseException("Errore nel salvataggio della prenotazione nel database.");
+            throw new DatabaseException("Errore nel salvataggio della prenotazione nel database.",false);
         }
         return rs;
     }
@@ -152,7 +151,7 @@ public class ValutazioneDAO {
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante l'eliminazione della valutazione [%d, '%s', %d] dal database.%n%s",
                     this.numeroStelle, this.descrizione, this.idUtente, e.getMessage()));
-            throw new DatabaseException("Errore nell'eliminazione della valutazione dal database.");
+            throw new DatabaseException("Errore nell'eliminazione della valutazione dal database.",false);
         }
         return rs;
     }

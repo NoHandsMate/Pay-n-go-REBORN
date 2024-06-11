@@ -27,7 +27,7 @@ public class PrenotazioneDAO {
      */
     public PrenotazioneDAO(int idPrenotazione) throws DatabaseException {
         if (!caricaDaDB(idPrenotazione))
-            throw new DatabaseException("Errore nella creazione di PrenotazioneDAO.");
+            throw new DatabaseException("Errore nella creazione di PrenotazioneDAO.",false);
         this.idPrenotazione = idPrenotazione;
     }
 
@@ -42,9 +42,9 @@ public class PrenotazioneDAO {
     public boolean createPrenotazione(long idPasseggero,
                                       long idViaggioPrenotato) throws DatabaseException {
         if (cercaInDB(idPasseggero, idViaggioPrenotato) != 0)
-            throw new DatabaseException("Esiste già una prenotazione identica nel database.");
+            throw new DatabaseException("Esiste già una prenotazione identica.",true);
         if (salvaInDB(idPasseggero, idViaggioPrenotato) == 0)
-            throw new DatabaseException("Non è stata aggiunta alcuna prenotazione al database.");
+            throw new DatabaseException("Non è stata aggiunta alcuna prenotazione al database.",false);
 
         this.idPrenotazione = cercaInDB(idPasseggero, idViaggioPrenotato);
         this.idPasseggero = idPasseggero;
@@ -58,7 +58,7 @@ public class PrenotazioneDAO {
      */
     public void deletePrenotazione() throws DatabaseException{
         if (this.eliminaDaDB() == 0)
-            throw new DatabaseException("Non è stata trovata una prenotazione corrispondente nel database.");
+            throw new DatabaseException("Non è stata trovata una prenotazione corrispondente.",true);
     }
 
     /**
@@ -81,7 +81,7 @@ public class PrenotazioneDAO {
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante il caricamento dal database di una prenotazione con id %d.%n%s",
                     id, e.getMessage()));
-            throw new DatabaseException("Errore nel caricamento di una prenotazione dal database.");
+            throw new DatabaseException("Errore nel caricamento di una prenotazione dal database.",false);
         }
         return true;
     }
@@ -106,7 +106,7 @@ public class PrenotazioneDAO {
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore nella ricerca della prenotazione [%d, %d] nel database.%n%s",
                     idPasseggero, idViaggioPrenotato, e.getMessage()));
-            throw new DatabaseException("Errore nella ricerca di una prenotazione nel database.");
+            throw new DatabaseException("Errore nella ricerca di una prenotazione nel database.",false);
         }
         return newIdPrenotazione;
     }
@@ -129,7 +129,7 @@ public class PrenotazioneDAO {
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante l'inserimento della prenotazione [%d, %d] nel database.%n%s",
                     idPasseggero, idViaggioPrenotato, e.getMessage()));
-            throw new DatabaseException("Errore nel salvataggio della prenotazione nel database.");
+            throw new DatabaseException("Errore nel salvataggio della prenotazione nel database.",false);
         }
         return rs;
     }
@@ -148,7 +148,7 @@ public class PrenotazioneDAO {
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante l'eliminazione della prenotazione [%d, %d, %d] dal database.%n%s",
                     this.idPrenotazione, this.idPasseggero, this.idViaggioPrenotato, e.getMessage()));
-            throw new DatabaseException("Errore nell'eliminazione della prenotazione dal database.");
+            throw new DatabaseException("Errore nell'eliminazione della prenotazione dal database.",false);
         }
         return rs;
     }

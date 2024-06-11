@@ -34,7 +34,7 @@ public class ViaggioDAO {
      */
     public ViaggioDAO(int idViaggio) throws DatabaseException {
         if (!caricaDaDB(idViaggio))
-            throw new DatabaseException("Errore nella creazione di ViaggioDAO.");
+            throw new DatabaseException("Errore nella creazione di ViaggioDAO.",false);
         this.idViaggio = idViaggio;
     }
 
@@ -55,9 +55,9 @@ public class ViaggioDAO {
                                  float contributoSpese,
                                  int idAutista) throws DatabaseException {
         if (cercaInDB(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese, idAutista) != 0)
-            throw new DatabaseException("Esiste già un viaggio identico nel database.");
+            throw new DatabaseException("Esiste già un viaggio identico.",true);
         if (salvaInDB(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese, idAutista) == 0)
-            throw new DatabaseException("Non è stato aggiunto alcun viaggio al database.");
+            throw new DatabaseException("Non è stato aggiunto alcun viaggio al database.",false);
 
         this.idViaggio = cercaInDB(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese, idAutista);
         this.luogoPartenza = luogoPartenza;
@@ -73,7 +73,7 @@ public class ViaggioDAO {
      */
     public void deleteViaggio() throws DatabaseException {
         if (this.eliminaDaDB() == 0)
-            throw new DatabaseException("Non è stato trovato un viaggio corrispondente nel database.");
+            throw new DatabaseException("Non è stato trovato un viaggio corrispondente.",true);
     }
 
     /**
@@ -101,7 +101,7 @@ public class ViaggioDAO {
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante il caricamento dal database di un viaggio con id %d.%n%s",
                     idViaggio, e.getMessage()));
-            throw new DatabaseException("Errore nel caricamento di un viaggio dal database.");
+            throw new DatabaseException("Errore nel caricamento di un viaggio dal database.",false);
         }
         return true;
     }
@@ -140,7 +140,7 @@ public class ViaggioDAO {
             logger.warning(String.format("Errore nella ricerca del viaggio ['%s', '%s', '%s', '%s', %s, %d] nel " +
                             "database.%n%s", luogoDestinazione, luogoDestinazione, dataPartenzaS, dataArrivoS,
                             contributoSpeseS, idAutista, e.getMessage()));
-            throw new DatabaseException("Errore nella ricerca di un viaggio nel database.");
+            throw new DatabaseException("Errore nella ricerca di un viaggio nel database.",false);
         }
         return newIdViaggio;
     }
@@ -177,7 +177,7 @@ public class ViaggioDAO {
             logger.warning(String.format("Errore durante l'inserimento del viaggio ['%s', '%s', '%s', '%s', %s, %d] " +
                             "nel database.%n%s", luogoPartenza, luogoDestinazione, dataPartenzaS, dataArrivoS,
                             contributoSpeseS, idAutista, e.getMessage()));
-            throw new DatabaseException("Errore nel salvataggio del viaggio nel database.");
+            throw new DatabaseException("Errore nel salvataggio del viaggio nel database.",false);
         }
         return rs;
     }
@@ -201,7 +201,7 @@ public class ViaggioDAO {
             logger.warning(String.format("Errore durante l'eliminazione del viaggio [%d, '%s', '%s', '%s', '%s', %s, %d] " +
                             "dal database.%n%s", this.idViaggio, this.luogoPartenza, this.luogoDestinazione, dataPartenzaS,
                             dataArrivoS, contributoSpeseS, this.idAutista, e.getMessage()));
-            throw new DatabaseException("Errore nell'eliminazione del viaggio dal database.");
+            throw new DatabaseException("Errore nell'eliminazione del viaggio dal database.",false);
         }
         return rs;
     }
