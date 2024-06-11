@@ -31,22 +31,22 @@ public class FormRegistrazione extends JFrame {
         registratiButton.addActionListener(actionEvent -> {
           AbstractMap.SimpleEntry<Boolean, String> result = validateInput();
 
-          if (!result.getKey()) {
+          if (Boolean.FALSE.equals(result.getKey())) {
               JOptionPane.showMessageDialog(rootPane, result.getValue(),
                                        "Errore", JOptionPane.ERROR_MESSAGE);
           } else {
-              /*TODO: Chiama il metodo registraUtente del controller*/
-
-
               result = ControllerUtente.getInstance().registraUtente(nomeField.getText(), cognomeField.getText(),
                       emailField.getText(), autoField.getText(),
                       passwordField.getPassword(), (Integer) postiSpinner.getValue(),
                       telefonoField.getText());
 
-              if (!result.getKey()) {
+              if (Boolean.FALSE.equals(result.getKey())) {
                   JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
               } else {
                   JOptionPane.showMessageDialog(rootPane, result.getValue(), "OK", JOptionPane.INFORMATION_MESSAGE);
+                  MainWindow mainWindow = new MainWindow();
+                  mainWindow.setVisible(true);
+                  setVisible(false);
               }
 
           }

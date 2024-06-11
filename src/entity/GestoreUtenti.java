@@ -11,8 +11,7 @@ public class GestoreUtenti {
 
     private static GestoreUtenti uniqueInstance;
 
-    private GestoreUtenti() {
-    }
+    private GestoreUtenti() {}
 
     public static GestoreUtenti getInstance() {
         if (uniqueInstance == null) {
@@ -30,7 +29,11 @@ public class GestoreUtenti {
             utenteDAO.createUtenteRegistrato(nome, cognome, telefono, email, auto,
                     postiDisp, new String(password));
         } catch (DatabaseException e) {
-            throw new RegistrationFailedException("Registrazione Utente fallita");
+            if (e.isVisible())
+            {
+                throw new RegistrationFailedException(String.format("Registrazione Utente fallita: %s", e.getMessage()));
+            }
+            throw new RegistrationFailedException("Registrazione Utente fallita.");
         }
     }
 
@@ -44,5 +47,9 @@ public class GestoreUtenti {
         } catch (DatabaseException e) {
             throw new LoginUserException("Login Utente fallito: " + e.getMessage());
         }
+    }
+
+    public void GeneraReportUtenti(){
+
     }
 }

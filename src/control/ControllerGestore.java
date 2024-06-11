@@ -2,9 +2,9 @@ package control;
 
 
 import java.util.AbstractMap;
-import entity.FacadeEntityCarpooling;
-import exceptions.RegistrationFailedException;
-import dto.*;
+import entity.FacadeEntityGestore;
+import exceptions.ReportIncassiFailedException;
+import exceptions.ReportUtentiFailedException;
 
 
 public class ControllerGestore {
@@ -26,8 +26,8 @@ public class ControllerGestore {
 
         try {
 
-            FacadeEntityCarpooling.getInstance().GeneraReportIncassi();
-        } catch (RegistrationFailedException e) {
+            FacadeEntityGestore.getInstance().GeneraReportIncassi();
+        } catch (ReportIncassiFailedException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
 
@@ -38,8 +38,8 @@ public class ControllerGestore {
 
         try {
 
-            FacadeEntityCarpooling.getInstance().GeneraReportIncassi();
-        } catch (RegistrationFailedException e) {
+            FacadeEntityGestore.getInstance().GeneraReportUtenti();
+        } catch (ReportUtentiFailedException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
 

@@ -1,11 +1,7 @@
 package boundary;
 
-import control.ControllerUtente;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.AbstractMap;
 
 public class FormLogin extends JFrame {
@@ -26,7 +22,7 @@ public class FormLogin extends JFrame {
 
             AbstractMap.SimpleEntry<Boolean, String> result = validateInput();
 
-            if (!result.getKey()) {
+            if (Boolean.FALSE.equals(result.getKey())) {
                 JOptionPane.showMessageDialog(loginPanel, result.getValue(), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
 
@@ -39,7 +35,7 @@ public class FormLogin extends JFrame {
             }
 
 
-        })
+        });
     }
 
     private AbstractMap.SimpleEntry<Boolean, String> validateInput() {

@@ -33,7 +33,7 @@ public class UtenteRegistratoDAO {
      */
     public UtenteRegistratoDAO(int idUtenteRegistrato) throws DatabaseException {
         if (!caricaDaDB(idUtenteRegistrato))
-            throw new DatabaseException("Errore nella creazione di UtenteRegistratoDAO.");
+            throw new DatabaseException("Errore nella creazione di UtenteRegistratoDAO.", false);
         this.idUtenteRegistrato = idUtenteRegistrato;
     }
 
@@ -57,9 +57,9 @@ public class UtenteRegistratoDAO {
                                        int postiDisponibili,
                                        String password) throws DatabaseException {
         if (cercaInDB(email) != 0)
-            throw new DatabaseException("Esiste già un utente associato alla mail data nel database.");
+            throw new DatabaseException("Esiste già un utente associato alla mail data.", true);
         if (salvaInDB(nome, cognome, contattoTelefonico, email, automobile, postiDisponibili, password) == 0)
-            throw new DatabaseException("Non è stato aggiunto alcun utente registrato al database.");
+            throw new DatabaseException("Non è stato aggiunto alcun utente registrato al database.", false);
 
         this.idUtenteRegistrato = cercaInDB(email);
         this.nome = nome;
@@ -80,33 +80,25 @@ public class UtenteRegistratoDAO {
      * @param automobile l'automobile dell'utente registrato.
      * @param postiDisponibili il numero di posti disponibili nell'automobile dell'utente registrato.
      * @param password la password (bcrypt) dell'utente registrato.
-     * @return il numero di righe modificate nel database.
      * @throws DatabaseException se non è stato possibile aggiornare l'utente registrato dal database.
      */
-
-    public int updateUtenteRegistrato(String nome,
+    public void updateUtenteRegistrato(String nome,
                                        String cognome,
                                        String contattoTelefonico,
                                        String email,
                                        String automobile,
                                        int postiDisponibili,
                                        String password) throws DatabaseException {
-        String query = String.format("UPDATE utentiregistrati SET (nome = '%s', cognome = '%s', " +
-                        "contattoTelefonico = '%s', email = '%s', automobile = '%s', postiDisponibili = %d, " +
-                        "password = '%s') WHERE (idUtenteRegistrato = %d);", nome, cognome, contattoTelefonico, email,
-                        automobile, postiDisponibili, password,this.idUtenteRegistrato);
-        logger.info(query);
-        int rs;
-        try {
-            rs = DBManager.getInstance().executeQuery(query);
-        } catch (ClassNotFoundException | SQLException e) {
-            logger.warning(String.format("Errore durante l'aggiornamento dell'utente registrato " +
-                            "['%s', '%s', '%s', '%s', '%s', %d, '%s'] nel database.%n%s", nome, cognome,
-                    contattoTelefonico, email, automobile, postiDisponibili, password, e.getMessage()));
-            throw new DatabaseException("Errore nell'aggiornamento dell'utente registrato nel database.");
-        }
-        return rs;
+        if (aggiornaInDB(nome, cognome, contattoTelefonico, email, automobile, postiDisponibili, password) == 0)
+            throw new DatabaseException("Non è stato aggiornato alcun utente registrato.", false);
 
+        this.nome = nome;
+        this.cognome = cognome;
+        this.contattoTelefonico = contattoTelefonico;
+        this.email = email;
+        this.automobile = automobile;
+        this.postiDisponibili = postiDisponibili;
+        this.password = password;
     }
 
     /**
@@ -115,7 +107,7 @@ public class UtenteRegistratoDAO {
      */
     public void deleteUtenteRegistrato() throws DatabaseException {
         if (this.eliminaDaDB() == 0)
-            throw new DatabaseException("Non è stato trovato un utente registrato corrispondente nel database.");
+            throw new DatabaseException("Non è stato trovato un utente registrato corrispondente.", true);
     }
 
     /**
@@ -141,12 +133,12 @@ public class UtenteRegistratoDAO {
             }
             if (this.nome == null && this.cognome == null && this.contattoTelefonico == null && this.email == null &&
                     this.automobile == null && this.postiDisponibili == 0 && this.password == null) {
-                throw new DatabaseException("Non è stato possibile trovare l'utente nel database.");
+                throw new DatabaseException("Non è stato possibile trovare l'utente nel database.", false);
             }
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante il caricamento dal database di un utente registrato con " +
                     "idUtenteRegistrato %d.%n%s", idUtenteRegistrato, e.getMessage()));
-            throw new DatabaseException("Errore nel caricamento di un utente registrato dal database.");
+            throw new DatabaseException("Errore nel caricamento di un utente registrato dal database.", false);
         }
     }
 
@@ -177,7 +169,7 @@ public class UtenteRegistratoDAO {
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore durante il caricamento dal database di un utente registrato con " +
                     "idUtenteRegistrato %d.%n%s", idUtenteRegistrato, e.getMessage()));
-            throw new DatabaseException("Errore nel caricamento di un utente registrato dal database.");
+            throw new DatabaseException("Errore nel caricamento di un utente registrato dal database.", false);
         }
         return true;
     }
@@ -199,7 +191,7 @@ public class UtenteRegistratoDAO {
         } catch (ClassNotFoundException | SQLException e) {
             logger.warning(String.format("Errore nella ricerca dell'utente associato alla mail '%s' nel database.%n%s",
                     email, e.getMessage()));
-            throw new DatabaseException("Errore nella ricerca di un utente registrato nel database.");
+            throw new DatabaseException("Errore nella ricerca di un utente registrato nel database.", false);
         }
         return newIdUtenteRegistrato;
     }
@@ -237,7 +229,43 @@ public class UtenteRegistratoDAO {
             logger.warning(String.format("Errore durante l'inserimento dell'utente registrato " +
                             "['%s', '%s', '%s', '%s', '%s', %d, '%s'] nel database.%n%s", nome, cognome,
                             contattoTelefonico, email, automobile, postiDisponibili, password, e.getMessage()));
-            throw new DatabaseException("Errore nel salvataggio dell'utente registrato nel database.");
+            throw new DatabaseException("Errore nel salvataggio dell'utente registrato nel database.", false);
+        }
+        return rs;
+    }
+
+    /**
+     *
+     * @param nome
+     * @param cognome
+     * @param contattoTelefonico
+     * @param email
+     * @param automobile
+     * @param postiDisponibili
+     * @param password
+     * @return
+     * @throws DatabaseException
+     */
+    private int aggiornaInDB(String nome,
+                             String cognome,
+                             String contattoTelefonico,
+                             String email,
+                             String automobile,
+                             int postiDisponibili,
+                             String password) throws DatabaseException {
+        String query = String.format("UPDATE utentiregistrati SET (nome = '%s', cognome = '%s', " +
+                        "contattoTelefonico = '%s', email = '%s', automobile = '%s', postiDisponibili = %d, " +
+                        "password = '%s') WHERE (idUtenteRegistrato = %d);", nome, cognome, contattoTelefonico, email,
+                automobile, postiDisponibili, password, this.idUtenteRegistrato);
+        logger.info(query);
+        int rs;
+        try {
+            rs = DBManager.getInstance().executeQuery(query);
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.warning(String.format("Errore durante l'aggiornamento dell'utente registrato " +
+                            "['%s', '%s', '%s', '%s', '%s', %d, '%s'] nel database.%n%s", nome, cognome,
+                    contattoTelefonico, email, automobile, postiDisponibili, password, e.getMessage()));
+            throw new DatabaseException("Errore nell'aggiornamento dell'utente registrato nel database.", false);
         }
         return rs;
     }
@@ -264,7 +292,7 @@ public class UtenteRegistratoDAO {
                                 "[%d, '%s', '%s', '%s', '%s', '%s'] dal database.%n%s", this.idUtenteRegistrato, this.nome,
                                 this.cognome, this.contattoTelefonico, this.email, this.password, e.getMessage()));
             }
-            throw new DatabaseException("Errore nell'eliminazione dell'utente registrato dal database.");
+            throw new DatabaseException("Errore nell'eliminazione dell'utente registrato dal database.", false);
         }
         return rs;
     }

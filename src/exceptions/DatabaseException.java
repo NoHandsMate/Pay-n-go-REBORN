@@ -1,7 +1,12 @@
 package exceptions;
 
 public class DatabaseException extends Exception{
-    public DatabaseException(String errorMessage) {
+    private final boolean visible;
+
+    public DatabaseException(String errorMessage, boolean visible) {
         super(errorMessage);
+        this.visible = visible;
     }
+
+    public boolean isVisible() { return visible; }
 }
