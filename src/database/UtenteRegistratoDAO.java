@@ -72,7 +72,7 @@ public class UtenteRegistratoDAO {
     }
 
     /**
-     * Funzione per aggiornare i dati relativi ad un utente registrato dal database.
+     * Funzione per aggiornare i dati relativi a un utente registrato dal database.
      * @param nome il nome dell'utente registrato.
      * @param cognome il cognome dell'utente registrato.
      * @param contattoTelefonico il contatto telefonico dell'utente registrato.
@@ -119,7 +119,7 @@ public class UtenteRegistratoDAO {
     }
 
     /**
-     * Funzione per cercare un utente registrato data una mail ed una password
+     * Funzione per cercare un utente registrato data una mail e una password
      * @param email l'email da utilizzare per la ricerca
      * @param password la password da utilizzare per la ricerca
      * @throws DatabaseException se si è verificato un errore nella ricerca
@@ -148,8 +148,6 @@ public class UtenteRegistratoDAO {
                     "idUtenteRegistrato %d.%n%s", idUtenteRegistrato, e.getMessage()));
             throw new DatabaseException("Errore nel caricamento di un utente registrato dal database.");
         }
-
-        return true;
     }
 
     /**

@@ -28,7 +28,7 @@ public class GestoreUtenti {
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
             utenteDAO.createUtenteRegistrato(nome, cognome, telefono, email, auto,
-                    postiDisp, Arrays.toString(password));
+                    postiDisp, new String(password));
         } catch (DatabaseException e) {
             throw new RegistrationFailedException("Registrazione Utente fallita");
         }
