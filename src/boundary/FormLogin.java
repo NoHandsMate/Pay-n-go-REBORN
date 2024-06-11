@@ -1,5 +1,7 @@
 package boundary;
 
+import control.ControllerUtente;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.AbstractMap;
@@ -23,15 +25,17 @@ public class FormLogin extends JFrame {
             AbstractMap.SimpleEntry<Boolean, String> result = validateInput();
 
             if (Boolean.FALSE.equals(result.getKey())) {
-                JOptionPane.showMessageDialog(loginPanel, result.getValue(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(loginPanel, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
+                result = ControllerUtente.getInstance().loginUtente(emailField.getText(), passwordField.getPassword());
 
-                /*TODO: Chiamata al loginUtente del Controller*/
-
-
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.setVisible(true);
-                setVisible(false);
+                if (Boolean.FALSE.equals(result.getKey())) {
+                    JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    MainWindow mainWindow = new MainWindow();
+                    mainWindow.setVisible(true);
+                    setVisible(false);
+                }
             }
 
 

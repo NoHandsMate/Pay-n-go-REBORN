@@ -55,8 +55,6 @@ R
 "src/control/ControllerGestore.java,a\a\aa5749d5dec3cec130464931e2b5a41bcb72fa3a
 `
 0src/exceptions/ReportIncassiFailedException.java,7\f\7f8f992906dc9caea1cd4b266471cc1dbe2c82ba
-V
-&src/entity/FacadeEntityCarpooling.java,f\5\f5e9a2b5ddaedddc50c55cc67612c6f5344d14b8
 _
 /src/exceptions/ReportUtentiFailedException.java,f\9\f92dda4cc1432f69fffeefbdd382d594fbf58646
 M
