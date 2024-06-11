@@ -37,7 +37,10 @@ public class GestoreUtenti {
     public void loginUtente(String email, char[] password) throws LoginUserException {
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
-            utenteDAO.readUtenteRegistrato(email, Arrays.toString(password));
+            utenteDAO.readUtenteRegistrato(email, new String(password));
+            utenteCorrente.getInstance().setIdUtenteCorrente(utenteDAO.getIdUtenteRegistrato());
+            utenteCorrente.getInstance().setNome(utenteDAO.getNome());
+            utenteCorrente.getInstance().setCognome(utenteDAO.getCognome());
         } catch (DatabaseException e) {
             throw new LoginUserException("Login Utente fallito: " + e.getMessage());
         }
