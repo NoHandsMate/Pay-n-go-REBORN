@@ -1,5 +1,9 @@
 package control;
 
+
+import java.util.AbstractMap;
+import entity.FacadeEntityCarpooling;
+import exceptions.RegistrationFailedException;
 import dto.*;
 
 
@@ -18,20 +22,28 @@ public class ControllerGestore {
     }
 
 
-    public float generaReportIncassi(){
+    public AbstractMap.SimpleEntry<Boolean, String> generaReportIncassi(){
 
-        //richiamare il metodo generaReportIncassi di EntityControllerCarpooling (Facade)
-        float ritorno_per_non_dare_errore = 1;
+        try {
 
-        return ritorno_per_non_dare_errore; //NON VA BENE QUESTO RETURN, ritornare ciò che ritorna il metodo richiamato
+            FacadeEntityCarpooling.getInstance().GeneraReportIncassi();
+        } catch (RegistrationFailedException e) {
+            return new AbstractMap.SimpleEntry<>(false, e.getMessage());
+        }
+
+        return new AbstractMap.SimpleEntry<>(true, "Report incassi generato con successo");
     }
 
-    public float generaReportUtenti(){
+    public AbstractMap.SimpleEntry<Boolean, String> generaReportUtenti(){
 
-        //richiamare il metodo generaReportUtenti di EntityControllerCarpooling (Facade)
-        float ritorno_per_non_dare_errore = 1;
+        try {
 
-        return ritorno_per_non_dare_errore; //NON VA BENE QUESTO RETURN, ritornare ciò che ritorna il metodo richiamato
+            FacadeEntityCarpooling.getInstance().GeneraReportIncassi();
+        } catch (RegistrationFailedException e) {
+            return new AbstractMap.SimpleEntry<>(false, e.getMessage());
+        }
+
+        return new AbstractMap.SimpleEntry<>(true, "Report utenti generato con successo");
     }
 
 }

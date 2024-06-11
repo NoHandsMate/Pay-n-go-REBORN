@@ -5,6 +5,8 @@ public class utenteCorrente {
 
     private static utenteCorrente uniqueInstance;
     private long idUtenteCorrente;
+    private String nome;
+    private String cognome;
 
     private utenteCorrente() {}
 
@@ -21,6 +23,22 @@ public class utenteCorrente {
 
     public void setIdUtenteCorrente(long idUtenteCorrente) {
         this.idUtenteCorrente = idUtenteCorrente;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
     }
 }
 

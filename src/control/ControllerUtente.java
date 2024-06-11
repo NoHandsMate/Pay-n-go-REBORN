@@ -4,7 +4,6 @@ package control;
 import java.util.AbstractMap;
 import entity.FacadeEntityUtente;
 import exceptions.RegistrationFailedException;
-
 import dto.*;
 
 public class ControllerUtente {
@@ -36,4 +35,5 @@ public class ControllerUtente {
         return new AbstractMap.SimpleEntry<>(true, "Registrazione effettuata con successo");
 
     }
+
 }

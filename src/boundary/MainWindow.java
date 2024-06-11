@@ -2,10 +2,15 @@ package boundary;
 
 import javax.swing.*;
 import java.awt.*;
+import dto.*;
 
 public class MainWindow extends JFrame {
     private JPanel mainWindowPanel;
     private JLabel welcomeLabel;
+    private JButton visualizzaPrenotazioniButton;
+    private JButton esciButton;
+    private JButton prenotaViaggioButton;
+    private JButton condividiViaggioButton;
 
     public MainWindow() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -14,5 +19,12 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         getContentPane().add(new JScrollPane(mainWindowPanel), BorderLayout.CENTER);
+
+        welcomeLabel.setText("Ciao, " + utenteCorrente.getInstance().getNome() + " " +
+                utenteCorrente.getInstance().getCognome());
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }
