@@ -1,7 +1,6 @@
 package boundary;
 
 import control.ControllerUtente;
-import dto.utenteCorrente;
 
 import javax.swing.*;
 import java.awt.*;

@@ -4,8 +4,7 @@ import exceptions.DatabaseException;
 import exceptions.LoginUserException;
 import exceptions.RegistrationFailedException;
 import database.UtenteRegistratoDAO;
-import dto.utenteCorrente;
-import java.util.Arrays;
+import dto.UtenteCorrente;
 
 public class GestoreUtenti {
 
@@ -41,9 +40,9 @@ public class GestoreUtenti {
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
             utenteDAO.readUtenteRegistrato(email, new String(password));
-            utenteCorrente.getInstance().setIdUtenteCorrente(utenteDAO.getIdUtenteRegistrato());
-            utenteCorrente.getInstance().setNome(utenteDAO.getNome());
-            utenteCorrente.getInstance().setCognome(utenteDAO.getCognome());
+            UtenteCorrente.getInstance().setIdUtenteCorrente(utenteDAO.getIdUtenteRegistrato());
+            UtenteCorrente.getInstance().setNome(utenteDAO.getNome());
+            UtenteCorrente.getInstance().setCognome(utenteDAO.getCognome());
         } catch (DatabaseException e) {
             throw new LoginUserException("Login Utente fallito: " + e.getMessage());
         }

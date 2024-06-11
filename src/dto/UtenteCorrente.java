@@ -1,18 +1,18 @@
 package dto;
 
 
-public class utenteCorrente {
+public class UtenteCorrente {
 
-    private static utenteCorrente uniqueInstance;
+    private static UtenteCorrente uniqueInstance;
     private long idUtenteCorrente;
     private String nome;
     private String cognome;
 
-    private utenteCorrente() {}
+    private UtenteCorrente() {}
 
-    public static utenteCorrente getInstance() {
+    public static UtenteCorrente getInstance() {
         if (uniqueInstance == null) {
-            uniqueInstance = new utenteCorrente();
+            uniqueInstance = new UtenteCorrente();
         }
         return uniqueInstance;
     }

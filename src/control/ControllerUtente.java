@@ -47,15 +47,17 @@ public class ControllerUtente {
         return new AbstractMap.SimpleEntry<>(true, "Login effettuato con successo");
     }
 
-    /*public AbstractMap.SimpleEntry<Boolean, String> condividiViaggio(String luogoPartenza,
+    public AbstractMap.SimpleEntry<Boolean, String> condividiViaggio(String luogoPartenza,
                                                                      String luogoDestinazione,
                                                                      LocalDateTime dataPartenza,
                                                                      LocalDateTime dataArrivo,
-                                                                     float contributoSpese,
-                                                                     int idAutista){
+                                                                     float contributoSpese){
+
+        FacadeEntityUtente.getInstance().condividiViaggio(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo,
+                contributoSpese,idAutista);
 
 
 
-    }*/
+    }
 
 }

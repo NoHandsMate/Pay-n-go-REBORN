@@ -1,6 +1,6 @@
 package dto;
 
-public class myDto {
+public class MyDto {
 
     private String campo1;
     private String campo2;
@@ -10,9 +10,9 @@ public class myDto {
     private String campo6;
     private String campo7;
 
-    public myDto() {}
+    public MyDto() {}
 
-    public myDto(String campo1, String campo2,String campo3, String campo4,String campo5, String campo6,
+    public MyDto(String campo1, String campo2, String campo3, String campo4, String campo5, String campo6,
                  String campo7) {
         super();
         this.campo1 = campo1;
