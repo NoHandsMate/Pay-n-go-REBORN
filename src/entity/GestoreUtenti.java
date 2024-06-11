@@ -25,8 +25,10 @@ public class GestoreUtenti {
 
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
-            utenteDAO.createUtenteRegistrato(nome, cognome, telefono, email, auto,
-                    postiDisp, new String(password));
+            utenteDAO.createUtenteRegistrato(nome, cognome, telefono, email, auto, postiDisp, new String(password));
+            UtenteCorrente.getInstance().setIdUtenteCorrente(utenteDAO.getIdUtenteRegistrato());
+            UtenteCorrente.getInstance().setNome(utenteDAO.getNome());
+            UtenteCorrente.getInstance().setCognome(utenteDAO.getCognome());
         } catch (DatabaseException e) {
             if (e.isVisible())
             {
@@ -48,7 +50,7 @@ public class GestoreUtenti {
         }
     }
 
-    public void GeneraReportUtenti(){
-
+    public void generaReportUtenti(){
+        /* TODO: Da implementare */
     }
 }

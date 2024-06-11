@@ -22,11 +22,13 @@ public class ControllerUtente {
         return uniqueInstance;
     }
 
-
-    public AbstractMap.SimpleEntry<Boolean, String> registraUtente(String nome, String cognome, String email,
-                                                                          String auto, char[] password, Integer postiDisp,
-                                                                          String telefono) {
-
+    public AbstractMap.SimpleEntry<Boolean, String> registraUtente(String nome,
+                                                                   String cognome,
+                                                                   String email,
+                                                                   String auto,
+                                                                   char[] password,
+                                                                   Integer postiDisp,
+                                                                   String telefono) {
         try {
             FacadeEntityUtente.getInstance().registraUtente(nome, cognome, email, auto, password, postiDisp, telefono);
         } catch (RegistrationFailedException e) {
@@ -36,8 +38,8 @@ public class ControllerUtente {
         return new AbstractMap.SimpleEntry<>(true, "Registrazione effettuata con successo");
     }
 
-    public AbstractMap.SimpleEntry<Boolean, String> loginUtente(String email, char[] password) {
-
+    public AbstractMap.SimpleEntry<Boolean, String> loginUtente(String email,
+                                                                char[] password) {
         try {
             FacadeEntityUtente.getInstance().loginUtente(email, password);
         } catch (LoginUserException e) {

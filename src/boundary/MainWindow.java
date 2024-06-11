@@ -19,9 +19,7 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         getContentPane().add(new JScrollPane(mainWindowPanel), BorderLayout.CENTER);
-    }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
+        welcomeLabel.setText(String.format("Ciao %s %s!",
+                UtenteCorrente.getInstance().getNome(), UtenteCorrente.getInstance().getCognome()));
     }
 }

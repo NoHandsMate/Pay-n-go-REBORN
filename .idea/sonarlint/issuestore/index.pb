@@ -65,3 +65,9 @@ M
 src/entity/GestoreViaggi.java,f\1\f1d9b24feb6994803ea09a9b800a3619c41a5139
 V
 &src/exceptions/LoginUserException.java,1\7\17801d142a84a3e8d75d88beef3ebf0223b85b53
+B
+src/dto/myDto.java,2\0\20e465f5ca9b53c6199171f1655fbbaf3d2c63fd
+B
+src/dto/MyDto.java,9\1\91f93fc4af8fbded340e6da23ef5d0b3da443bea
+K
+src/dto/UtenteCorrente.java,3\6\36931f7e93bfbc47c381afb7d1754919dfbf2b79
