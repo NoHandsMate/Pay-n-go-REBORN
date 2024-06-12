@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class ViaggioDAO {
@@ -20,7 +21,7 @@ public class ViaggioDAO {
 
     private static final String DATETIMEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    private final Logger logger = Logger.getLogger("loggerViaggioDAO");
+    private static final Logger logger = Logger.getLogger("loggerViaggioDAO");
 
     /**
      * Costruttore di default di ViaggioDAO, crea un'istanza vuota da popolare successivamente.
@@ -76,6 +77,34 @@ public class ViaggioDAO {
             throw new DatabaseException("Non è stato trovato un viaggio corrispondente.",true);
     }
 
+
+    /**
+     * Funzione per caricare dal database la lista dei viaggi memorizzati
+     * @return la lista di viaggiDAO
+     * @throws DatabaseException se si è verificato un errore nel caricamento dal database dei viaggi
+     */
+    public static ArrayList<ViaggioDAO> getViaggi() throws DatabaseException {
+        String query = "SELECT * from viaggi";
+        logger.info(query);
+        ArrayList<ViaggioDAO> viaggiSalvati = new ArrayList<>();
+        try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
+           while(rs.next()) {
+               ViaggioDAO v = new ViaggioDAO();
+               v.luogoPartenza = rs.getString("luogoPartenza");
+               v.luogoDestinazione = rs.getString("luogoDestinazione");
+               v.dataPartenza = rs.getObject("dataPartenza", LocalDateTime.class);
+               v.dataArrivo = rs.getObject("dataArrivo", LocalDateTime.class);
+               v.contributoSpese = rs.getFloat("contributoSpese");
+               v.idAutista = rs.getLong("autista");
+               viaggiSalvati.add(v);
+           }
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.warning(String.format("Errore durante il caricamento dal database: %s", e.getMessage()));
+            throw new DatabaseException("Errore nel caricamento di un viaggio dal database.",false);
+        }
+
+        return viaggiSalvati;
+    }
     /**
      * Funzione privata per caricare i dati di un viaggio dal database.
      * @param idViaggio l'identificativo del viaggio.

@@ -1,15 +1,14 @@
 package control;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 
 import database.UtenteRegistratoDAO;
 import entity.FacadeEntityUtente;
-import exceptions.AggiornamentoDatiFailedException;
-import exceptions.LoginUserException;
-import exceptions.RegistrationFailedException;
-import exceptions.CondivisioneViaggioFailedException;
+import exceptions.*;
 import dto.*;
 
 public class ControllerUtente {
@@ -84,7 +83,19 @@ public class ControllerUtente {
 
         return new AbstractMap.SimpleEntry<>(true, "Aggiornamento effettuato con successo");
 
-
     }
 
+    public AbstractMap.SimpleEntry<Boolean, Object> ricercaViaggio(String luogoPartenza, String luogoDestinazione,
+                                                                   LocalDate dataPartenza) {
+
+        ArrayList<MyDto> viaggiTrovatiDTO;
+
+        try {
+            viaggiTrovatiDTO = FacadeEntityUtente.getInstance().ricercaViaggio(luogoPartenza, luogoDestinazione, dataPartenza);
+        } catch (RicercaViaggioFailedException e) {
+            return new AbstractMap.SimpleEntry<>(false, e.getMessage());
+        }
+
+        return new AbstractMap.SimpleEntry<>(true, viaggiTrovatiDTO);
+    }
 }

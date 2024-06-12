@@ -1,11 +1,11 @@
 package entity;
 
-import exceptions.LoginUserException;
-import exceptions.RegistrationFailedException;
-import exceptions.CondivisioneViaggioFailedException;
-import exceptions.AggiornamentoDatiFailedException;
+import dto.MyDto;
+import exceptions.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class FacadeEntityUtente {
 
@@ -46,5 +46,11 @@ public class FacadeEntityUtente {
 
         GestoreUtenti.getInstance().aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, telefono);
 
+    }
+
+    public ArrayList<MyDto> ricercaViaggio(String luogoPartenza, String luogoDestinazione,
+                                           LocalDate dataPartenza) throws RicercaViaggioFailedException {
+
+        return GestoreViaggi.getInstance().ricercaViaggio(luogoPartenza, luogoDestinazione, dataPartenza);
     }
 }

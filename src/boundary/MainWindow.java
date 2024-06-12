@@ -6,9 +6,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 
 import com.github.lgooddatepicker.components.DatePicker;
+import control.ControllerUtente;
 import dto.*;
 
 public class MainWindow extends JFrame {
@@ -157,23 +162,52 @@ public class MainWindow extends JFrame {
                 prenotaViaggioButton.setEnabled(viaggiTable.getSelectedRow() != -1));
 
         cercaViaggioButton.addActionListener(actionEvent -> {
-            Object[][] data = {{"1", "Napoli", "Roma", "Oggi", "Domani", 1.65f, 3}};
-            String[] columnNames = {"Id viaggio", "Partenza", "Destinazione", "Data e ora partenza", "Data e ora arrivo", "Contributo spese", "Autista"};
-            TableModel tableModel = new DefaultTableModel(data, columnNames) {
-                @Override
-                public boolean isCellEditable(int row, int column) {
-                    return false;
+
+            /*TODO: Ricerca Viaggio del controller*/
+
+            AbstractMap.SimpleEntry<Boolean, Object> result;
+
+            result = ControllerUtente.getInstance().ricercaViaggio(luogoPartenzaField.getText(),
+                                                                   luogoArrivoField.getText(),
+                                                                   dataPartenzaPicker.getDate());
+
+            if (result.getKey()) {
+                ArrayList<MyDto> viaggiTrovati = (ArrayList<MyDto>)result.getValue();
+                ArrayList<String> rows = new ArrayList<>();
+                for (MyDto viaggi : viaggiTrovati) {
+                    rows.add(viaggi.getCampo1());
+                    rows.add(viaggi.getCampo2());
+                    rows.add(viaggi.getCampo3());
+                    rows.add(viaggi.getCampo4());
+                    rows.add(viaggi.getCampo5());
+                    rows.add(viaggi.getCampo6());
+                    rows.add(viaggi.getCampo7());
                 }
-            };
-            viaggiTable.setModel(tableModel);
-            viaggiTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            viaggiTable.setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
-            DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
-            headerRenderer.setBackground(new Color(48, 48, 48));
-            headerRenderer.setOpaque(true);
-            viaggiTable.getTableHeader().setDefaultRenderer(headerRenderer);
-            viaggiTable.getTableHeader().setReorderingAllowed(false);
-            viaggiTable.getTableHeader().setResizingAllowed(false);
+                String[] columnNames = {"Id viaggio", "Partenza", "Destinazione", "Data e ora partenza", "Data e ora arrivo", "Contributo spese", "Autista"};
+                String[][] data = new String[rows.size() / columnNames.length][columnNames.length];
+
+                for (int i = 0; i < data.length; i++) {
+                    Arrays.fill(data[i], rows.get(i + columnNames.length));
+                }
+
+                TableModel tableModel = new DefaultTableModel(data, columnNames) {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return false;
+                    }
+                };
+                viaggiTable.setModel(tableModel);
+                viaggiTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                viaggiTable.setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
+                DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
+                headerRenderer.setBackground(new Color(48, 48, 48));
+                headerRenderer.setOpaque(true);
+                viaggiTable.getTableHeader().setDefaultRenderer(headerRenderer);
+                viaggiTable.getTableHeader().setReorderingAllowed(false);
+                viaggiTable.getTableHeader().setResizingAllowed(false);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, result.getValue(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         viaggiTable.getSelectionModel().addListSelectionListener(selectionEvent ->

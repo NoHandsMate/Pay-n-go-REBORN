@@ -68,6 +68,10 @@ public class MyDto {
         return campo6;
     }
 
+    public void setCampo6(String campo6) {
+        this.campo6 = campo6;
+    }
+
     public String getCampo7() {
         return campo7;
     }
