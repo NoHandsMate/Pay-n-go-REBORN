@@ -6,8 +6,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
 import com.github.lgooddatepicker.components.DatePicker;
@@ -48,6 +46,17 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
         getContentPane().add(new JScrollPane(mainWindowPanel), BorderLayout.CENTER);
+        if (UtenteCorrente.getInstance().getIdUtenteCorrente() == 0)
+        {
+            JOptionPane.showMessageDialog(rootPane, "Non è presente una sessione utente attiva!", "Errore",
+                    JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
+        } else if (UtenteCorrente.getInstance().getIdUtenteCorrente() == 1) {
+            FormGestore formGestore = new FormGestore();
+            formGestore.setVisible(true);
+            setVisible(false);
+        }
+
         welcomeLabel.setText(String.format("Ciao %s %s!",
                 UtenteCorrente.getInstance().getNome(), UtenteCorrente.getInstance().getCognome()));
 
@@ -110,6 +119,13 @@ public class MainWindow extends JFrame {
             if (contentTab.getSelectedIndex() == 0) {
 
             } else if (contentTab.getSelectedIndex() == 1) {
+                nomeField.setText(UtenteCorrente.getInstance().getNome());
+                cognomeField.setText(UtenteCorrente.getInstance().getCognome());
+                emailField.setText(UtenteCorrente.getInstance().getEmail());
+                passwordField.setText(UtenteCorrente.getInstance().getPassword());
+                telefonoField.setText(UtenteCorrente.getInstance().getContattoTelefonico());
+                autoField.setText(UtenteCorrente.getInstance().getAuto());
+                postiSpinner.setValue(Integer.valueOf(UtenteCorrente.getInstance().getPostiDisp()));
 
             // TODO: forse non serve        } else if (contentTab.getSelectedIndex() == 2) {
 
@@ -166,24 +182,6 @@ public class MainWindow extends JFrame {
         prenotaViaggioButton.addActionListener(actionEvent -> {
 
         });
-    }
-
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-            Font f = new javax.swing.plaf.FontUIResource("Lucida Sans Typewriter", Font.PLAIN,16);
-            Enumeration<Object> keys = UIManager.getDefaults().keys();
-            while (keys.hasMoreElements()) {
-                Object key = keys.nextElement();
-                Object value = UIManager.get (key);
-                if (value instanceof javax.swing.plaf.FontUIResource)
-                    UIManager.put (key, f);
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            java.util.logging.Logger.getLogger("loggerFormLogin").log(java.util.logging.Level.SEVERE, e.getMessage());
-        }
-        MainWindow window = new MainWindow();
-        window.setVisible(true);
     }
 
     private void createUIComponents() {

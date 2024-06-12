@@ -27,9 +27,7 @@ public class GestoreUtenti {
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
             utenteDAO.createUtenteRegistrato(nome, cognome, telefono, email, auto, postiDisp, new String(password));
-            UtenteCorrente.getInstance().setIdUtenteCorrente(utenteDAO.getIdUtenteRegistrato());
-            UtenteCorrente.getInstance().setNome(utenteDAO.getNome());
-            UtenteCorrente.getInstance().setCognome(utenteDAO.getCognome());
+            aggiornaUtenteCorrente(utenteDAO);
         } catch (DatabaseException e) {
             if (e.isVisible())
             {
@@ -43,9 +41,7 @@ public class GestoreUtenti {
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
             utenteDAO.readUtenteRegistrato(email, new String(password));
-            UtenteCorrente.getInstance().setIdUtenteCorrente(utenteDAO.getIdUtenteRegistrato());
-            UtenteCorrente.getInstance().setNome(utenteDAO.getNome());
-            UtenteCorrente.getInstance().setCognome(utenteDAO.getCognome());
+            aggiornaUtenteCorrente(utenteDAO);
         } catch (DatabaseException e) {
             throw new LoginUserException("Login Utente fallito: " + e.getMessage());
         }
@@ -58,13 +54,7 @@ public class GestoreUtenti {
         try {
             UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(UtenteCorrente.getInstance().getIdUtenteCorrente());
             utenteDAO.updateUtenteRegistrato(nome, cognome, email, auto, new String(password), postiDisp, telefono);
-            UtenteCorrente.getInstance().setNome(utenteDAO.getNome());
-            UtenteCorrente.getInstance().setCognome(utenteDAO.getCognome());
-            UtenteCorrente.getInstance().setEmail(utenteDAO.getEmail());
-            UtenteCorrente.getInstance().setAuto(utenteDAO.getAutomobile());
-            UtenteCorrente.getInstance().setPassword(utenteDAO.getPassword());
-            UtenteCorrente.getInstance().setPostiDisp(String.valueOf(utenteDAO.getPostiDisponibili()));
-            UtenteCorrente.getInstance().setContattoTelefonico(utenteDAO.getContattoTelefonico());
+            aggiornaUtenteCorrente(utenteDAO);
         } catch (DatabaseException e) {
             throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito: " + e.getMessage());
         }
@@ -73,5 +63,16 @@ public class GestoreUtenti {
 
     public void generaReportUtenti(){
         /* TODO: Da implementare */
+    }
+
+    private void aggiornaUtenteCorrente(UtenteRegistratoDAO utenteDAO) {
+        UtenteCorrente.getInstance().setIdUtenteCorrente(utenteDAO.getIdUtenteRegistrato());
+        UtenteCorrente.getInstance().setNome(utenteDAO.getNome());
+        UtenteCorrente.getInstance().setCognome(utenteDAO.getCognome());
+        UtenteCorrente.getInstance().setEmail(utenteDAO.getEmail());
+        UtenteCorrente.getInstance().setAuto(utenteDAO.getAutomobile());
+        UtenteCorrente.getInstance().setPassword(utenteDAO.getPassword());
+        UtenteCorrente.getInstance().setPostiDisp(String.valueOf(utenteDAO.getPostiDisponibili()));
+        UtenteCorrente.getInstance().setContattoTelefonico(utenteDAO.getContattoTelefonico());
     }
 }

@@ -1,5 +1,7 @@
 package boundary;
 
+import dto.UtenteCorrente;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -19,6 +21,7 @@ public class HomePage extends JFrame {
         setResizable(false);
         setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
         getContentPane().add(new JScrollPane(homepagePanel), BorderLayout.CENTER);
+        UtenteCorrente.getInstance().setIdUtenteCorrente(0);
         registrazioneButton.addActionListener(actionEvent -> {
             FormRegistrazione formRegistrazione = new FormRegistrazione();
             formRegistrazione.setVisible(true);
