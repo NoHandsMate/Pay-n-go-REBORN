@@ -72,7 +72,7 @@ public class UtenteRegistratoDAO {
     }
 
     /**
-     * Funzione per aggiornare i dati relativi a un utente registrato dal database.
+     * Funzione per aggiornare i dati relativi a un utente registrato nel database.
      * @param nome il nome dell'utente registrato.
      * @param cognome il cognome dell'utente registrato.
      * @param contattoTelefonico il contatto telefonico dell'utente registrato.
@@ -80,7 +80,7 @@ public class UtenteRegistratoDAO {
      * @param automobile l'automobile dell'utente registrato.
      * @param postiDisponibili il numero di posti disponibili nell'automobile dell'utente registrato.
      * @param password la password (bcrypt) dell'utente registrato.
-     * @throws DatabaseException se non è stato possibile aggiornare l'utente registrato dal database.
+     * @throws DatabaseException se non è stato possibile aggiornare l'utente registrato nel database.
      */
     public void updateUtenteRegistrato(String nome,
                                        String cognome,
@@ -243,7 +243,7 @@ public class UtenteRegistratoDAO {
      * @param automobile l'automobile dell'utente registrato.
      * @param postiDisponibili il numero di posti disponibili nell'automobile dell'utente registrato.
      * @param password la password (bcrypt) dell'utente registrato.
-     * @throws DatabaseException se non è stato possibile aggiornare l'utente registrato dal database.
+     * @throws DatabaseException se non è stato possibile aggiornare l'utente registrato nel database.
      */
     private int aggiornaInDB(String nome,
                              String cognome,
