@@ -63,18 +63,16 @@ public class GestoreUtenti {
 
     public ArrayList<ArrayList<MyDto>> generaReportUtenti() throws ReportUtentiFailedException {
 
+        //ArrayList di ArrayList di DTO: ogni utente può avere una serie di valutazioni
+        ArrayList<ArrayList<MyDto>> reportUtenti = new ArrayList<>();
+
         try{
             int i = 0;
-
 
             //Tutti gli utenti del database
             ArrayList<UtenteRegistratoDAO> utentiRegistrati = UtenteRegistratoDAO.getUtentiRegistrati();
             //Tutti le valutazioni del database
             ArrayList<ValutazioneDAO> valutazioni = ValutazioneDAO.getValutazioni();
-
-            //ArrayList di ArrayList di DTO: ogni utente può avere una serie di valutazioni
-            ArrayList<ArrayList<MyDto>> reportUtenti = new ArrayList<>();
-
 
             for (UtenteRegistratoDAO utente : utentiRegistrati) {
 

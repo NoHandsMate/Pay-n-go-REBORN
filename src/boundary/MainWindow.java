@@ -6,11 +6,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import control.ControllerUtente;
@@ -27,7 +24,7 @@ public class MainWindow extends JFrame {
     private JTable prenotazioniTable;
     private JButton gestisciPrenotazioneButton;
     private JEditorPane homeEditorPane;
-    private JButton viaggiTabButton;
+    private JButton ricercaTabButton;
     private JTextField nomeField;
     private JTextField cognomeField;
     private JTextField emailField;
@@ -42,6 +39,8 @@ public class MainWindow extends JFrame {
     private JButton prenotaViaggioButton;
     private DatePicker dataPartenzaPicker;
     private JButton cercaViaggioButton;
+    private JButton condividiTabButton;
+    private JButton viaggiTabButton;
 
     public MainWindow() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -78,10 +77,14 @@ public class MainWindow extends JFrame {
             homeTabButton.setForeground(Color.WHITE);
             accountTabButton.setBackground(new Color(240, 155, 50));
             accountTabButton.setForeground(Color.BLACK);
-            viaggiTabButton.setBackground(new Color(240, 155, 50));
-            viaggiTabButton.setForeground(Color.BLACK);
+            ricercaTabButton.setBackground(new Color(240, 155, 50));
+            ricercaTabButton.setForeground(Color.BLACK);
             prenotazioniTabButton.setBackground(new Color(240, 155, 50));
             prenotazioniTabButton.setForeground(Color.BLACK);
+            condividiTabButton.setBackground(new Color(240, 155, 50));
+            condividiTabButton.setForeground(Color.BLACK);
+            viaggiTabButton.setBackground(new Color(240, 155, 50));
+            viaggiTabButton.setForeground(Color.BLACK);
         });
 
         accountTabButton.addActionListener(actionEvent -> {
@@ -90,22 +93,30 @@ public class MainWindow extends JFrame {
             homeTabButton.setForeground(Color.BLACK);
             accountTabButton.setBackground(new Color(15, 53, 156));
             accountTabButton.setForeground(Color.WHITE);
-            viaggiTabButton.setBackground(new Color(240, 155, 50));
-            viaggiTabButton.setForeground(Color.BLACK);
+            ricercaTabButton.setBackground(new Color(240, 155, 50));
+            ricercaTabButton.setForeground(Color.BLACK);
             prenotazioniTabButton.setBackground(new Color(240, 155, 50));
             prenotazioniTabButton.setForeground(Color.BLACK);
+            condividiTabButton.setBackground(new Color(240, 155, 50));
+            condividiTabButton.setForeground(Color.BLACK);
+            viaggiTabButton.setBackground(new Color(240, 155, 50));
+            viaggiTabButton.setForeground(Color.BLACK);
         });
 
-        viaggiTabButton.addActionListener(actionListener -> {
+        ricercaTabButton.addActionListener(actionListener -> {
             contentTab.setSelectedIndex(2);
             homeTabButton.setBackground(new Color(240, 155, 50));
             homeTabButton.setForeground(Color.BLACK);
             accountTabButton.setBackground(new Color(240, 155, 50));
             accountTabButton.setForeground(Color.BLACK);
-            viaggiTabButton.setBackground(new Color(15, 53, 156));
-            viaggiTabButton.setForeground(Color.WHITE);
+            ricercaTabButton.setBackground(new Color(15, 53, 156));
+            ricercaTabButton.setForeground(Color.WHITE);
             prenotazioniTabButton.setBackground(new Color(240, 155, 50));
             prenotazioniTabButton.setForeground(Color.BLACK);
+            condividiTabButton.setBackground(new Color(240, 155, 50));
+            condividiTabButton.setForeground(Color.BLACK);
+            viaggiTabButton.setBackground(new Color(240, 155, 50));
+            viaggiTabButton.setForeground(Color.BLACK);
         });
 
         prenotazioniTabButton.addActionListener(actionListener -> {
@@ -114,10 +125,46 @@ public class MainWindow extends JFrame {
             homeTabButton.setForeground(Color.BLACK);
             accountTabButton.setBackground(new Color(240, 155, 50));
             accountTabButton.setForeground(Color.BLACK);
-            viaggiTabButton.setBackground(new Color(240, 155, 50));
-            viaggiTabButton.setForeground(Color.BLACK);
+            ricercaTabButton.setBackground(new Color(240, 155, 50));
+            ricercaTabButton.setForeground(Color.BLACK);
             prenotazioniTabButton.setBackground(new Color(15, 53, 156));
             prenotazioniTabButton.setForeground(Color.WHITE);
+            condividiTabButton.setBackground(new Color(240, 155, 50));
+            condividiTabButton.setForeground(Color.BLACK);
+            viaggiTabButton.setBackground(new Color(240, 155, 50));
+            viaggiTabButton.setForeground(Color.BLACK);
+        });
+
+        condividiTabButton.addActionListener(actionListener -> {
+            contentTab.setSelectedIndex(4);
+            homeTabButton.setBackground(new Color(240, 155, 50));
+            homeTabButton.setForeground(Color.BLACK);
+            accountTabButton.setBackground(new Color(240, 155, 50));
+            accountTabButton.setForeground(Color.BLACK);
+            ricercaTabButton.setBackground(new Color(240, 155, 50));
+            ricercaTabButton.setForeground(Color.BLACK);
+            prenotazioniTabButton.setBackground(new Color(240, 155, 50));
+            prenotazioniTabButton.setForeground(Color.BLACK);
+            condividiTabButton.setBackground(new Color(15, 53, 156));
+            condividiTabButton.setForeground(Color.WHITE);
+            viaggiTabButton.setBackground(new Color(240, 155, 50));
+            viaggiTabButton.setForeground(Color.BLACK);
+        });
+
+        viaggiTabButton.addActionListener(actionListener -> {
+            contentTab.setSelectedIndex(5);
+            homeTabButton.setBackground(new Color(240, 155, 50));
+            homeTabButton.setForeground(Color.BLACK);
+            accountTabButton.setBackground(new Color(240, 155, 50));
+            accountTabButton.setForeground(Color.BLACK);
+            ricercaTabButton.setBackground(new Color(240, 155, 50));
+            ricercaTabButton.setForeground(Color.BLACK);
+            prenotazioniTabButton.setBackground(new Color(240, 155, 50));
+            prenotazioniTabButton.setForeground(Color.BLACK);
+            condividiTabButton.setBackground(new Color(240, 155, 50));
+            condividiTabButton.setForeground(Color.BLACK);
+            viaggiTabButton.setBackground(new Color(15, 53, 156));
+            viaggiTabButton.setForeground(Color.WHITE);
         });
 
         contentTab.addChangeListener(e -> {
@@ -187,7 +234,10 @@ public class MainWindow extends JFrame {
                 String[][] data = new String[rows.size() / columnNames.length][columnNames.length];
 
                 for (int i = 0; i < data.length; i++) {
-                    Arrays.fill(data[i], rows.get(i + columnNames.length));
+                    for (int j = 0; j < data[i].length; j++)
+                    {
+                        data[i][j] = rows.get(i * columnNames.length + j);
+                    }
                 }
 
                 TableModel tableModel = new DefaultTableModel(data, columnNames) {

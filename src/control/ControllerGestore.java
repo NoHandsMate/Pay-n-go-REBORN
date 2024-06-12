@@ -42,7 +42,7 @@ public class ControllerGestore {
 
     public AbstractMap.SimpleEntry<Boolean, Object> generaReportUtenti(){
 
-        ArrayList<MyDto> reportUtenti;
+        ArrayList<ArrayList<MyDto>> reportUtenti;
 
         try {
 

@@ -90,6 +90,7 @@ public class ViaggioDAO {
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
            while(rs.next()) {
                ViaggioDAO v = new ViaggioDAO();
+               v.idViaggio = rs.getLong("idViaggio");
                v.luogoPartenza = rs.getString("luogoPartenza");
                v.luogoDestinazione = rs.getString("luogoDestinazione");
                v.dataPartenza = rs.getObject("dataPartenza", LocalDateTime.class);
