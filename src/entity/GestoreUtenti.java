@@ -1,5 +1,6 @@
 package entity;
 
+import exceptions.AggiornamentoDatiFailedException;
 import exceptions.DatabaseException;
 import exceptions.LoginUserException;
 import exceptions.RegistrationFailedException;
@@ -48,6 +49,26 @@ public class GestoreUtenti {
         } catch (DatabaseException e) {
             throw new LoginUserException("Login Utente fallito: " + e.getMessage());
         }
+    }
+
+    public void aggiornaDatiPersonali(String nome, String cognome, String email,
+                                      String auto, char[] password, Integer postiDisp,
+                                      String telefono) throws AggiornamentoDatiFailedException {
+
+        /* TODO: Bisogna capire come ottenere l'utente corrente. O lo prendiamo dal GestoreUtenti come entità oppure
+        *        utilizziamo l'id corrente e costruiamo l'utente corrente con la DAO con il quale poi
+        *        aggiornare i dati personali. Nel try dopo l'update va aggiornato l'utenteRegistrato corrente
+        *
+        */
+
+        EntityUtenteRegistrato entity = new EntityUtenteRegistrato(); /*TODO: Questa va ottenuta in qualche modo come detto prima*/
+        UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(entity.getId());
+        try {
+            utenteDAO.updateUtenteRegistrato(nome, cognome, email, auto, new String(password), postiDisp, telefono);
+        } catch (DatabaseException e) {
+            throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito: " + e.getMessage());
+        }
+
     }
 
     public void generaReportUtenti(){

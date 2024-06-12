@@ -3,7 +3,10 @@ package control;
 
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
+
+import database.UtenteRegistratoDAO;
 import entity.FacadeEntityUtente;
+import exceptions.AggiornamentoDatiFailedException;
 import exceptions.LoginUserException;
 import exceptions.RegistrationFailedException;
 import exceptions.CondivisioneViaggioFailedException;
@@ -66,6 +69,21 @@ public class ControllerUtente {
         }
 
         return new AbstractMap.SimpleEntry<>(true, "Viaggio condiviso con successo");
+
+    }
+
+    public AbstractMap.SimpleEntry<Boolean, String> aggiornaDatiPersonali(String nome, String cognome, String email,
+                                                                          String auto, char[] password, Integer postiDisp,
+                                                                          String telefono) {
+
+        try {
+            FacadeEntityUtente.getInstance().aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, telefono);
+        } catch (AggiornamentoDatiFailedException e) {
+            return new AbstractMap.SimpleEntry<>(false, e.getMessage());
+        }
+
+        return new AbstractMap.SimpleEntry<>(true, "Aggiornamento effettuato con successo");
+
 
     }
 

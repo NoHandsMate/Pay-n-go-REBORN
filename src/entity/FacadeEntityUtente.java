@@ -3,6 +3,7 @@ package entity;
 import exceptions.LoginUserException;
 import exceptions.RegistrationFailedException;
 import exceptions.CondivisioneViaggioFailedException;
+import exceptions.AggiornamentoDatiFailedException;
 
 import java.time.LocalDateTime;
 
@@ -37,6 +38,13 @@ public class FacadeEntityUtente {
                                  LocalDateTime dataArrivo,
                                  float contributoSpese,long idAutista) throws CondivisioneViaggioFailedException {
 
+    }
+
+    public void aggiornaDatiPersonali(String nome, String cognome, String email,
+                                      String auto, char[] password, Integer postiDisp,
+                                      String telefono) throws AggiornamentoDatiFailedException {
+
+        GestoreUtenti.getInstance().aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, telefono);
 
     }
 }
