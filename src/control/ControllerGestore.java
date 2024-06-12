@@ -2,9 +2,13 @@ package control;
 
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
+
 import entity.FacadeEntityGestore;
 import exceptions.ReportIncassiFailedException;
 import exceptions.ReportUtentiFailedException;
+
+import dto.*;
 
 
 public class ControllerGestore {
@@ -36,16 +40,18 @@ public class ControllerGestore {
         return new AbstractMap.SimpleEntry<>(true, reportIncassi);
     }
 
-    public AbstractMap.SimpleEntry<Boolean, String> generaReportUtenti(){
+    public AbstractMap.SimpleEntry<Boolean, Object> generaReportUtenti(){
+
+        ArrayList<MyDto> reportUtenti;
 
         try {
 
-            FacadeEntityGestore.getInstance().GeneraReportUtenti();
+           reportUtenti = FacadeEntityGestore.getInstance().GeneraReportUtenti();
         } catch (ReportUtentiFailedException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
 
-        return new AbstractMap.SimpleEntry<>(true, "Report utenti generato con successo");
+        return new AbstractMap.SimpleEntry<>(true,reportUtenti);
     }
 
 }

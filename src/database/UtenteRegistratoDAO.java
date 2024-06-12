@@ -1,10 +1,12 @@
 package database;
 
 
+import dto.UtenteCorrente;
 import exceptions.DatabaseException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class UtenteRegistratoDAO {
@@ -18,7 +20,7 @@ public class UtenteRegistratoDAO {
     private int postiDisponibili;
     private String password;
 
-    private final Logger logger = Logger.getLogger("loggerUtenteRegistratoDAO");
+    private static final Logger logger = Logger.getLogger("loggerUtenteRegistratoDAO");
 
     /**
      * Costruttore di default di UtenteRegistratoDAO, crea un'istanza vuota da popolare successivamente.
@@ -108,6 +110,33 @@ public class UtenteRegistratoDAO {
     public void deleteUtenteRegistrato() throws DatabaseException {
         if (this.eliminaDaDB() == 0)
             throw new DatabaseException("Non è stato trovato un utente registrato corrispondente.", true);
+    }
+
+    /**
+     * Funzione per prelevare tutti gli utenti registrati dal database.
+     * @throws DatabaseException se non è stato possibile selezionare tutti gli utenti registrati dal database.
+     */
+    public static ArrayList<UtenteRegistratoDAO> getUtentiRegistrati() throws DatabaseException {
+        String query = "SELECT * from utentiregistrati";
+        ArrayList<UtenteRegistratoDAO> utentiRegistrati = new ArrayList<>();
+        try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
+            while (rs.next()) {
+                UtenteRegistratoDAO u = new UtenteRegistratoDAO();
+                u.idUtenteRegistrato = rs.getInt("idUtenteRegistrato");
+                u.nome = rs.getString("nome");
+                u.cognome = rs.getString("cognome");
+                u.contattoTelefonico = rs.getString("contattoTelefonico");
+                u.email = rs.getString("email");
+                u.automobile = rs.getString("automobile");
+                u.postiDisponibili = rs.getInt("postiDisponibili");
+                u.password = rs.getString("password");
+                utentiRegistrati.add(u);
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.warning("Errore durante il caricamento dal database degli utenti registrati.");
+            throw new DatabaseException("Errore nel caricamento degli utenti registrati dal database.", false);
+        }
+        return utentiRegistrati;
     }
 
     /**
