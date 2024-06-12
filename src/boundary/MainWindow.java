@@ -6,8 +6,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
+import com.github.lgooddatepicker.components.DatePicker;
 import dto.*;
 
 public class MainWindow extends JFrame {
@@ -30,6 +33,12 @@ public class MainWindow extends JFrame {
     private JButton aggiornaDatiPersonaliButton;
     private JPasswordField passwordField;
     private JTextField telefonoField;
+    private JTextField luogoPartenzaField;
+    private JTextField luogoArrivoField;
+    private JTable viaggiTable;
+    private JButton prenotaViaggioButton;
+    private DatePicker dataPartenzaPicker;
+    private JButton cercaViaggioButton;
 
     public MainWindow() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -48,6 +57,7 @@ public class MainWindow extends JFrame {
                     return -1;
             }
         });
+
         homeTabButton.addActionListener(actionEvent -> {
             contentTab.setSelectedIndex(0);
             homeTabButton.setBackground(new Color(15, 53, 156));
@@ -59,6 +69,7 @@ public class MainWindow extends JFrame {
             prenotazioniTabButton.setBackground(new Color(240, 155, 50));
             prenotazioniTabButton.setForeground(Color.BLACK);
         });
+
         accountTabButton.addActionListener(actionEvent -> {
             contentTab.setSelectedIndex(1);
             homeTabButton.setBackground(new Color(240, 155, 50));
@@ -70,6 +81,7 @@ public class MainWindow extends JFrame {
             prenotazioniTabButton.setBackground(new Color(240, 155, 50));
             prenotazioniTabButton.setForeground(Color.BLACK);
         });
+
         viaggiTabButton.addActionListener(actionListener -> {
             contentTab.setSelectedIndex(2);
             homeTabButton.setBackground(new Color(240, 155, 50));
@@ -81,6 +93,7 @@ public class MainWindow extends JFrame {
             prenotazioniTabButton.setBackground(new Color(240, 155, 50));
             prenotazioniTabButton.setForeground(Color.BLACK);
         });
+
         prenotazioniTabButton.addActionListener(actionListener -> {
             contentTab.setSelectedIndex(3);
             homeTabButton.setBackground(new Color(240, 155, 50));
@@ -92,12 +105,13 @@ public class MainWindow extends JFrame {
             prenotazioniTabButton.setBackground(new Color(15, 53, 156));
             prenotazioniTabButton.setForeground(Color.WHITE);
         });
+
         contentTab.addChangeListener(e -> {
             if (contentTab.getSelectedIndex() == 0) {
 
             } else if (contentTab.getSelectedIndex() == 1) {
 
-            } else if (contentTab.getSelectedIndex() == 2) {
+            // TODO: forse non serve        } else if (contentTab.getSelectedIndex() == 2) {
 
             } else if (contentTab.getSelectedIndex() == 3) {
                 /* TODO qualcosa del genere */
@@ -122,12 +136,35 @@ public class MainWindow extends JFrame {
                 prenotazioniTable.getTableHeader().setResizingAllowed(false);
             }
         });
-        prenotazioniTable.getSelectionModel().addListSelectionListener(e -> {
-            if (prenotazioniTable.getSelectedRow() != -1) {
-                gestisciPrenotazioneButton.setEnabled(true);
-            } else if (prenotazioniTable.getSelectedRow() == -1) {
-                gestisciPrenotazioneButton.setEnabled(false);
-            }
+
+        prenotazioniTable.getSelectionModel().addListSelectionListener(selectionEvent ->
+                prenotaViaggioButton.setEnabled(viaggiTable.getSelectedRow() != -1));
+
+        cercaViaggioButton.addActionListener(actionEvent -> {
+            Object[][] data = {{"1", "Napoli", "Roma", "Oggi", "Domani", 1.65f, 3}};
+            String[] columnNames = {"Id viaggio", "Partenza", "Destinazione", "Data e ora partenza", "Data e ora arrivo", "Contributo spese", "Autista"};
+            TableModel tableModel = new DefaultTableModel(data, columnNames) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+            viaggiTable.setModel(tableModel);
+            viaggiTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            viaggiTable.setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
+            DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
+            headerRenderer.setBackground(new Color(48, 48, 48));
+            headerRenderer.setOpaque(true);
+            viaggiTable.getTableHeader().setDefaultRenderer(headerRenderer);
+            viaggiTable.getTableHeader().setReorderingAllowed(false);
+            viaggiTable.getTableHeader().setResizingAllowed(false);
+        });
+
+        viaggiTable.getSelectionModel().addListSelectionListener(selectionEvent ->
+                prenotaViaggioButton.setEnabled(viaggiTable.getSelectedRow() != -1));
+
+        prenotaViaggioButton.addActionListener(actionEvent -> {
+
         });
     }
 

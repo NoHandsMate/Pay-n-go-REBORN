@@ -62,7 +62,7 @@ public class GestoreUtenti {
         */
 
         EntityUtenteRegistrato entity = new EntityUtenteRegistrato(); /*TODO: Questa va ottenuta in qualche modo come detto prima*/
-        UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(entity.getId());
+        UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
             utenteDAO.updateUtenteRegistrato(nome, cognome, email, auto, new String(password), postiDisp, telefono);
         } catch (DatabaseException e) {

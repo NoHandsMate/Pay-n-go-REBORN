@@ -19,33 +19,28 @@ public class HomePage extends JFrame {
         setResizable(false);
         setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
         getContentPane().add(new JScrollPane(homepagePanel), BorderLayout.CENTER);
-        registrazioneButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                FormRegistrazione formRegistrazione = new FormRegistrazione();
-                formRegistrazione.setVisible(true);
-                formRegistrazione.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        setVisible(true);
-                    }
-                });
-                setVisible(false);
+        registrazioneButton.addActionListener(actionEvent -> {
+            FormRegistrazione formRegistrazione = new FormRegistrazione();
+            formRegistrazione.setVisible(true);
+            formRegistrazione.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    setVisible(true);
+                }
+            });
+            setVisible(false);
             }
-        });
-        loginButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                FormLogin formLogin = new FormLogin();
-                formLogin.setVisible(true);
-                formLogin.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        setVisible(true);
-                    }
-                });
-                setVisible(false);
-            }
+        );
+        loginButton.addActionListener(actionEvent -> {
+            FormLogin formLogin = new FormLogin();
+            formLogin.setVisible(true);
+            formLogin.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    setVisible(true);
+                }
+            });
+            setVisible(false);
         });
     }
 
