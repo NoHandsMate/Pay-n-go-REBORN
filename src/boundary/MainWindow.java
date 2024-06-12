@@ -2,10 +2,12 @@ package boundary;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.Enumeration;
 
-import control.ControllerUtente;
 import dto.*;
 
 public class MainWindow extends JFrame {
@@ -16,8 +18,18 @@ public class MainWindow extends JFrame {
     private JButton accountTabButton;
     private JButton homeTabButton;
     private JButton prenotazioniTabButton;
-    private JTable table1;
+    private JTable prenotazioniTable;
     private JButton gestisciPrenotazioneButton;
+    private JEditorPane homeEditorPane;
+    private JButton viaggiTabButton;
+    private JTextField nomeField;
+    private JTextField cognomeField;
+    private JTextField emailField;
+    private JTextField autoField;
+    private JSpinner postiSpinner;
+    private JButton aggiornaDatiPersonaliButton;
+    private JPasswordField passwordField;
+    private JTextField telefonoField;
 
     public MainWindow() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -32,7 +44,7 @@ public class MainWindow extends JFrame {
 
         contentTab.setUI(new BasicTabbedPaneUI() {
             @Override
-            protected int calculateTabAreaHeight(int tab_placement, int run_count, int max_tab_height) {
+            protected int calculateTabAreaHeight(int tabPlacement, int runCount, int maxTabHeight) {
                     return -1;
             }
         });
@@ -42,6 +54,8 @@ public class MainWindow extends JFrame {
             homeTabButton.setForeground(Color.WHITE);
             accountTabButton.setBackground(new Color(240, 155, 50));
             accountTabButton.setForeground(Color.BLACK);
+            viaggiTabButton.setBackground(new Color(240, 155, 50));
+            viaggiTabButton.setForeground(Color.BLACK);
             prenotazioniTabButton.setBackground(new Color(240, 155, 50));
             prenotazioniTabButton.setForeground(Color.BLACK);
         });
@@ -51,15 +65,30 @@ public class MainWindow extends JFrame {
             homeTabButton.setForeground(Color.BLACK);
             accountTabButton.setBackground(new Color(15, 53, 156));
             accountTabButton.setForeground(Color.WHITE);
+            viaggiTabButton.setBackground(new Color(240, 155, 50));
+            viaggiTabButton.setForeground(Color.BLACK);
             prenotazioniTabButton.setBackground(new Color(240, 155, 50));
             prenotazioniTabButton.setForeground(Color.BLACK);
         });
-        prenotazioniTabButton.addActionListener(actionListener -> {
+        viaggiTabButton.addActionListener(actionListener -> {
             contentTab.setSelectedIndex(2);
             homeTabButton.setBackground(new Color(240, 155, 50));
             homeTabButton.setForeground(Color.BLACK);
             accountTabButton.setBackground(new Color(240, 155, 50));
             accountTabButton.setForeground(Color.BLACK);
+            viaggiTabButton.setBackground(new Color(15, 53, 156));
+            viaggiTabButton.setForeground(Color.WHITE);
+            prenotazioniTabButton.setBackground(new Color(240, 155, 50));
+            prenotazioniTabButton.setForeground(Color.BLACK);
+        });
+        prenotazioniTabButton.addActionListener(actionListener -> {
+            contentTab.setSelectedIndex(3);
+            homeTabButton.setBackground(new Color(240, 155, 50));
+            homeTabButton.setForeground(Color.BLACK);
+            accountTabButton.setBackground(new Color(240, 155, 50));
+            accountTabButton.setForeground(Color.BLACK);
+            viaggiTabButton.setBackground(new Color(240, 155, 50));
+            viaggiTabButton.setForeground(Color.BLACK);
             prenotazioniTabButton.setBackground(new Color(15, 53, 156));
             prenotazioniTabButton.setForeground(Color.WHITE);
         });
@@ -69,8 +98,35 @@ public class MainWindow extends JFrame {
             } else if (contentTab.getSelectedIndex() == 1) {
 
             } else if (contentTab.getSelectedIndex() == 2) {
+
+            } else if (contentTab.getSelectedIndex() == 3) {
                 /* TODO qualcosa del genere */
                 // ControllerUtente.getInstance().visualizzaPrenotazioni
+
+                Object[][] data = {{"1", "Nome Cognome", "3"}, {"2", "Name Surname", "3"}, {"3", "Mario Rossi", "4"}};
+                String[] columnNames = {"Id prenotazione", "Passeggero", "Viaggio"};
+                TableModel tableModel = new DefaultTableModel(data, columnNames) {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return false;
+                    }
+                };
+                prenotazioniTable.setModel(tableModel);
+                prenotazioniTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                prenotazioniTable.setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
+                DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
+                headerRenderer.setBackground(new Color(48, 48, 48));
+                headerRenderer.setOpaque(true);
+                prenotazioniTable.getTableHeader().setDefaultRenderer(headerRenderer);
+                prenotazioniTable.getTableHeader().setReorderingAllowed(false);
+                prenotazioniTable.getTableHeader().setResizingAllowed(false);
+            }
+        });
+        prenotazioniTable.getSelectionModel().addListSelectionListener(e -> {
+            if (prenotazioniTable.getSelectedRow() != -1) {
+                gestisciPrenotazioneButton.setEnabled(true);
+            } else if (prenotazioniTable.getSelectedRow() == -1) {
+                gestisciPrenotazioneButton.setEnabled(false);
             }
         });
     }

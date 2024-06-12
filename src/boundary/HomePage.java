@@ -4,15 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Enumeration;
-import java.util.logging.Logger;
 
 public class HomePage extends JFrame {
     private JButton registrazioneButton;
     private JButton loginButton;
     private JPanel homepagePanel;
     private JPanel logoPanel;
-
-    private Logger logger = Logger.getLogger("loggerHomePage");
 
     public HomePage() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

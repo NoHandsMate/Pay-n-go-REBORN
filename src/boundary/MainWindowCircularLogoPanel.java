@@ -10,23 +10,23 @@ import java.util.logging.Logger;
 
 public class MainWindowCircularLogoPanel extends JPanel {
 
-    private BufferedImage pngCircularLogoImage;
-    private Logger logger = Logger.getLogger("loggerMainWindowCircularLogoPanel");
+    private transient BufferedImage pngCircularLogoImage;
 
     public MainWindowCircularLogoPanel() {
         try {
             pngCircularLogoImage = ImageIO.read(new File("resources/payngo-circlogo.png"));
         } catch (IOException e) {
-            logger.info(String.format("Non è stato possibile caricare il logo.%n%s", e.getMessage()));
+            Logger logger = Logger.getLogger("loggerMainWindowCircularLogoPanel");
+            logger.warning(String.format("Non è stato possibile caricare il logo.%n%s", e.getMessage()));
         }
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int imgWidth = 48;
-        int imgHeight = 48;
-        g.drawImage(pngCircularLogoImage, 0, 0, imgWidth, imgHeight, this);
+        int imgWidth = 42;
+        int imgHeight = 42;
+        g.drawImage(pngCircularLogoImage, 3, 3, imgWidth, imgHeight, this);
     }
 
 }
