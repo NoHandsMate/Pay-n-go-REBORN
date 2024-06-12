@@ -9,11 +9,12 @@ public class MyDto {
     private String campo5;
     private String campo6;
     private String campo7;
+    private String campo8;
 
     public MyDto() {}
 
     public MyDto(String campo1, String campo2, String campo3, String campo4, String campo5, String campo6,
-                 String campo7) {
+                 String campo7, String campo8) {
         super();
         this.campo1 = campo1;
         this.campo2 = campo2;
@@ -22,6 +23,7 @@ public class MyDto {
         this.campo5 = campo5;
         this.campo6 = campo6;
         this.campo7 = campo7;
+        this.campo8 = campo8;
     }
 
     public String getCampo1() {
@@ -74,6 +76,14 @@ public class MyDto {
 
     public void setCampo7(String campo7) {
         this.campo7 = campo7;
+    }
+
+    public String getCampo8() {
+        return campo8;
+    }
+
+    public void setCampo8(String campo8) {
+        this.campo8 = campo8;
     }
 
     @Override

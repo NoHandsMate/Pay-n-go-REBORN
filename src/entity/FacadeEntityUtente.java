@@ -1,9 +1,7 @@
 package entity;
 
-import exceptions.LoginUserException;
-import exceptions.RegistrationFailedException;
-import exceptions.CondivisioneViaggioFailedException;
-import exceptions.AggiornamentoDatiFailedException;
+import dto.MyDto;
+import exceptions.*;
 
 import java.time.LocalDateTime;
 
@@ -46,5 +44,9 @@ public class FacadeEntityUtente {
 
         GestoreUtenti.getInstance().aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, telefono);
 
+    }
+
+    public MyDto infoUtenteCorrente() throws InfoUtenteCorrenteFailedException {
+        return GestoreUtenti.getInstance().infoUtenteCorrente();
     }
 }

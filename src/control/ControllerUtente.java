@@ -6,10 +6,7 @@ import java.util.AbstractMap;
 
 import database.UtenteRegistratoDAO;
 import entity.FacadeEntityUtente;
-import exceptions.AggiornamentoDatiFailedException;
-import exceptions.LoginUserException;
-import exceptions.RegistrationFailedException;
-import exceptions.CondivisioneViaggioFailedException;
+import exceptions.*;
 import dto.*;
 
 public class ControllerUtente {
@@ -85,6 +82,16 @@ public class ControllerUtente {
         return new AbstractMap.SimpleEntry<>(true, "Aggiornamento effettuato con successo");
 
 
+    }
+
+    public AbstractMap.SimpleEntry<Boolean, MyDto> infoUtenteCorrente() {
+        MyDto myDto;
+        try {
+            myDto = FacadeEntityUtente.getInstance().infoUtenteCorrente();
+        } catch (InfoUtenteCorrenteFailedException e) {
+            return  new AbstractMap.SimpleEntry<>(false, null);
+        }
+        return new AbstractMap.SimpleEntry<>(true, myDto);
     }
 
 }

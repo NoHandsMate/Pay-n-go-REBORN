@@ -1,15 +1,13 @@
 package entity;
 
-import exceptions.AggiornamentoDatiFailedException;
-import exceptions.DatabaseException;
-import exceptions.LoginUserException;
-import exceptions.RegistrationFailedException;
+import dto.MyDto;
+import exceptions.*;
 import database.UtenteRegistratoDAO;
-import dto.UtenteCorrente;
 
 public class GestoreUtenti {
 
     private static GestoreUtenti uniqueInstance;
+    private EntityUtenteRegistrato utenteCorrente;
 
     private GestoreUtenti() {}
 
@@ -27,9 +25,7 @@ public class GestoreUtenti {
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
             utenteDAO.createUtenteRegistrato(nome, cognome, telefono, email, auto, postiDisp, new String(password));
-            UtenteCorrente.getInstance().setIdUtenteCorrente(utenteDAO.getIdUtenteRegistrato());
-            UtenteCorrente.getInstance().setNome(utenteDAO.getNome());
-            UtenteCorrente.getInstance().setCognome(utenteDAO.getCognome());
+            this.utenteCorrente = new EntityUtenteRegistrato(utenteDAO);
         } catch (DatabaseException e) {
             if (e.isVisible())
             {
@@ -43,9 +39,7 @@ public class GestoreUtenti {
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
             utenteDAO.readUtenteRegistrato(email, new String(password));
-            UtenteCorrente.getInstance().setIdUtenteCorrente(utenteDAO.getIdUtenteRegistrato());
-            UtenteCorrente.getInstance().setNome(utenteDAO.getNome());
-            UtenteCorrente.getInstance().setCognome(utenteDAO.getCognome());
+            this.utenteCorrente = new EntityUtenteRegistrato(utenteDAO);
         } catch (DatabaseException e) {
             throw new LoginUserException("Login Utente fallito: " + e.getMessage());
         }
@@ -73,5 +67,19 @@ public class GestoreUtenti {
 
     public void generaReportUtenti(){
         /* TODO: Da implementare */
+    }
+
+    public MyDto infoUtenteCorrente() throws InfoUtenteCorrenteFailedException {
+        if (this.utenteCorrente == null) {
+            throw new InfoUtenteCorrenteFailedException("Utente non loggato.");
+        }
+        return new MyDto(String.valueOf(this.utenteCorrente.getId()),
+                this.utenteCorrente.getNome(),
+                this.utenteCorrente.getCognome(),
+                this.utenteCorrente.getEmail(),
+                this.utenteCorrente.getPassword(),
+                this.utenteCorrente.getContattoTelefonico(),
+                this.utenteCorrente.getAutomobile(),
+                String.valueOf(this.utenteCorrente.getPostiDisponibili()));
     }
 }
