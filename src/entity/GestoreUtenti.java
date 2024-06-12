@@ -55,16 +55,16 @@ public class GestoreUtenti {
                                       String auto, char[] password, Integer postiDisp,
                                       String telefono) throws AggiornamentoDatiFailedException {
 
-        /* TODO: Bisogna capire come ottenere l'utente corrente. O lo prendiamo dal GestoreUtenti come entità oppure
-        *        utilizziamo l'id corrente e costruiamo l'utente corrente con la DAO con il quale poi
-        *        aggiornare i dati personali. Nel try dopo l'update va aggiornato l'utenteRegistrato corrente
-        *
-        */
-
-        EntityUtenteRegistrato entity = new EntityUtenteRegistrato(); /*TODO: Questa va ottenuta in qualche modo come detto prima*/
-        UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
+            UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(UtenteCorrente.getInstance().getIdUtenteCorrente());
             utenteDAO.updateUtenteRegistrato(nome, cognome, email, auto, new String(password), postiDisp, telefono);
+            UtenteCorrente.getInstance().setNome(utenteDAO.getNome());
+            UtenteCorrente.getInstance().setCognome(utenteDAO.getCognome());
+            UtenteCorrente.getInstance().setEmail(utenteDAO.getEmail());
+            UtenteCorrente.getInstance().setAuto(utenteDAO.getAutomobile());
+            UtenteCorrente.getInstance().setPassword(utenteDAO.getPassword());
+            UtenteCorrente.getInstance().setPostiDisp(String.valueOf(utenteDAO.getPostiDisponibili()));
+            UtenteCorrente.getInstance().setContattoTelefonico(utenteDAO.getContattoTelefonico());
         } catch (DatabaseException e) {
             throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito: " + e.getMessage());
         }
