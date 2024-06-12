@@ -31,7 +31,7 @@ public class UtenteRegistratoDAO {
      * @param idUtenteRegistrato l'identificativo dell'utente registrato.
      * @throws DatabaseException se non è stato possibile creare un'istanza di UtenteRegistratoDAO.
      */
-    public UtenteRegistratoDAO(int idUtenteRegistrato) throws DatabaseException {
+    public UtenteRegistratoDAO(long idUtenteRegistrato) throws DatabaseException {
         if (!caricaDaDB(idUtenteRegistrato))
             throw new DatabaseException("Errore nella creazione di UtenteRegistratoDAO.", false);
         this.idUtenteRegistrato = idUtenteRegistrato;
