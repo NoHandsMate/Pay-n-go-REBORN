@@ -11,6 +11,7 @@ public class PrenotazioneDAO {
     private long idPrenotazione;
     private long idPasseggero;
     private long idViaggioPrenotato;
+    private boolean accettata;
 
     private final Logger logger = Logger.getLogger("loggerPrenotazioneDAO");
 
@@ -49,7 +50,20 @@ public class PrenotazioneDAO {
         this.idPrenotazione = cercaInDB(idPasseggero, idViaggioPrenotato);
         this.idPasseggero = idPasseggero;
         this.idViaggioPrenotato = idViaggioPrenotato;
+        this.accettata = false;
         return true;
+    }
+
+    /**
+     * Funzione per aggiornare i dati relativi a una prenotazione nel database.
+     * @param accettata lo stato della prenotazione
+     * @throws DatabaseException se non è stato possibile aggiornare la prenotazione nel database.
+     */
+    public void updatePrenotazione(boolean accettata) throws DatabaseException {
+        if (aggiornaInDB(accettata)==0)
+            throw new DatabaseException("Non è stata aggiornata alcuna prenotazione.", false);
+
+        this.accettata = accettata;
     }
 
     /**
@@ -74,6 +88,7 @@ public class PrenotazioneDAO {
             while (rs.next()) {
                 this.idPasseggero = rs.getLong("passeggero");
                 this.idViaggioPrenotato = rs.getLong("viaggioPrenotato");
+                this.accettata = rs.getBoolean("accettata");
             }
             if (this.idPasseggero == 0 && this.idViaggioPrenotato == 0) {
                 return false;
@@ -135,6 +150,28 @@ public class PrenotazioneDAO {
     }
 
     /**
+     *
+     * @param accettata lo stato della prenotazione
+     * @throws DatabaseException se non è stato possibile aggiornare la prenotazione nel database.
+     */
+
+    private int aggiornaInDB(boolean accettata) throws DatabaseException {
+
+        String query = String.format("UPDATE prenotazioni SET (accettata = %b WHERE (idPrenotazione = %d);",
+                accettata,this.idPrenotazione);
+        logger.info(query);
+        int rs;
+        try {
+            rs = DBManager.getInstance().executeQuery(query);
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.warning(String.format("Errore durante l'aggiornamento dello stato della prenotazione " +
+                            "%d nel database.%n%s",this.idPrenotazione, e.getMessage()));
+            throw new DatabaseException("Errore nell'aggiornamento dello stato della prenotazione nel database.", false);
+        }
+        return rs;
+    }
+
+    /**
      * Funzione privata per eliminare una prenotazione dal database.
      * @return il numero di righe eliminate dal database.
      * @throws DatabaseException se non è stato possibile eliminare la prenotazione dal database.
@@ -165,4 +202,7 @@ public class PrenotazioneDAO {
         return idViaggioPrenotato;
     }
 
+    public boolean isAccettata() {
+        return accettata;
+    }
 }
