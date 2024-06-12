@@ -6,13 +6,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.AbstractMap;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
 import com.github.lgooddatepicker.components.DatePicker;
-import control.ControllerUtente;
 import dto.*;
-import entity.GestoreUtenti;
 
 public class MainWindow extends JFrame {
     private JPanel mainWindowPanel;
@@ -49,6 +48,8 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
         getContentPane().add(new JScrollPane(mainWindowPanel), BorderLayout.CENTER);
+        welcomeLabel.setText(String.format("Ciao %s %s!",
+                UtenteCorrente.getInstance().getNome(), UtenteCorrente.getInstance().getCognome()));
 
         contentTab.setUI(new BasicTabbedPaneUI() {
             @Override
@@ -56,16 +57,6 @@ public class MainWindow extends JFrame {
                     return -1;
             }
         });
-
-        AbstractMap.SimpleEntry<Boolean, MyDto> infoUtente = ControllerUtente.getInstance().infoUtenteCorrente();
-        if (Boolean.FALSE.equals(infoUtente.getKey())) {
-            JOptionPane.showMessageDialog(rootPane, "La sessione utente non risulta attiva.", "Errore",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(-1);
-        }
-
-        welcomeLabel.setText(String.format("Ciao %s %s!",
-                infoUtente.getValue().getCampo2(), infoUtente.getValue().getCampo3()));
 
         homeTabButton.addActionListener(actionEvent -> {
             contentTab.setSelectedIndex(0);
@@ -119,17 +110,6 @@ public class MainWindow extends JFrame {
             if (contentTab.getSelectedIndex() == 0) {
 
             } else if (contentTab.getSelectedIndex() == 1) {
-
-                /* TODO: i dati vengono caricati one-time all'avvio della form, non aggiornati quando si cambia tab.
-                    Questo dovrebbe andare bene in quanto posso cambiare dati solo attraverso questo tab.
-                    L'aggiornamento richiamerebbe i metodi del caso e anche l'aggiornamento di infoUtente. Da discutere. */
-                nomeField.setText(infoUtente.getValue().getCampo2());
-                cognomeField.setText(infoUtente.getValue().getCampo3());
-                emailField.setText(infoUtente.getValue().getCampo4());
-                passwordField.setText(infoUtente.getValue().getCampo5());
-                telefonoField.setText(infoUtente.getValue().getCampo6());
-                autoField.setText(infoUtente.getValue().getCampo7());
-                postiSpinner.setValue(Integer.valueOf(infoUtente.getValue().getCampo8()));
 
             // TODO: forse non serve        } else if (contentTab.getSelectedIndex() == 2) {
 

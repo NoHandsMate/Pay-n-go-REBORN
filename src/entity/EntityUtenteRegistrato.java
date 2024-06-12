@@ -1,6 +1,7 @@
 package entity;
 
 import database.UtenteRegistratoDAO;
+import database.UtenteRegistratoDAO;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ public class EntityUtenteRegistrato {
     private String email;
     private String password;
     private String automobile;
-    private int postiDisponibili;
+    private int numPostiDisponibili;
     private ArrayList<EntityViaggio> viaggiCondivisi;
     private ArrayList<EntityPrenotazione> prenotazioni;
     private ArrayList<EntityValutazione> valutazioni;
@@ -22,39 +23,18 @@ public class EntityUtenteRegistrato {
 
     public EntityUtenteRegistrato(String nome, String cognome,
                                   String contattoTelefonico, String email, String password,
-                                  String automobile, int postiDisponibili) {
+                                  String automobile, int numPostiDisponibili) {
 
         this.nome = nome;
         this.cognome = cognome;
         this.contattoTelefonico = contattoTelefonico;
         this.email = email;
         this.automobile = automobile;
-        this.postiDisponibili = postiDisponibili;
-        /* TODO: per me questo metodo non ha senso di esistere se non va ad effettuare la registazione
-            e quindi viene utilizzato in registraUtente */
+        this.numPostiDisponibili = numPostiDisponibili;
     }
 
-    /**
-     * Costruttore di EntityUtenteRegistrato che ne inizializza l'istanza con gli attributi memorizzati in una DAO.
-     * @param utenteRegistratoDAO la UtenteRegistratoDAO da cui inizializzare l'oggetto.
-     */
     public EntityUtenteRegistrato(UtenteRegistratoDAO utenteRegistratoDAO) {
-        this.id = utenteRegistratoDAO.getIdUtenteRegistrato();
-        this.nome = utenteRegistratoDAO.getNome();
-        this.cognome = utenteRegistratoDAO.getCognome();
-        this.email = utenteRegistratoDAO.getEmail();
-        this.password = utenteRegistratoDAO.getPassword();
-        this.contattoTelefonico = utenteRegistratoDAO.getContattoTelefonico();
-        this.automobile = utenteRegistratoDAO.getAutomobile();
-        this.postiDisponibili = utenteRegistratoDAO.getPostiDisponibili();
-    }
-
-    public long getId() {
-        return this.id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+        /* TODO */
     }
 
     public String getNome() {
@@ -89,14 +69,6 @@ public class EntityUtenteRegistrato {
         this.email = email;
     }
 
-    protected String getPassword() {
-        return password;
-    }
-
-    protected void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getAutomobile() {
         return automobile;
     }
@@ -105,12 +77,12 @@ public class EntityUtenteRegistrato {
         this.automobile = automobile;
     }
 
-    public int getPostiDisponibili() {
-        return postiDisponibili;
+    public int getNumPostiDisponibili() {
+        return numPostiDisponibili;
     }
 
-    public void setPostiDisponibili(int postiDisponibili) {
-        this.postiDisponibili = postiDisponibili;
+    public void setNumPostiDisponibili(int numPostiDisponibili) {
+        this.numPostiDisponibili = numPostiDisponibili;
     }
 
     public ArrayList<EntityValutazione> getValutazioni() {
