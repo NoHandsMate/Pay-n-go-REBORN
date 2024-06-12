@@ -2,6 +2,8 @@ package entity;
 
 import exceptions.ReportIncassiFailedException;
 import exceptions.ReportUtentiFailedException;
+import dto.*;
+import java.util.ArrayList;
 
 public class FacadeEntityGestore {
 
@@ -22,7 +24,7 @@ public class FacadeEntityGestore {
 
     }
 
-    public void GeneraReportUtenti() throws ReportUtentiFailedException {
-        GestoreUtenti.getInstance().generaReportUtenti();
+    public ArrayList<MyDto> GeneraReportUtenti() throws ReportUtentiFailedException {
+        return GestoreUtenti.getInstance().generaReportUtenti();
     }
 }

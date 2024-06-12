@@ -4,6 +4,7 @@ import exceptions.DatabaseException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class ValutazioneDAO {
@@ -14,7 +15,7 @@ public class ValutazioneDAO {
     private long idUtente;
 
     /* TODO: rimuovi logging delle query eseguite dopo il testing. */
-    private final Logger logger = Logger.getLogger("loggerValutazioneDAO");
+    private static final Logger logger = Logger.getLogger("loggerValutazioneDAO");
 
     /**
      * Costruttore di default di ValutazioneDAO, crea un'istanza vuota da popolare successivamente.
@@ -64,6 +65,28 @@ public class ValutazioneDAO {
     public void deletePrenotazione() throws DatabaseException{
         if (this.eliminaDaDB() == 0)
             throw new DatabaseException("Non è stata trovata una valutazione corrispondente.",false);
+    }
+
+    /**
+     * Funzione per prelevare tutte le valutazioni dal database.
+     * @throws DatabaseException se non è stato possibile selezionare tutte le valutazioni dal database.
+     */
+    public static ArrayList<ValutazioneDAO> getValutazioni() throws DatabaseException {
+        String query = "SELECT * from valutazioni";
+        ArrayList<ValutazioneDAO> valutazioni = new ArrayList<>();
+        try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
+            while (rs.next()) {
+                ValutazioneDAO v = new ValutazioneDAO();
+                v.numeroStelle = rs.getInt("numeroStelle");
+                v.descrizione = rs.getString("descrizione");
+                v.idUtente = rs.getLong("utente");
+                valutazioni.add(v);
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.warning("Errore durante il caricamento dal database delle valutazioni");
+            throw new DatabaseException("Errore nel caricamento delle valutazioni dal database.", false);
+        }
+        return valutazioni;
     }
     /**
      * Funzione privata per caricare i dati di una valutazione dal database.
