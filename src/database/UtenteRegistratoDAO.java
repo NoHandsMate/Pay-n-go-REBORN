@@ -293,6 +293,8 @@ public class UtenteRegistratoDAO {
             logger.warning(String.format("Errore durante l'aggiornamento dell'utente registrato " +
                             "['%s', '%s', '%s', '%s', '%s', %d, '%s'] nel database.%n%s", nome, cognome,
                     contattoTelefonico, email, automobile, postiDisponibili, password, e.getMessage()));
+            if (e.getMessage().contains("Duplicate entry"))
+                throw new DatabaseException("Esiste già un utente associato alla mail data.", true);
             throw new DatabaseException("Errore nell'aggiornamento dell'utente registrato nel database.", false);
         }
         return rs;

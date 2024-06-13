@@ -30,9 +30,7 @@ public class GestoreUtenti {
             aggiornaUtenteCorrente(utenteDAO);
         } catch (DatabaseException e) {
             if (e.isVisible())
-            {
-                throw new RegistrationFailedException(String.format("Registrazione Utente fallita: %s", e.getMessage()));
-            }
+                throw new RegistrationFailedException("Registrazione Utente fallita: " + e.getMessage());
             throw new RegistrationFailedException("Registrazione Utente fallita.");
         }
     }
@@ -44,9 +42,7 @@ public class GestoreUtenti {
             aggiornaUtenteCorrente(utenteDAO);
         } catch (DatabaseException e) {
             if (e.isVisible())
-            {
-                throw new LoginFailedException(String.format("Login Utente fallito: %s", e.getMessage()));
-            }
+                throw new LoginFailedException("Login Utente fallito: %s" + e.getMessage());
             throw new LoginFailedException("Login Utente fallito.");
         }
     }
@@ -60,7 +56,9 @@ public class GestoreUtenti {
             utenteDAO.updateUtenteRegistrato(nome, cognome, telefono, email, auto, postiDisp, new String(password));
             aggiornaUtenteCorrente(utenteDAO);
         } catch (DatabaseException e) {
-            throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito: " + e.getMessage());
+            if (e.isVisible())
+                throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito: " + e.getMessage());
+            throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito.");
         }
 
     }
@@ -93,9 +91,10 @@ public class GestoreUtenti {
                 }
                 reportUtenti.add(reportUtente);
             }
-
-        }catch (DatabaseException e){
-            throw new ReportUtentiFailedException("Generazione report utenti fallita: " + e.getMessage());
+        } catch (DatabaseException e) {
+            if (e.isVisible())
+                throw new ReportUtentiFailedException("Generazione report utenti fallita: " + e.getMessage());
+            throw new ReportUtentiFailedException("Generazione report utenti fallita.");
 
         }
         return reportUtenti;

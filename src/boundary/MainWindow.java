@@ -6,8 +6,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -20,43 +18,44 @@ import dto.*;
 
 public class MainWindow extends JFrame {
     private JPanel mainWindowPanel;
-    private JLabel welcomeLabel;
     private JTabbedPane contentTab;
+    private JLabel welcomeLabel;
     private JPanel circularLogoPanel;
     private JButton accountTabButton;
     private JButton homeTabButton;
     private JButton prenotazioniTabButton;
-    private JTable prenotazioniTable;
-    private JButton valutaAutistaViaggioButton;
-    private JEditorPane homeEditorPane;
     private JButton ricercaTabButton;
+    private JButton condividiTabButton;
+    private JButton viaggiTabButton;
+    private JEditorPane homeEditorPane;
     private JTextField nomeField;
     private JTextField cognomeField;
     private JTextField emailField;
+    private JPasswordField passwordField;
     private JTextField autoField;
     private JSpinner postiSpinner;
     private JButton aggiornaDatiPersonaliButton;
-    private JPasswordField passwordField;
     private JTextField telefonoField;
     private JTextField luogoPartenzaField;
     private JTextField luogoArrivoField;
-    private JTable viaggiTable;
-    private JButton prenotaViaggioButton;
-    private DatePicker dataPartenzaPicker;
     private JButton cercaViaggioButton;
-    private JButton condividiTabButton;
-    private JButton viaggiTabButton;
-    private JTextField condividiLuogoDestinazioneField;
-    private JTextField condividiContributoSpeseField;
-    private JButton condividiViaggioButton;
+    private JTable viaggiTrovatiTable;
+    private JButton prenotaViaggioButton;
+    private JTable prenotazioniTable;
+    private DatePicker dataPartenzaPicker;
+    private JButton valutaAutistaButton;
     private JTextField condividiLuogoPartenzaField;
+    private JTextField condividiLuogoDestinazioneField;
     private DateTimePicker condividiDataOraPartenzaPicker;
     private DateTimePicker condividiDataOraArrivoPicker;
+    private JTextField condividiContributoSpeseField;
+    private JButton condividiViaggioButton;
+    private JTable viaggiCondivisiTable;
+    private JTable prenotazioniViaggioCondivisoTable;
+    private JButton gestisciPrenotazioneButton;
     private JButton valutaPasseggeroButton;
-    private JTable table1;
-    private JTable table2;
 
-    private JButton[] tabButtons = {homeTabButton, accountTabButton, ricercaTabButton, prenotazioniTabButton,
+    private final JButton[] tabButtons = {homeTabButton, accountTabButton, ricercaTabButton, prenotazioniTabButton,
             condividiTabButton, viaggiTabButton};
 
     public MainWindow() {
@@ -67,6 +66,13 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
         getContentPane().add(new JScrollPane(mainWindowPanel), BorderLayout.CENTER);
+        contentTab.setUI(new BasicTabbedPaneUI() {
+            @Override
+            protected int calculateTabAreaHeight(int tabPlacement, int runCount, int maxTabHeight) {
+                return -1;
+            }
+        });
+
         if (UtenteCorrente.getInstance().getIdUtenteCorrente() == 0)
         {
             JOptionPane.showMessageDialog(rootPane, "Non è presente una sessione utente attiva!", "Errore",
@@ -81,35 +87,31 @@ public class MainWindow extends JFrame {
         welcomeLabel.setText(String.format("Ciao %s %s!",
                 UtenteCorrente.getInstance().getNome(), UtenteCorrente.getInstance().getCognome()));
 
-        contentTab.setUI(new BasicTabbedPaneUI() {
-            @Override
-            protected int calculateTabAreaHeight(int tabPlacement, int runCount, int maxTabHeight) {
-                    return -1;
-            }
-        });
-
         homeTabButton.addActionListener(actionEvent -> setTabActive(0));
-
         accountTabButton.addActionListener(actionEvent -> setTabActive(1));
-
         ricercaTabButton.addActionListener(actionListener -> setTabActive(2));
-
         prenotazioniTabButton.addActionListener(actionListener -> setTabActive(3));
-
         condividiTabButton.addActionListener(actionListener -> setTabActive(4));
-
         viaggiTabButton.addActionListener(actionListener -> setTabActive(5));
 
         contentTab.addChangeListener(e -> {
-            if (contentTab.getSelectedIndex() == 1) {
+            if (contentTab.getSelectedIndex() == 0) {
+                welcomeLabel.setText(String.format("Ciao %s %s!",
+                        UtenteCorrente.getInstance().getNome(), UtenteCorrente.getInstance().getCognome()));
+            }
+            else if (contentTab.getSelectedIndex() == 1) {
                 populateAccountTab();
             } else if (contentTab.getSelectedIndex() == 3) {
-                visuaizzaPreotazioni();
+                visuaizzaPrenotazioni();
+            } else if (contentTab.getSelectedIndex() == 5) {
+                visualizzaViaggiCondivisi();
             }
         });
 
-        prenotazioniTable.getSelectionModel().addListSelectionListener(selectionEvent ->
-                prenotaViaggioButton.setEnabled(viaggiTable.getSelectedRow() != -1));
+        aggiornaDatiPersonaliButton.addActionListener(actionEvent -> aggiornaDatiPersonali());
+
+        viaggiTrovatiTable.getSelectionModel().addListSelectionListener(selectionEvent ->
+                prenotaViaggioButton.setEnabled(viaggiTrovatiTable.getSelectedRow() != -1));
 
         cercaViaggioButton.addActionListener(actionEvent -> {
             AbstractMap.SimpleEntry<Boolean, String> result = ricercaViaggiValidateInput();
@@ -120,14 +122,21 @@ public class MainWindow extends JFrame {
                 ricercaViaggi();
         });
 
-        viaggiTable.getSelectionModel().addListSelectionListener(selectionEvent ->
-                prenotaViaggioButton.setEnabled(viaggiTable.getSelectedRow() != -1));
-
         prenotaViaggioButton.addActionListener(actionEvent -> {
 
         });
 
-        aggiornaDatiPersonaliButton.addActionListener(actionEvent -> aggiornaDatiPersonali());
+        prenotazioniTable.getSelectionModel().addListSelectionListener(selectionEvent ->
+                prenotaViaggioButton.setEnabled(viaggiTrovatiTable.getSelectedRow() != -1));
+
+        condividiViaggioButton.addActionListener(actionEvent -> {
+            /* TODO: check e condividiViaggio() */
+        });
+
+        viaggiCondivisiTable.getSelectionModel().addListSelectionListener(selectionEvent -> {
+            String s = (String) viaggiCondivisiTable.getValueAt(1, viaggiCondivisiTable.getSelectedRow());
+            System.out.println(s);
+        });
     }
 
     private void createUIComponents() {
@@ -147,6 +156,24 @@ public class MainWindow extends JFrame {
                 tabButtons[i].setForeground(Color.WHITE);
             }
         }
+    }
+
+    private void populateTable(JTable table, Object[] columnNames, Object[][] data) {
+        TableModel tableModel = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        table.setModel(tableModel);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
+        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
+        headerRenderer.setBackground(new Color(48, 48, 48));
+        headerRenderer.setOpaque(true);
+        table.getTableHeader().setDefaultRenderer(headerRenderer);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
     }
 
     private void populateAccountTab() {
@@ -241,40 +268,6 @@ public class MainWindow extends JFrame {
         return new AbstractMap.SimpleEntry<>(true, "OK");
     }
 
-    private void populateTable(JTable table, Object[] columnNames, Object[][] data) {
-        TableModel tableModel = new DefaultTableModel(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        table.setModel(tableModel);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
-        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
-        headerRenderer.setBackground(new Color(48, 48, 48));
-        headerRenderer.setOpaque(true);
-        table.getTableHeader().setDefaultRenderer(headerRenderer);
-        table.getTableHeader().setReorderingAllowed(false);
-        table.getTableHeader().setResizingAllowed(false);
-    }
-
-    private AbstractMap.SimpleEntry<Boolean, String> ricercaViaggiValidateInput() {
-        if (luogoPartenzaField.getText().isBlank()) {
-            return new AbstractMap.SimpleEntry<>(false, "Il campo luogo di partenza non può essere vuoto");
-        }
-
-        if (luogoArrivoField.getText().isBlank()) {
-            return new AbstractMap.SimpleEntry<>(false, "Il campo luogo di destinazione non può essere vuoto");
-        }
-
-        if (dataPartenzaPicker.getDate() == null) {
-            return new AbstractMap.SimpleEntry<>(false, "Il campo data di partenza non può essere vuoto");
-        }
-
-        return new AbstractMap.SimpleEntry<>(true, "OK");
-    }
-
     private void ricercaViaggi() {
         AbstractMap.SimpleEntry<Boolean, Object> result;
         result = ControllerUtente.getInstance().ricercaViaggio(luogoPartenzaField.getText(),
@@ -309,20 +302,51 @@ public class MainWindow extends JFrame {
                     data[i][j] = rows.get(i * columnNames.length + j);
                 }
             }
-            populateTable(viaggiTable, columnNames, data);
+            populateTable(viaggiTrovatiTable, columnNames, data);
 
         } else {
             JOptionPane.showMessageDialog(rootPane, result.getValue(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void visuaizzaPreotazioni() {
-        /* TODO qualcosa del genere */
-        // ControllerUtente.getInstance().visualizzaPrenotazioni
+    private AbstractMap.SimpleEntry<Boolean, String> ricercaViaggiValidateInput() {
+        if (luogoPartenzaField.getText().isBlank()) {
+            return new AbstractMap.SimpleEntry<>(false, "Il campo luogo di partenza non può essere vuoto");
+        }
 
-        String[][] data = {{"1", "Nome Cognome", "3"}, {"2", "Name Surname", "3"}, {"3", "Mario Rossi", "4"}};
-        String[] columnNames = {"Id prenotazione", "Passeggero", "Viaggio"};
+        if (luogoArrivoField.getText().isBlank()) {
+            return new AbstractMap.SimpleEntry<>(false, "Il campo luogo di destinazione non può essere vuoto");
+        }
+
+        if (dataPartenzaPicker.getDate() == null) {
+            return new AbstractMap.SimpleEntry<>(false, "Il campo data di partenza non può essere vuoto");
+        }
+
+        return new AbstractMap.SimpleEntry<>(true, "OK");
+    }
+
+    private void visuaizzaPrenotazioni() {
+        /* TODO qualcosa del genere */
+        // String[][] data = ControllerUtente.getInstance().visualizzaPrenotazioni();
+
+        String[] columnNames = {"Id prenotazione", "Passeggero", "Viaggio", "Stato"};
+        String[][] data = {{"1", "Nome Cognome", "3", "In sospeso"},
+                {"2", "Name Surname", "3", "Accettata"},
+                {"3", "Mario Rossi", "4", "In sospeso"}};
+
         populateTable(prenotazioniTable, columnNames, data);
     }
 
+    private void visualizzaViaggiCondivisi() {
+        /* TODO: qualcosa del genere */
+        // String data[][] = ControllerUtente.getInstance().visualizzaViaggiCondivisi();
+
+        String[] columnNames = {"Id viaggio", "Partenza", "Destinazione", "Data e ora partenza",
+                "Data e ora arrivo", "Contributo spese"};
+        String[][] data = {{String.valueOf(3), "Roma", "Napoli", "05/04/2024 15:30:00", "05/04/2024 17:10:00", String.valueOf(1.49f)},
+                {String.valueOf(3), "Torino", "Roma", "14/05/2024 10:30:00", "14/05/2024 18:00:00", String.valueOf(3.49f)},
+                {String.valueOf(3), "Casoria", "Bacoli", "25/06/2024 08:30:00", "25/06/2024 09:20:00", String.valueOf(1.49f)}};
+
+        populateTable(viaggiCondivisiTable, columnNames, data);
+    }
 }
