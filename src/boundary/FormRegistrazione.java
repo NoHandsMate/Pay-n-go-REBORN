@@ -118,16 +118,4 @@ public class FormRegistrazione extends JFrame {
         }
         return new AbstractMap.SimpleEntry<>(true, "OK");
     }
-
-
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-               FormRegistrazione window = new FormRegistrazione();
-                window.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
 }

@@ -84,14 +84,4 @@ public class FormLogin extends JFrame {
 
         return empty;
     }
-
-    public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            java.util.logging.Logger.getLogger("loggerFormLogin").log(java.util.logging.Level.SEVERE, e.getMessage());
-        }
-        FormLogin frame = new FormLogin();
-        frame.setVisible(true);
-    }
 }

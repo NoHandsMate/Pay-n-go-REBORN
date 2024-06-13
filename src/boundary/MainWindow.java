@@ -6,10 +6,15 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DateTimePicker;
 import control.ControllerUtente;
 import dto.*;
 
@@ -22,7 +27,7 @@ public class MainWindow extends JFrame {
     private JButton homeTabButton;
     private JButton prenotazioniTabButton;
     private JTable prenotazioniTable;
-    private JButton gestisciPrenotazioneButton;
+    private JButton valutaAutistaViaggioButton;
     private JEditorPane homeEditorPane;
     private JButton ricercaTabButton;
     private JTextField nomeField;
@@ -41,6 +46,15 @@ public class MainWindow extends JFrame {
     private JButton cercaViaggioButton;
     private JButton condividiTabButton;
     private JButton viaggiTabButton;
+    private JTextField condividiLuogoDestinazioneField;
+    private JTextField condividiContributoSpeseField;
+    private JButton condividiViaggioButton;
+    private JTextField condividiLuogoPartenzaField;
+    private DateTimePicker condividiDataOraPartenzaPicker;
+    private DateTimePicker condividiDataOraArrivoPicker;
+    private JButton valutaPasseggeroButton;
+    private JTable table1;
+    private JTable table2;
 
     private JButton[] tabButtons = {homeTabButton, accountTabButton, ricercaTabButton, prenotazioniTabButton,
             condividiTabButton, viaggiTabButton};
@@ -112,6 +126,8 @@ public class MainWindow extends JFrame {
         prenotaViaggioButton.addActionListener(actionEvent -> {
 
         });
+
+        aggiornaDatiPersonaliButton.addActionListener(actionEvent -> aggiornaDatiPersonali());
     }
 
     private void createUIComponents() {
@@ -141,6 +157,88 @@ public class MainWindow extends JFrame {
         telefonoField.setText(UtenteCorrente.getInstance().getContattoTelefonico());
         autoField.setText(UtenteCorrente.getInstance().getAuto());
         postiSpinner.setValue(Integer.valueOf(UtenteCorrente.getInstance().getPostiDisp()));
+    }
+
+    private void aggiornaDatiPersonali() {
+        AbstractMap.SimpleEntry<Boolean, String> result = validateAggiornaDatiPersonaliInput();
+        if (Boolean.FALSE.equals(result.getKey())) {
+            JOptionPane.showMessageDialog(rootPane, result.getValue(),
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+        } else {
+            result = ControllerUtente.getInstance().aggiornaDatiPersonali(nomeField.getText(), cognomeField.getText(),
+                    emailField.getText(), passwordField.getPassword(), telefonoField.getText(), autoField.getText(),
+                    (Integer) postiSpinner.getValue());
+
+            if (Boolean.FALSE.equals(result.getKey())) {
+                JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, result.getValue(), "OK", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    private AbstractMap.SimpleEntry<Boolean, String> validateAggiornaDatiPersonaliInput() {
+        if (nomeField.getText().isBlank() || cognomeField.getText().isBlank() ||
+                emailField.getText().isBlank() || passwordField.getPassword().length == 0 ||
+                telefonoField.getText().isBlank()) {
+            return new AbstractMap.SimpleEntry<>(false, "Riempi i campi obbligatori");
+        }
+
+        if (!autoField.getText().isBlank() && (Integer) postiSpinner.getValue() == 0 ||
+                (autoField.getText().isBlank() && (Integer) postiSpinner.getValue() != 0)) {
+            return new AbstractMap.SimpleEntry<>(false, "Il valore dei posti disponibili è incorretto");
+        }
+
+        Pattern specialCharRegex = Pattern.compile("[^a-zA-Z]", Pattern.CASE_INSENSITIVE);
+        Pattern numberRegex = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
+        Pattern telRegex = Pattern.compile("[^+0-9]", Pattern.CASE_INSENSITIVE);
+        Matcher nomeMatcher = specialCharRegex.matcher(nomeField.getText());
+        Matcher nomeMatcherNumber = numberRegex.matcher(nomeField.getText());
+        Matcher cognomeMatcher = specialCharRegex.matcher(cognomeField.getText());
+        Matcher cognomeMatcherNumber = numberRegex.matcher(cognomeField.getText());
+        Matcher telefonoMatcher = telRegex.matcher(telefonoField.getText());
+
+
+        if (nomeField.getText().length() > 50) {
+            return new AbstractMap.SimpleEntry<>(false, "Il nome supera la lunghezza massima di 50 caratteri");
+        }
+
+        if (nomeMatcher.find() || nomeMatcherNumber.find()) {
+            return new AbstractMap.SimpleEntry<>(false, "Il nome contiene caratteri non validi");
+        }
+
+        if (cognomeField.getText().length() > 50) {
+            return new AbstractMap.SimpleEntry<>(false, "Il cognome supera la lunghezza massima di 50 caratteri");
+        }
+
+        if (cognomeMatcher.find() || cognomeMatcherNumber.find()) {
+            return new AbstractMap.SimpleEntry<>(false, "Il cognome contiene caratteri non validi");
+        }
+
+        if (emailField.getText().length() > 50) {
+            return new AbstractMap.SimpleEntry<>(false, "L'email supera la lunghezza massima di 50 caratteri");
+        }
+
+        if (emailField.getText().indexOf('@') == -1) {
+            return new AbstractMap.SimpleEntry<>(false, "L'email non è valida");
+        }
+
+        if (telefonoField.getText().length() > 15) {
+            return new AbstractMap.SimpleEntry<>(false, "Il contatto telefonico supera la lunghezza massima di 15 caratteri");
+        }
+
+        if (telefonoMatcher.find()) {
+            return new AbstractMap.SimpleEntry<>(false, "Il contatto telefonico contiene caratteri non validi");
+        }
+
+        if (passwordField.getPassword().length > 50 || passwordField.getPassword().length < 4) {
+            return new AbstractMap.SimpleEntry<>(false, "La password deve essere compresa tra 4 e 50 caratteri");
+        }
+
+        if (autoField.getText().length() > 50) {
+            return new AbstractMap.SimpleEntry<>(false, "Il modello dell'automobile supera la lunghezza massima di 50 caratteri");
+        }
+        return new AbstractMap.SimpleEntry<>(true, "OK");
     }
 
     private void populateTable(JTable table, Object[] columnNames, Object[][] data) {

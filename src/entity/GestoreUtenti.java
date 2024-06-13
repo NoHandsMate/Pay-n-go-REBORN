@@ -37,13 +37,17 @@ public class GestoreUtenti {
         }
     }
 
-    public void loginUtente(String email, char[] password) throws LoginUserException {
+    public void loginUtente(String email, char[] password) throws LoginFailedException {
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
             utenteDAO.readUtenteRegistrato(email, new String(password));
             aggiornaUtenteCorrente(utenteDAO);
         } catch (DatabaseException e) {
-            throw new LoginUserException("Login Utente fallito: " + e.getMessage());
+            if (e.isVisible())
+            {
+                throw new LoginFailedException(String.format("Login Utente fallito: %s", e.getMessage()));
+            }
+            throw new LoginFailedException("Login Utente fallito.");
         }
     }
 
@@ -53,7 +57,7 @@ public class GestoreUtenti {
 
         try {
             UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(UtenteCorrente.getInstance().getIdUtenteCorrente());
-            utenteDAO.updateUtenteRegistrato(nome, cognome, email, auto, new String(password), postiDisp, telefono);
+            utenteDAO.updateUtenteRegistrato(nome, cognome, telefono, email, auto, postiDisp, new String(password));
             aggiornaUtenteCorrente(utenteDAO);
         } catch (DatabaseException e) {
             throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito: " + e.getMessage());

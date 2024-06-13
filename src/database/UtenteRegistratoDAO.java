@@ -281,9 +281,9 @@ public class UtenteRegistratoDAO {
                              String automobile,
                              int postiDisponibili,
                              String password) throws DatabaseException {
-        String query = String.format("UPDATE utentiregistrati SET (nome = '%s', cognome = '%s', " +
+        String query = String.format("UPDATE utentiregistrati SET nome = '%s', cognome = '%s', " +
                         "contattoTelefonico = '%s', email = '%s', automobile = '%s', postiDisponibili = %d, " +
-                        "password = '%s') WHERE (idUtenteRegistrato = %d);", nome, cognome, contattoTelefonico, email,
+                        "password = '%s' WHERE (idUtenteRegistrato = %d);", nome, cognome, contattoTelefonico, email,
                 automobile, postiDisponibili, password, this.idUtenteRegistrato);
         logger.info(query);
         int rs;

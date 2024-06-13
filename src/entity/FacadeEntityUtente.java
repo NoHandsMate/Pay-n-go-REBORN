@@ -23,12 +23,10 @@ public class FacadeEntityUtente {
 
     public void registraUtente(String nome, String cognome, String email, String auto, char[] password,
                                       Integer postiDisp, String telefono) throws RegistrationFailedException {
-
         GestoreUtenti.getInstance().registraUtente(nome, cognome, email, auto, password, postiDisp, telefono);
     }
 
-    public void loginUtente(String email, char[] password) throws LoginUserException {
-
+    public void loginUtente(String email, char[] password) throws LoginFailedException {
         GestoreUtenti.getInstance().loginUtente(email, password);
     }
 

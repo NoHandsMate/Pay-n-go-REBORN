@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 
-import database.UtenteRegistratoDAO;
 import entity.FacadeEntityUtente;
 import exceptions.*;
 import dto.*;
@@ -45,11 +44,11 @@ public class ControllerUtente {
                                                                 char[] password) {
         try {
             FacadeEntityUtente.getInstance().loginUtente(email, password);
-        } catch (LoginUserException e) {
+        } catch (LoginFailedException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
 
-        return new AbstractMap.SimpleEntry<>(true, "Login effettuato con successo");
+        return new AbstractMap.SimpleEntry<>(true, "Login effettuato con successo.");
     }
 
     public AbstractMap.SimpleEntry<Boolean, String> condividiViaggio(String luogoPartenza,
@@ -67,13 +66,17 @@ public class ControllerUtente {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
 
-        return new AbstractMap.SimpleEntry<>(true, "Viaggio condiviso con successo");
+        return new AbstractMap.SimpleEntry<>(true, "Viaggio condiviso con successo.");
 
     }
 
-    public AbstractMap.SimpleEntry<Boolean, String> aggiornaDatiPersonali(String nome, String cognome, String email,
-                                                                          String auto, char[] password, Integer postiDisp,
-                                                                          String telefono) {
+    public AbstractMap.SimpleEntry<Boolean, String> aggiornaDatiPersonali(String nome,
+                                                                          String cognome,
+                                                                          String email,
+                                                                          char[] password,
+                                                                          String telefono,
+                                                                          String auto,
+                                                                          Integer postiDisp) {
 
         try {
             FacadeEntityUtente.getInstance().aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, telefono);
@@ -81,7 +84,7 @@ public class ControllerUtente {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
 
-        return new AbstractMap.SimpleEntry<>(true, "Aggiornamento effettuato con successo");
+        return new AbstractMap.SimpleEntry<>(true, "Aggiornamento effettuato con successo.");
 
     }
 
