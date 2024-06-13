@@ -5,6 +5,7 @@ import exceptions.*;
 import database.UtenteRegistratoDAO;
 import dto.*;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 
 public class GestoreUtenti {
@@ -51,16 +52,9 @@ public class GestoreUtenti {
                                       String auto, char[] password, Integer postiDisp,
                                       String telefono) throws AggiornamentoDatiFailedException {
 
-        try {
-            UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(UtenteCorrente.getInstance().getIdUtenteCorrente());
-            utenteDAO.updateUtenteRegistrato(nome, cognome, telefono, email, auto, postiDisp, new String(password));
-            aggiornaUtenteCorrente(utenteDAO);
-        } catch (DatabaseException e) {
-            if (e.isVisible())
-                throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito: " + e.getMessage());
-            throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito.");
-        }
-
+        EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
+        utenteCorrente.aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, new String(password));
+        Sessione.getInstance().setUtenteCorrente(utenteCorrente);
     }
 
     public ArrayList<ArrayList<MyDto>> generaReportUtenti() throws ReportUtentiFailedException {
@@ -100,14 +94,9 @@ public class GestoreUtenti {
         return reportUtenti;
     }
 
-    private void aggiornaUtenteCorrente(UtenteRegistratoDAO utenteDAO) {
-        UtenteCorrente.getInstance().setIdUtenteCorrente(utenteDAO.getIdUtenteRegistrato());
-        UtenteCorrente.getInstance().setNome(utenteDAO.getNome());
-        UtenteCorrente.getInstance().setCognome(utenteDAO.getCognome());
-        UtenteCorrente.getInstance().setEmail(utenteDAO.getEmail());
-        UtenteCorrente.getInstance().setAuto(utenteDAO.getAutomobile());
-        UtenteCorrente.getInstance().setPassword(utenteDAO.getPassword());
-        UtenteCorrente.getInstance().setPostiDisp(String.valueOf(utenteDAO.getPostiDisponibili()));
-        UtenteCorrente.getInstance().setContattoTelefonico(utenteDAO.getContattoTelefonico());
+    private void aggiornaUtenteCorrente(UtenteRegistratoDAO utenteRegistratoDAO) throws DatabaseException {
+        EntityUtenteRegistrato utenteCorrente = new EntityUtenteRegistrato(utenteRegistratoDAO.getIdUtenteRegistrato());
+        Sessione.getInstance().setUtenteCorrente(utenteCorrente);
     }
+
 }

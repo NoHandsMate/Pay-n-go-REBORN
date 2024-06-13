@@ -2,6 +2,10 @@ package entity;
 
 import database.UtenteRegistratoDAO;
 import database.UtenteRegistratoDAO;
+import database.ViaggioDAO;
+import dto.UtenteCorrente;
+import exceptions.AggiornamentoDatiFailedException;
+import exceptions.DatabaseException;
 
 import java.util.ArrayList;
 
@@ -35,6 +39,22 @@ public class EntityUtenteRegistrato {
 
     public EntityUtenteRegistrato(UtenteRegistratoDAO utenteRegistratoDAO) {
         /* TODO */
+    }
+
+    /**
+     * Costruttore che popola l'EntityUtenteRegistrato a partire dall'id specificato. Gli attributi viaggiCondivisi,
+     * prenotazioni e valutazioni non vengono popolati.
+     * @param idUtente l'id dell'utente che si intende prelevare dal database al fine di caricare l'Entity
+     */
+    public EntityUtenteRegistrato(long idUtente) throws DatabaseException {
+        UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(idUtente);
+        this.nome = utenteDAO.getNome();
+        this.cognome = utenteDAO.getCognome();
+        this.email = utenteDAO.getEmail();
+        this.automobile = utenteDAO.getAutomobile();
+        this.password = utenteDAO.getPassword();
+        this.numPostiDisponibili = utenteDAO.getPostiDisponibili();
+        this.id = idUtente;
     }
 
     public String getNome() {
@@ -107,5 +127,29 @@ public class EntityUtenteRegistrato {
 
     public void setViaggiCondivisi(ArrayList<EntityViaggio> viaggiCondivisi) {
         this.viaggiCondivisi = viaggiCondivisi;
+    }
+
+    public void aggiornaDatiPersonali(String nome, String cognome, String email,
+                                      String auto, char[] password, Integer postiDisp,
+                                      String telefono) throws AggiornamentoDatiFailedException {
+        try {
+            UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(this.id);
+            utenteDAO.updateUtenteRegistrato(nome, cognome, telefono, email, auto, postiDisp, new String(password));
+            aggiornaDati(utenteDAO);
+        } catch (DatabaseException e) {
+            if (e.isVisible())
+                throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito: " + e.getMessage());
+            throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito.");
+        }
+    }
+
+    private void aggiornaDati(UtenteRegistratoDAO utenteRegistratoDAO) {
+        this.nome = utenteRegistratoDAO.getNome();
+        this.cognome = utenteRegistratoDAO.getCognome();
+        this.email = utenteRegistratoDAO.getEmail();
+        this.contattoTelefonico = utenteRegistratoDAO.getContattoTelefonico();
+        this.automobile = utenteRegistratoDAO.getAutomobile();
+        this.password = utenteRegistratoDAO.getPassword();
+        this.numPostiDisponibili = utenteRegistratoDAO.getPostiDisponibili();
     }
 }
