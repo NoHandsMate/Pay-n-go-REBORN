@@ -210,8 +210,6 @@ public class MainWindow extends JFrame {
 
         cercaViaggioButton.addActionListener(actionEvent -> {
 
-            /*TODO: Ricerca Viaggio del controller*/
-
             AbstractMap.SimpleEntry<Boolean, Object> result;
 
             result = ControllerUtente.getInstance().ricercaViaggio(luogoPartenzaField.getText(),

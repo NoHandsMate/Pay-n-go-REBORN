@@ -4,6 +4,7 @@ import exceptions.DatabaseException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class PrenotazioneDAO {
@@ -13,7 +14,7 @@ public class PrenotazioneDAO {
     private long idViaggioPrenotato;
     private boolean accettata;
 
-    private final Logger logger = Logger.getLogger("loggerPrenotazioneDAO");
+    private static final Logger logger = Logger.getLogger("loggerPrenotazioneDAO");
 
     /**
      * Costruttore di default di PrenotazioneDAO, crea un'istanza vuota da popolare successivamente.
@@ -73,6 +74,29 @@ public class PrenotazioneDAO {
     public void deletePrenotazione() throws DatabaseException{
         if (this.eliminaDaDB() == 0)
             throw new DatabaseException("Non è stata trovata una prenotazione corrispondente.",true);
+    }
+
+    /**
+     * Funzione per prelevare tutte le prenotazioni dal database.
+     * @throws DatabaseException se non è stato possibile selezionare tutte le prenotazioni dal database.
+     */
+    public static ArrayList<PrenotazioneDAO> getPrenotazioni() throws DatabaseException {
+        String query = "SELECT * from prenotazioni";
+        ArrayList<PrenotazioneDAO> prenotazioni = new ArrayList<>();
+        try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
+            while (rs.next()) {
+                PrenotazioneDAO p = new PrenotazioneDAO();
+                p.idPrenotazione = rs.getLong("idPrenotazione");
+                p.accettata = rs.getBoolean("accettata");
+                p.idViaggioPrenotato = rs.getLong("viaggioPrenotato");
+                p.idPasseggero = rs.getLong("passeggero");
+                prenotazioni.add(p);
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.warning("Errore durante il caricamento dal database delle prenotazioni");
+            throw new DatabaseException("Errore nel caricamento delle prenotazioni dal database.", false);
+        }
+        return prenotazioni;
     }
 
     /**

@@ -122,7 +122,7 @@ public class UtenteRegistratoDAO {
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
             while (rs.next()) {
                 UtenteRegistratoDAO u = new UtenteRegistratoDAO();
-                u.idUtenteRegistrato = rs.getInt("idUtenteRegistrato");
+                u.idUtenteRegistrato = rs.getLong("idUtenteRegistrato");
                 u.nome = rs.getString("nome");
                 u.cognome = rs.getString("cognome");
                 u.contattoTelefonico = rs.getString("contattoTelefonico");
@@ -151,7 +151,7 @@ public class UtenteRegistratoDAO {
 
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
             while (rs.next()) {
-                this.idUtenteRegistrato = rs.getInt("idUtenteRegistrato");
+                this.idUtenteRegistrato = rs.getLong("idUtenteRegistrato");
                 this.nome = rs.getString("nome");
                 this.cognome = rs.getString("cognome");
                 this.contattoTelefonico = rs.getString("contattoTelefonico");

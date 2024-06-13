@@ -67,36 +67,28 @@ public class GestoreUtenti {
         ArrayList<ArrayList<MyDto>> reportUtenti = new ArrayList<>();
 
         try{
-            int i = 0;
-
             //Tutti gli utenti del database
-            ArrayList<UtenteRegistratoDAO> utentiRegistrati = UtenteRegistratoDAO.getUtentiRegistrati();
+            ArrayList<UtenteRegistratoDAO> utentiRegistratiDAO = UtenteRegistratoDAO.getUtentiRegistrati();
             //Tutti le valutazioni del database
-            ArrayList<ValutazioneDAO> valutazioni = ValutazioneDAO.getValutazioni();
+            ArrayList<ValutazioneDAO> valutazioniDAO = ValutazioneDAO.getValutazioni();
 
-            for (UtenteRegistratoDAO utente : utentiRegistrati) {
-
-                //Tutte le valutazioni associate a un utente: ognuna di esse è un Dto, con descrizione e numstelle
-                ArrayList<MyDto> valutazioniUtente = new ArrayList<>();
-                MyDto i_esimo_utente = new MyDto();
-                ArrayList<MyDto> i_esimo_reportUtente = new ArrayList<>();
-
-                for (ValutazioneDAO valutazione : valutazioni) {
-
-                    MyDto i_esima_valutazione_utente = new MyDto();
-                    if(valutazione.getIdUtente() == utente.getIdUtenteRegistrato() ){
-                        i_esimo_utente.setCampo1(utente.getNome());
-                        i_esimo_utente.setCampo2(utente.getCognome());
-                        i_esima_valutazione_utente.setCampo3(valutazione.getDescrizione());
-                        i_esima_valutazione_utente.setCampo4(String.valueOf(valutazione.getNumeroStelle()));
-                        valutazioniUtente.add(i_esima_valutazione_utente);
-                        i_esimo_reportUtente.add(i_esimo_utente);
-                        i_esimo_reportUtente.add(i_esima_valutazione_utente);
+            //Costruisco un array di Entity o lavoro sulle DAO?
+            for(UtenteRegistratoDAO utenteRegistratoDAO : utentiRegistratiDAO){
+                ArrayList<MyDto> reportUtente = new ArrayList<>();
+                MyDto utente = new MyDto();
+                utente.setCampo1(utenteRegistratoDAO.getNome());
+                utente.setCampo2(utenteRegistratoDAO.getCognome());
+                reportUtente.add(utente);
+                for(ValutazioneDAO valutazioneDAO : valutazioniDAO){
+                    if(valutazioneDAO.getIdUtente() == utenteRegistratoDAO.getIdUtenteRegistrato()){
+                        MyDto valutazione = new MyDto();
+                        valutazione.setCampo1(valutazioneDAO.getDescrizione());
+                        valutazione.setCampo2(String.valueOf(valutazioneDAO.getNumeroStelle()));
+                        reportUtente.add(valutazione);
                     }
-
                 }
+                reportUtenti.add(reportUtente);
             }
-
 
         }catch (DatabaseException e){
             throw new ReportUtentiFailedException("Generazione report utenti fallita: " + e.getMessage());

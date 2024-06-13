@@ -1,9 +1,11 @@
 package entity;
 
+import database.PrenotazioneDAO;
 import database.UtenteRegistratoDAO;
 import database.ViaggioDAO;
 import dto.MyDto;
 import exceptions.DatabaseException;
+import exceptions.ReportIncassiFailedException;
 import exceptions.RicercaViaggioFailedException;
 
 import javax.xml.crypto.Data;
@@ -27,8 +29,25 @@ public class GestoreViaggi {
         return uniqueInstance;
     }
 
-    public Float GeneraReportIncassi(){
-        return 0f;
+    public Float GeneraReportIncassi() throws ReportIncassiFailedException {
+        float reportIncassi = 0f;
+        ArrayList<ViaggioDAO> listaViaggi;
+        ArrayList<PrenotazioneDAO> listaPrenotazioni;
+        try {
+            listaViaggi = ViaggioDAO.getViaggi();
+            listaPrenotazioni = PrenotazioneDAO.getPrenotazioni();
+            for (ViaggioDAO viaggio : listaViaggi) {
+                for(PrenotazioneDAO prenotazione : listaPrenotazioni){
+                    if(prenotazione.isAccettata() && prenotazione.getIdViaggioPrenotato() == viaggio.getIdViaggio()) {
+                        reportIncassi = reportIncassi + viaggio.getContributoSpese();
+                    }
+
+                }
+            }
+        }catch (DatabaseException e){
+            throw new ReportIncassiFailedException(e.getMessage());
+        }
+        return reportIncassi;
     }
 
     public ArrayList<MyDto> ricercaViaggio(String luogoPartenza, String luogoDestinazione,
@@ -55,6 +74,7 @@ public class GestoreViaggi {
         return viaggiTrovati;
     }
 
+    //Metodo per alleggerire ricercaViaggio
     private MyDto caricaViaggioDTO(ViaggioDAO viaggio, UtenteRegistratoDAO utenteRegistrato) {
         MyDto viaggioDTO = new MyDto();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(NATURALDATEFORMAT);
