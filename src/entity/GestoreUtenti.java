@@ -6,6 +6,7 @@ import database.UtenteRegistratoDAO;
 import dto.*;
 
 import javax.swing.text.html.parser.Entity;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class GestoreUtenti {
@@ -93,6 +94,13 @@ public class GestoreUtenti {
 
         }
         return reportUtenti;
+    }
+
+    public void condividiViaggio(String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
+                                 LocalDateTime dataArrivo, float contributoSpese) throws CondivisioneViaggioFailedException {
+
+        EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
+        utenteCorrente.condividiViaggio(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese);
     }
 
     private void aggiornaUtenteCorrente(UtenteRegistratoDAO utenteRegistratoDAO) throws DatabaseException {

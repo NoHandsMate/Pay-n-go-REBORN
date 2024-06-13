@@ -5,8 +5,10 @@ import database.PrenotazioneDAO;
 import database.ValutazioneDAO;
 import database.ViaggioDAO;
 import exceptions.AggiornamentoDatiFailedException;
+import exceptions.CondivisioneViaggioFailedException;
 import exceptions.DatabaseException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class EntityUtenteRegistrato {
@@ -98,6 +100,28 @@ public class EntityUtenteRegistrato {
             if (e.isVisible())
                 throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito: " + e.getMessage());
             throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito.");
+        }
+    }
+
+
+    public void condividiViaggio(String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
+                                 LocalDateTime dataArrivo, float contributoSpese) throws CondivisioneViaggioFailedException {
+
+        EntityViaggio viaggioCondiviso = new EntityViaggio();
+        viaggioCondiviso.setLuogoPartenza(luogoPartenza);
+        viaggioCondiviso.setLuogoDestinazione(luogoDestinazione);
+        viaggioCondiviso.setDataPartenza(dataPartenza);
+        viaggioCondiviso.setDataArrivo(dataArrivo);
+        viaggioCondiviso.setContributoSpese(contributoSpese);
+        viaggioCondiviso.setAutista(this);
+
+        try {
+            viaggioCondiviso.salvaInDB();
+        } catch (DatabaseException e) {
+            if(e.isVisible()) {
+                throw new CondivisioneViaggioFailedException("Condivisione viaggio fallita: " + e.getMessage());
+            }
+            throw new CondivisioneViaggioFailedException("Condivisione viaggio fallita");
         }
     }
 
@@ -194,4 +218,5 @@ public class EntityUtenteRegistrato {
     public void setViaggiCondivisi(ArrayList<EntityViaggio> viaggiCondivisi) {
         this.viaggiCondivisi = viaggiCondivisi;
     }
+
 }

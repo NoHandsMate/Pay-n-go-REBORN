@@ -27,9 +27,7 @@ public class ValutazioneDAO {
      * database.
      * @param idValutazione l'identificativo della valutazione.
      */
-
-
-    public ValutazioneDAO(int idValutazione) throws DatabaseException {
+    public ValutazioneDAO(long idValutazione) throws DatabaseException {
         if (!caricaDaDB(idValutazione))
             throw new DatabaseException("Errore nella creazione di PrenotazioneDAO.",false);
         this.idValutazione = idValutazione;

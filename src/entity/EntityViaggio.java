@@ -3,6 +3,7 @@ package entity;
 import database.*;
 import exceptions.*;
 
+import javax.xml.crypto.Data;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -18,7 +19,8 @@ public class EntityViaggio {
 
     public EntityViaggio() {}
 
-    public EntityViaggio(ViaggioDAO viaggioDAO) {
+
+    public EntityViaggio(ViaggioDAO viaggioDAO) throws DatabaseException {
 
         this.id = viaggioDAO.getIdViaggio();
         this.luogoPartenza = viaggioDAO.getLuogoPartenza();
@@ -26,6 +28,8 @@ public class EntityViaggio {
         this.dataPartenza = viaggioDAO.getDataPartenza();
         this.dataArrivo = viaggioDAO.getDataArrivo();
         this.contributoSpese = viaggioDAO.getContributoSpese();
+        UtenteRegistratoDAO utenteRegistratoDAO = new UtenteRegistratoDAO(viaggioDAO.getIdAutista());
+        this.autista = new EntityUtenteRegistrato(utenteRegistratoDAO);
     }
 
     public void popolaPrenotazioni() throws DatabaseException {
@@ -39,6 +43,19 @@ public class EntityViaggio {
         }
     }
 
+    public void salvaInDB() throws DatabaseException {
+        ViaggioDAO viaggioDAO = new ViaggioDAO();
+        viaggioDAO.createViaggio(this.luogoPartenza, this.luogoDestinazione, this.dataPartenza,
+                                 this.dataArrivo, this.contributoSpese, this.autista.getId());
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getLuogoPartenza() {
         return luogoPartenza;

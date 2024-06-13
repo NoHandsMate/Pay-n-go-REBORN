@@ -6,6 +6,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -133,6 +135,26 @@ public class MainWindow extends JFrame {
 
         condividiViaggioButton.addActionListener(actionEvent -> {
             /* TODO: check e condividiViaggio() */
+            AbstractMap.SimpleEntry<Boolean, String> result = validateCondividiViaggioInput();
+
+            if (!result.getKey())
+                JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), "Error", JOptionPane.ERROR_MESSAGE);
+            else {
+                // Variabili temporanee per facilitare la lettura
+                String luogoPartenza = condividiLuogoPartenzaField.getText();
+                String luogoDestinazione = condividiLuogoDestinazioneField.getText();
+                LocalDateTime dataPartenza = condividiDataOraPartenzaPicker.getDateTimeStrict();
+                LocalDateTime dataArrivo = condividiDataOraArrivoPicker.getDateTimeStrict();
+                float contributoSpese = Float.parseFloat(condividiContributoSpeseField.getText());
+
+                result = ControllerUtente.getInstance().condividiViaggio(luogoPartenza, luogoDestinazione,
+                                                                         dataPartenza, dataArrivo, contributoSpese);
+
+                String title = !result.getKey() ? "Error" : "Info";
+                int messageType = !result.getKey() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
+
+                JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), title, messageType);
+            }
         });
 
         viaggiCondivisiTable.getSelectionModel().addListSelectionListener(selectionEvent -> {
@@ -269,6 +291,50 @@ public class MainWindow extends JFrame {
             return new AbstractMap.SimpleEntry<>(false, "Il modello dell'automobile supera la lunghezza massima di 50 caratteri");
         }
         return new AbstractMap.SimpleEntry<>(true, "OK");
+    }
+
+    private AbstractMap.SimpleEntry<Boolean, String> validateCondividiViaggioInput() {
+        if (condividiLuogoPartenzaField.getText().isBlank() || condividiLuogoDestinazioneField.getText().isBlank() ||
+            condividiDataOraPartenzaPicker.toString().isBlank() || condividiDataOraArrivoPicker.toString().isBlank() ||
+            condividiContributoSpeseField.getText().isBlank()) {
+            return new AbstractMap.SimpleEntry<>(false, "Riempi i campi obbligatori");
+        }
+
+        Pattern specialCharRegex = Pattern.compile("[^a-z A-Z]", Pattern.CASE_INSENSITIVE);
+        Pattern numberRegex = Pattern.compile("[^0-9]", Pattern.CASE_INSENSITIVE);
+        Matcher condividiLuogoPartenzaMatcher = specialCharRegex.matcher(condividiLuogoPartenzaField.getText());
+        Matcher condividiLuogoDestinazioneMatcher = numberRegex.matcher(condividiLuogoDestinazioneField.getText());
+        Matcher condividiContributoSpeseMatcher = numberRegex.matcher(condividiContributoSpeseField.getText());
+
+        if (condividiLuogoPartenzaField.getText().length() > 50) {
+            return new AbstractMap.SimpleEntry<>(false, "Il luogo di partenza supera la lunghezza massima di 50 caratteri");
+        }
+
+        if (condividiLuogoPartenzaMatcher.find()) {
+            return new AbstractMap.SimpleEntry<>(false, "Il luogo di partenza contiene caratteri non validi");
+        }
+
+        if (condividiLuogoDestinazioneField.getText().length() > 50) {
+            return new AbstractMap.SimpleEntry<>(false, "Il luogo di destinazione supera la lunghezza massima di 50 caratteri");
+        }
+
+        if (condividiLuogoDestinazioneMatcher.find()) {
+            return new AbstractMap.SimpleEntry<>(false, "Il luogo di destinazione contiene caratteri non validi");
+        }
+
+        if (condividiContributoSpeseMatcher.find()) {
+            return new AbstractMap.SimpleEntry<>(false, "Il contributo spese contiene caratteri non validi");
+        }
+
+        LocalDateTime dataPartenzaTemp = condividiDataOraPartenzaPicker.getDateTimeStrict();
+        LocalDateTime dataArrivoTemop = condividiDataOraArrivoPicker.getDateTimeStrict();
+
+        if (dataPartenzaTemp.isAfter(dataArrivoTemop)) {
+            return new AbstractMap.SimpleEntry<>(false, "La data di partenza è invalida");
+        }
+
+        return new AbstractMap.SimpleEntry<>(true, "OK");
+
     }
 
     private void ricercaViaggi() {

@@ -35,7 +35,7 @@ public class FacadeEntityUtente {
                                  LocalDateTime dataPartenza,
                                  LocalDateTime dataArrivo,
                                  float contributoSpese) throws CondivisioneViaggioFailedException {
-
+        GestoreUtenti.getInstance().condividiViaggio(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese);
     }
 
     public void aggiornaDatiPersonali(String nome, String cognome, String email,

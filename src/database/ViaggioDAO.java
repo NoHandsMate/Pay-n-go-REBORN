@@ -54,7 +54,7 @@ public class ViaggioDAO {
                                  LocalDateTime dataPartenza,
                                  LocalDateTime dataArrivo,
                                  float contributoSpese,
-                                 int idAutista) throws DatabaseException {
+                                 long idAutista) throws DatabaseException {
         if (cercaInDB(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese, idAutista) != 0)
             throw new DatabaseException("Esiste già un viaggio identico.",true);
         if (salvaInDB(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese, idAutista) == 0)
@@ -152,7 +152,7 @@ public class ViaggioDAO {
                            LocalDateTime dataPartenza,
                            LocalDateTime dataArrivo,
                            float contributoSpese,
-                           int idAutista) throws DatabaseException {
+                           long idAutista) throws DatabaseException {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATETIMEFORMAT);
         String dataPartenzaS = dataPartenza.format(dateTimeFormatter);
         String dataArrivoS = dataArrivo.format(dateTimeFormatter);

@@ -27,7 +27,7 @@ public class PrenotazioneDAO {
      * @param idPrenotazione l'identificativo della prenotazione.
      * @throws DatabaseException se non è stato possibile creare un'istanza di PrenotazioneDAO.
      */
-    public PrenotazioneDAO(int idPrenotazione) throws DatabaseException {
+    public PrenotazioneDAO(long idPrenotazione) throws DatabaseException {
         if (!caricaDaDB(idPrenotazione))
             throw new DatabaseException("Errore nella creazione di PrenotazioneDAO.",false);
         this.idPrenotazione = idPrenotazione;
@@ -157,8 +157,7 @@ public class PrenotazioneDAO {
      * @return il numero di righe inserite nel database.
      * @throws DatabaseException se non è stato possibile salvare la prenotazione nel database.
      */
-    private int salvaInDB(long idPasseggero,
-                              long idViaggioPrenotato) throws DatabaseException {
+    private int salvaInDB(long idPasseggero, long idViaggioPrenotato) throws DatabaseException {
         String query = String.format("INSERT INTO prenotazioni (passeggero, viaggioPrenotato) VALUES (%d, %d);",
                 idPasseggero, idViaggioPrenotato);
         logger.info(query);

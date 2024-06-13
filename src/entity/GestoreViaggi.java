@@ -8,6 +8,7 @@ import exceptions.DatabaseException;
 import exceptions.ReportIncassiFailedException;
 import exceptions.RicercaViaggioFailedException;
 
+import javax.swing.text.html.parser.Entity;
 import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -59,14 +60,13 @@ public class GestoreViaggi {
         ArrayList<MyDto> viaggiTrovati = new ArrayList<>();
         try {
             ArrayList<ViaggioDAO> listaViaggi = ViaggioDAO.getViaggi();
-
             for (ViaggioDAO viaggio : listaViaggi) {
-                if (viaggio.getLuogoPartenza().equalsIgnoreCase(luogoPartenza) &&
-                    viaggio.getLuogoDestinazione().equalsIgnoreCase(luogoDestinazione) &&
-                    viaggio.getDataPartenza().toLocalDate().isEqual(dataPartenza)) {
 
-                        UtenteRegistratoDAO utenteRegistrato = new UtenteRegistratoDAO(viaggio.getIdAutista());
-                        MyDto viaggioDTO = caricaViaggioDTO(viaggio, utenteRegistrato);
+                EntityViaggio entityViaggio = new EntityViaggio(viaggio);
+                if (entityViaggio.getLuogoPartenza().equalsIgnoreCase(luogoPartenza) &&
+                    entityViaggio.getLuogoDestinazione().equalsIgnoreCase(luogoDestinazione) &&
+                    entityViaggio.getDataPartenza().toLocalDate().isEqual(dataPartenza)) {
+                        MyDto viaggioDTO = caricaViaggioDTO(entityViaggio, entityViaggio.getAutista());
                         viaggiTrovati.add(viaggioDTO);
                 }
             }
@@ -78,10 +78,10 @@ public class GestoreViaggi {
     }
 
     //Metodo per alleggerire ricercaViaggio
-    private MyDto caricaViaggioDTO(ViaggioDAO viaggio, UtenteRegistratoDAO utenteRegistrato) {
+    private MyDto caricaViaggioDTO(EntityViaggio viaggio, EntityUtenteRegistrato utenteRegistrato) {
         MyDto viaggioDTO = new MyDto();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(NATURALDATEFORMAT);
-        viaggioDTO.setCampo1(String.valueOf(viaggio.getIdViaggio()));
+        viaggioDTO.setCampo1(String.valueOf(viaggio.getId()));
         viaggioDTO.setCampo2(viaggio.getLuogoPartenza());
         viaggioDTO.setCampo3(viaggio.getLuogoDestinazione());
         viaggioDTO.setCampo4(viaggio.getDataPartenza().format(dateTimeFormatter));
