@@ -42,6 +42,9 @@ public class MainWindow extends JFrame {
     private JButton condividiTabButton;
     private JButton viaggiTabButton;
 
+    private JButton[] tabButtons = {homeTabButton, accountTabButton, ricercaTabButton, prenotazioniTabButton,
+            condividiTabButton, viaggiTabButton};
+
     public MainWindow() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Pay-n-go REBORN");
@@ -71,137 +74,23 @@ public class MainWindow extends JFrame {
             }
         });
 
-        homeTabButton.addActionListener(actionEvent -> {
-            contentTab.setSelectedIndex(0);
-            homeTabButton.setBackground(new Color(15, 53, 156));
-            homeTabButton.setForeground(Color.WHITE);
-            accountTabButton.setBackground(new Color(240, 155, 50));
-            accountTabButton.setForeground(Color.BLACK);
-            ricercaTabButton.setBackground(new Color(240, 155, 50));
-            ricercaTabButton.setForeground(Color.BLACK);
-            prenotazioniTabButton.setBackground(new Color(240, 155, 50));
-            prenotazioniTabButton.setForeground(Color.BLACK);
-            condividiTabButton.setBackground(new Color(240, 155, 50));
-            condividiTabButton.setForeground(Color.BLACK);
-            viaggiTabButton.setBackground(new Color(240, 155, 50));
-            viaggiTabButton.setForeground(Color.BLACK);
-        });
+        homeTabButton.addActionListener(actionEvent -> setTabActive(0));
 
-        accountTabButton.addActionListener(actionEvent -> {
-            contentTab.setSelectedIndex(1);
-            homeTabButton.setBackground(new Color(240, 155, 50));
-            homeTabButton.setForeground(Color.BLACK);
-            accountTabButton.setBackground(new Color(15, 53, 156));
-            accountTabButton.setForeground(Color.WHITE);
-            ricercaTabButton.setBackground(new Color(240, 155, 50));
-            ricercaTabButton.setForeground(Color.BLACK);
-            prenotazioniTabButton.setBackground(new Color(240, 155, 50));
-            prenotazioniTabButton.setForeground(Color.BLACK);
-            condividiTabButton.setBackground(new Color(240, 155, 50));
-            condividiTabButton.setForeground(Color.BLACK);
-            viaggiTabButton.setBackground(new Color(240, 155, 50));
-            viaggiTabButton.setForeground(Color.BLACK);
-        });
+        accountTabButton.addActionListener(actionEvent -> setTabActive(1));
 
-        ricercaTabButton.addActionListener(actionListener -> {
-            contentTab.setSelectedIndex(2);
-            homeTabButton.setBackground(new Color(240, 155, 50));
-            homeTabButton.setForeground(Color.BLACK);
-            accountTabButton.setBackground(new Color(240, 155, 50));
-            accountTabButton.setForeground(Color.BLACK);
-            ricercaTabButton.setBackground(new Color(15, 53, 156));
-            ricercaTabButton.setForeground(Color.WHITE);
-            prenotazioniTabButton.setBackground(new Color(240, 155, 50));
-            prenotazioniTabButton.setForeground(Color.BLACK);
-            condividiTabButton.setBackground(new Color(240, 155, 50));
-            condividiTabButton.setForeground(Color.BLACK);
-            viaggiTabButton.setBackground(new Color(240, 155, 50));
-            viaggiTabButton.setForeground(Color.BLACK);
-        });
+        ricercaTabButton.addActionListener(actionListener -> setTabActive(2));
 
-        prenotazioniTabButton.addActionListener(actionListener -> {
-            contentTab.setSelectedIndex(3);
-            homeTabButton.setBackground(new Color(240, 155, 50));
-            homeTabButton.setForeground(Color.BLACK);
-            accountTabButton.setBackground(new Color(240, 155, 50));
-            accountTabButton.setForeground(Color.BLACK);
-            ricercaTabButton.setBackground(new Color(240, 155, 50));
-            ricercaTabButton.setForeground(Color.BLACK);
-            prenotazioniTabButton.setBackground(new Color(15, 53, 156));
-            prenotazioniTabButton.setForeground(Color.WHITE);
-            condividiTabButton.setBackground(new Color(240, 155, 50));
-            condividiTabButton.setForeground(Color.BLACK);
-            viaggiTabButton.setBackground(new Color(240, 155, 50));
-            viaggiTabButton.setForeground(Color.BLACK);
-        });
+        prenotazioniTabButton.addActionListener(actionListener -> setTabActive(3));
 
-        condividiTabButton.addActionListener(actionListener -> {
-            contentTab.setSelectedIndex(4);
-            homeTabButton.setBackground(new Color(240, 155, 50));
-            homeTabButton.setForeground(Color.BLACK);
-            accountTabButton.setBackground(new Color(240, 155, 50));
-            accountTabButton.setForeground(Color.BLACK);
-            ricercaTabButton.setBackground(new Color(240, 155, 50));
-            ricercaTabButton.setForeground(Color.BLACK);
-            prenotazioniTabButton.setBackground(new Color(240, 155, 50));
-            prenotazioniTabButton.setForeground(Color.BLACK);
-            condividiTabButton.setBackground(new Color(15, 53, 156));
-            condividiTabButton.setForeground(Color.WHITE);
-            viaggiTabButton.setBackground(new Color(240, 155, 50));
-            viaggiTabButton.setForeground(Color.BLACK);
-        });
+        condividiTabButton.addActionListener(actionListener -> setTabActive(4));
 
-        viaggiTabButton.addActionListener(actionListener -> {
-            contentTab.setSelectedIndex(5);
-            homeTabButton.setBackground(new Color(240, 155, 50));
-            homeTabButton.setForeground(Color.BLACK);
-            accountTabButton.setBackground(new Color(240, 155, 50));
-            accountTabButton.setForeground(Color.BLACK);
-            ricercaTabButton.setBackground(new Color(240, 155, 50));
-            ricercaTabButton.setForeground(Color.BLACK);
-            prenotazioniTabButton.setBackground(new Color(240, 155, 50));
-            prenotazioniTabButton.setForeground(Color.BLACK);
-            condividiTabButton.setBackground(new Color(240, 155, 50));
-            condividiTabButton.setForeground(Color.BLACK);
-            viaggiTabButton.setBackground(new Color(15, 53, 156));
-            viaggiTabButton.setForeground(Color.WHITE);
-        });
+        viaggiTabButton.addActionListener(actionListener -> setTabActive(5));
 
         contentTab.addChangeListener(e -> {
-            if (contentTab.getSelectedIndex() == 0) {
-
-            } else if (contentTab.getSelectedIndex() == 1) {
-                nomeField.setText(UtenteCorrente.getInstance().getNome());
-                cognomeField.setText(UtenteCorrente.getInstance().getCognome());
-                emailField.setText(UtenteCorrente.getInstance().getEmail());
-                passwordField.setText(UtenteCorrente.getInstance().getPassword());
-                telefonoField.setText(UtenteCorrente.getInstance().getContattoTelefonico());
-                autoField.setText(UtenteCorrente.getInstance().getAuto());
-                postiSpinner.setValue(Integer.valueOf(UtenteCorrente.getInstance().getPostiDisp()));
-
-            // TODO: forse non serve        } else if (contentTab.getSelectedIndex() == 2) {
-
+            if (contentTab.getSelectedIndex() == 1) {
+                populateAccountTab();
             } else if (contentTab.getSelectedIndex() == 3) {
-                /* TODO qualcosa del genere */
-                // ControllerUtente.getInstance().visualizzaPrenotazioni
-
-                Object[][] data = {{"1", "Nome Cognome", "3"}, {"2", "Name Surname", "3"}, {"3", "Mario Rossi", "4"}};
-                String[] columnNames = {"Id prenotazione", "Passeggero", "Viaggio"};
-                TableModel tableModel = new DefaultTableModel(data, columnNames) {
-                    @Override
-                    public boolean isCellEditable(int row, int column) {
-                        return false;
-                    }
-                };
-                prenotazioniTable.setModel(tableModel);
-                prenotazioniTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-                prenotazioniTable.setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
-                DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
-                headerRenderer.setBackground(new Color(48, 48, 48));
-                headerRenderer.setOpaque(true);
-                prenotazioniTable.getTableHeader().setDefaultRenderer(headerRenderer);
-                prenotazioniTable.getTableHeader().setReorderingAllowed(false);
-                prenotazioniTable.getTableHeader().setResizingAllowed(false);
+                visuaizzaPreotazioni();
             }
         });
 
@@ -209,53 +98,12 @@ public class MainWindow extends JFrame {
                 prenotaViaggioButton.setEnabled(viaggiTable.getSelectedRow() != -1));
 
         cercaViaggioButton.addActionListener(actionEvent -> {
-
-            AbstractMap.SimpleEntry<Boolean, Object> result;
-
-            result = ControllerUtente.getInstance().ricercaViaggio(luogoPartenzaField.getText(),
-                                                                   luogoArrivoField.getText(),
-                                                                   dataPartenzaPicker.getDate());
-
-            if (result.getKey()) {
-                ArrayList<MyDto> viaggiTrovati = (ArrayList<MyDto>)result.getValue();
-                ArrayList<String> rows = new ArrayList<>();
-                for (MyDto viaggi : viaggiTrovati) {
-                    rows.add(viaggi.getCampo1());
-                    rows.add(viaggi.getCampo2());
-                    rows.add(viaggi.getCampo3());
-                    rows.add(viaggi.getCampo4());
-                    rows.add(viaggi.getCampo5());
-                    rows.add(viaggi.getCampo6());
-                    rows.add(viaggi.getCampo7());
-                }
-                String[] columnNames = {"Id viaggio", "Partenza", "Destinazione", "Data e ora partenza", "Data e ora arrivo", "Contributo spese", "Autista"};
-                String[][] data = new String[rows.size() / columnNames.length][columnNames.length];
-
-                for (int i = 0; i < data.length; i++) {
-                    for (int j = 0; j < data[i].length; j++)
-                    {
-                        data[i][j] = rows.get(i * columnNames.length + j);
-                    }
-                }
-
-                TableModel tableModel = new DefaultTableModel(data, columnNames) {
-                    @Override
-                    public boolean isCellEditable(int row, int column) {
-                        return false;
-                    }
-                };
-                viaggiTable.setModel(tableModel);
-                viaggiTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-                viaggiTable.setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
-                DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
-                headerRenderer.setBackground(new Color(48, 48, 48));
-                headerRenderer.setOpaque(true);
-                viaggiTable.getTableHeader().setDefaultRenderer(headerRenderer);
-                viaggiTable.getTableHeader().setReorderingAllowed(false);
-                viaggiTable.getTableHeader().setResizingAllowed(false);
-            } else {
-                JOptionPane.showMessageDialog(rootPane, result.getValue(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            AbstractMap.SimpleEntry<Boolean, String> result = ricercaViaggiValidateInput();
+            if (Boolean.FALSE.equals(result.getKey())) {
+                JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), "Errore",
+                        JOptionPane.ERROR_MESSAGE);
+            } else
+                ricercaViaggi();
         });
 
         viaggiTable.getSelectionModel().addListSelectionListener(selectionEvent ->
@@ -269,4 +117,114 @@ public class MainWindow extends JFrame {
     private void createUIComponents() {
         circularLogoPanel = new MainWindowCircularLogoPanel();
     }
+
+    private void setTabActive(int index) {
+        contentTab.setSelectedIndex(index);
+        if (index < 0 || index > 5)
+            return;
+        for (int i = 0; i < 6; i++) {
+            if (i != index) {
+                tabButtons[i].setBackground(new Color(240, 155, 50));
+                tabButtons[i].setForeground(Color.BLACK);
+            } else {
+                tabButtons[i].setBackground(new Color(15, 53, 156));
+                tabButtons[i].setForeground(Color.WHITE);
+            }
+        }
+    }
+
+    private void populateAccountTab() {
+        nomeField.setText(UtenteCorrente.getInstance().getNome());
+        cognomeField.setText(UtenteCorrente.getInstance().getCognome());
+        emailField.setText(UtenteCorrente.getInstance().getEmail());
+        passwordField.setText(UtenteCorrente.getInstance().getPassword());
+        telefonoField.setText(UtenteCorrente.getInstance().getContattoTelefonico());
+        autoField.setText(UtenteCorrente.getInstance().getAuto());
+        postiSpinner.setValue(Integer.valueOf(UtenteCorrente.getInstance().getPostiDisp()));
+    }
+
+    private void populateTable(JTable table, Object[] columnNames, Object[][] data) {
+        TableModel tableModel = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        table.setModel(tableModel);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
+        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
+        headerRenderer.setBackground(new Color(48, 48, 48));
+        headerRenderer.setOpaque(true);
+        table.getTableHeader().setDefaultRenderer(headerRenderer);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
+    }
+
+    private AbstractMap.SimpleEntry<Boolean, String> ricercaViaggiValidateInput() {
+        if (luogoPartenzaField.getText().isBlank()) {
+            return new AbstractMap.SimpleEntry<>(false, "Il campo luogo di partenza non può essere vuoto");
+        }
+
+        if (luogoArrivoField.getText().isBlank()) {
+            return new AbstractMap.SimpleEntry<>(false, "Il campo luogo di destinazione non può essere vuoto");
+        }
+
+        if (dataPartenzaPicker.getDate() == null) {
+            return new AbstractMap.SimpleEntry<>(false, "Il campo data di partenza non può essere vuoto");
+        }
+
+        return new AbstractMap.SimpleEntry<>(true, "OK");
+    }
+
+    private void ricercaViaggi() {
+        AbstractMap.SimpleEntry<Boolean, Object> result;
+        result = ControllerUtente.getInstance().ricercaViaggio(luogoPartenzaField.getText(),
+                luogoArrivoField.getText(),
+                dataPartenzaPicker.getDate());
+
+        if (Boolean.TRUE.equals(result.getKey())) {
+            ArrayList<MyDto> viaggiTrovati = (ArrayList<MyDto>)result.getValue();
+            ArrayList<String> rows = new ArrayList<>();
+            for (MyDto viaggi : viaggiTrovati) {
+                rows.add(viaggi.getCampo1());
+                rows.add(viaggi.getCampo2());
+                rows.add(viaggi.getCampo3());
+                rows.add(viaggi.getCampo4());
+                rows.add(viaggi.getCampo5());
+                rows.add(viaggi.getCampo6());
+                rows.add(viaggi.getCampo7());
+            }
+
+            if (rows.isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "Non è stato trovato alcun viaggio corrispondente ai " +
+                        "criteri di ricerca inseriti.", "Nessun viaggio trovato", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            String[] columnNames = {"Id viaggio", "Partenza", "Destinazione", "Data e ora partenza",
+                    "Data e ora arrivo", "Contributo spese", "Autista"};
+            String[][] data = new String[rows.size() / columnNames.length][columnNames.length];
+
+            for (int i = 0; i < data.length; i++) {
+                for (int j = 0; j < data[i].length; j++)
+                {
+                    data[i][j] = rows.get(i * columnNames.length + j);
+                }
+            }
+            populateTable(viaggiTable, columnNames, data);
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, result.getValue(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void visuaizzaPreotazioni() {
+        /* TODO qualcosa del genere */
+        // ControllerUtente.getInstance().visualizzaPrenotazioni
+
+        String[][] data = {{"1", "Nome Cognome", "3"}, {"2", "Name Surname", "3"}, {"3", "Mario Rossi", "4"}};
+        String[] columnNames = {"Id prenotazione", "Passeggero", "Viaggio"};
+        populateTable(prenotazioniTable, columnNames, data);
+    }
+
 }
