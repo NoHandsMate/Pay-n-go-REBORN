@@ -39,6 +39,7 @@ public class EntityUtenteRegistrato {
 
     public EntityUtenteRegistrato(UtenteRegistratoDAO utenteRegistratoDAO) {
         /* TODO */
+
     }
 
     /**

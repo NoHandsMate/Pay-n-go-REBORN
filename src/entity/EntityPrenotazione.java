@@ -1,22 +1,23 @@
 package entity;
 
-import database.PrenotazioneDAO;
+import database.*;
 
 import java.util.ArrayList;
 
 public class EntityPrenotazione {
 
-    /*
+
     private long id;
+    private boolean accettata;
     private EntityUtenteRegistrato passeggero;
     private EntityViaggio viaggioPrenotato;
-    TODO: Aggiustare i costruttori dell'entità per includere l'EntityViaggio viaggioPrenotato
+
 
     public EntityPrenotazione() {}
 
-    public EntityPrenotazione(long id, EntityUtenteRegistrato passeggero) {
-        this.id = id;
-        this.passeggero = passeggero;
+    public EntityPrenotazione(PrenotazioneDAO prenotazioneDAO) {
+        this.id = prenotazioneDAO.getIdPrenotazione();
+        this.accettata = prenotazioneDAO.isAccettata();
     }
 
     public void creaPrenotazione() {
@@ -24,20 +25,6 @@ public class EntityPrenotazione {
     }
 
     public long getId() {
-
-        TODO: fai esplodere (ma utilizza perché sensato)
-        // EntityPrenotazione ha una lista ArrayList<EntityPrenotazione> prenotazioni;
-        ArrayList<PrenotazioneDAO> prenotazioniList = new ArrayList<>();
-        int idViaggio = 1;
-        PrenotazioneDAO.popolaPrenotazioni(prenotazioniList, idViaggio);
-        for (PrenotazioneDAO prenotazioneDAO : prenotazioniList) {
-            EntityPrenotazione entityPrenotazione = new EntityPrenotazione(prenotazioneDAO);
-            if (entityPrenotazione.viaggioPrenotato.getId() == idViaggio) {
-                prenotazioni.append(entityPrenotazione);
-            }
-        }
-
-        this.idDPrenotazioni = prenotazioniList;
         return id;
     }
 
@@ -53,5 +40,5 @@ public class EntityPrenotazione {
         this.passeggero = passeggero;
     }
 
-     */
+
 }

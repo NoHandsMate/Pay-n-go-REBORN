@@ -30,26 +30,15 @@ public class GestoreViaggi {
     }
 
     public Float GeneraReportIncassi() throws ReportIncassiFailedException {
+
         float reportIncassi = 0f;
         ArrayList<ViaggioDAO> listaDAOViaggi;
-        ArrayList<PrenotazioneDAO> listaPrenotazioni;
-        ArrayList<EntityViaggio> listaEntityViaggi;
-        ArrayList<EntityPrenotazione> listaEntityPrenotazioni;
         try {
             listaDAOViaggi = GestoreViaggi.caricaViaggiDaDB();
-            for(int i=0; i<listaDAOViaggi.size(); i++) {
-                EntityViaggio viaggio = new EntityViaggio();
-
-
-            }
-            listaPrenotazioni = PrenotazioneDAO.getPrenotazioni();
-            for (ViaggioDAO viaggio : listaDAOViaggi) {
-                for(PrenotazioneDAO prenotazione : listaPrenotazioni){
-                    if(prenotazione.isAccettata() && prenotazione.getIdViaggioPrenotato() == viaggio.getIdViaggio()) {
-                        reportIncassi = reportIncassi + viaggio.getContributoSpese();
-                    }
-
-                }
+            for (ViaggioDAO viaggioDAO : listaDAOViaggi) {
+                EntityViaggio viaggio = new EntityViaggio(viaggioDAO);
+                viaggio.popolaPrenotazioni();
+                reportIncassi = reportIncassi + viaggio.getContributoSpese() * viaggio.getPrenotazioni().size();
             }
         }catch (DatabaseException e){
             throw new ReportIncassiFailedException(e.getMessage());
@@ -99,5 +88,11 @@ public class GestoreViaggi {
         ArrayList<ViaggioDAO> listaDAOViaggi;
         listaDAOViaggi = ViaggioDAO.getViaggi();
         return listaDAOViaggi;
+    }
+
+    private static ArrayList<PrenotazioneDAO> caricaPrenotazioniDaDB() throws DatabaseException {
+        ArrayList<PrenotazioneDAO> listaDAOPrenotazioni;
+        listaDAOPrenotazioni = PrenotazioneDAO.getPrenotazioni();
+        return listaDAOPrenotazioni;
     }
 }

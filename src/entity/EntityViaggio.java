@@ -1,11 +1,11 @@
 package entity;
 
-import database.PrenotazioneDAO;
-import database.ViaggioDAO;
+import database.*;
 import exceptions.DatabaseException;
 import exceptions.ReportIncassiFailedException;
 
 import java.lang.reflect.Array;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.ArrayList;
 
@@ -13,38 +13,35 @@ public class EntityViaggio {
     private long id;
     private String luogoPartenza;
     private String luogoDestinazione;
-    private Date dataPartenza;
-    private Date oraPartenza;
-    private Date dataArrivo;
-    private Date oraArrivo;
+    private LocalDateTime dataPartenza;
+    private LocalDateTime dataArrivo;
     private float contributoSpese;
     private EntityUtenteRegistrato autista;
     private ArrayList<EntityPrenotazione> prenotazioni;
 
     public EntityViaggio() {}
 
-    public EntityViaggio(String luogoPartenza, String luogoDestinazione,
-                         Date dataPartenza, Date oraPartenza,
-                         Date dataArrivo, Date oraArrivo,
-                         float contributoSpese,
-                         EntityUtenteRegistrato autista, ArrayList<EntityPrenotazione> prenotazioni) {
+    public EntityViaggio(ViaggioDAO viaggioDAO) {
 
-        this.luogoPartenza = luogoPartenza;
-        this.luogoDestinazione = luogoDestinazione;
-        this.dataPartenza = dataPartenza;
-        this.oraPartenza = oraPartenza;
-        this.dataArrivo = dataArrivo;
-        this.oraArrivo = oraArrivo;
-        this.contributoSpese = contributoSpese;
-        this.autista = autista;
-        this.prenotazioni = prenotazioni;
+        this.id = viaggioDAO.getIdViaggio();
+        this.luogoPartenza = viaggioDAO.getLuogoPartenza();
+        this.luogoDestinazione = viaggioDAO.getLuogoDestinazione();
+        this.dataPartenza = viaggioDAO.getDataPartenza();
+        this.dataArrivo = viaggioDAO.getDataArrivo();
+        this.contributoSpese = viaggioDAO.getContributoSpese();
     }
 
-    private ArrayList<PrenotazioneDAO> caricaPrenotazioniDaDB() throws DatabaseException {
-        ArrayList<PrenotazioneDAO> listaDAOPrenotazioni;
-        listaDAOPrenotazioni = PrenotazioneDAO.getPrenotazioni();
-        return listaDAOPrenotazioni;
+    public void popolaPrenotazioni() throws DatabaseException {
+        ArrayList<PrenotazioneDAO> prenotazioni = PrenotazioneDAO.getPrenotazioni();
+        this.prenotazioni = new ArrayList<>();
+        for (PrenotazioneDAO prenotazioneDAO : prenotazioni) {
+            if(prenotazioneDAO.getIdPrenotazione() == this.id) {
+                EntityPrenotazione prenotazione = new EntityPrenotazione(prenotazioneDAO);
+                this.prenotazioni.add(prenotazione);
+            }
+        }
     }
+
 
     public String getLuogoPartenza() {
         return luogoPartenza;
@@ -62,36 +59,20 @@ public class EntityViaggio {
         this.luogoDestinazione = luogoDestinazione;
     }
 
-    public Date getDataPartenza() {
+    public LocalDateTime getDataPartenza() {
         return dataPartenza;
     }
 
-    public void setDataPartenza(Date dataPartenza) {
+    public void setDataPartenza(LocalDateTime dataPartenza) {
         this.dataPartenza = dataPartenza;
     }
 
-    public Date getOraPartenza() {
-        return oraPartenza;
-    }
-
-    public void setOraPartenza(Date oraPartenza) {
-        this.oraPartenza = oraPartenza;
-    }
-
-    public Date getDataArrivo() {
+    public LocalDateTime getDataArrivo() {
         return dataArrivo;
     }
 
-    public void setDataArrivo(Date dataArrivo) {
+    public void setDataArrivo(LocalDateTime dataArrivo) {
         this.dataArrivo = dataArrivo;
-    }
-
-    public Date getOraArrivo() {
-        return oraArrivo;
-    }
-
-    public void setOraArrivo(Date oraArrivo) {
-        this.oraArrivo = oraArrivo;
     }
 
     public float getContributoSpese() {
