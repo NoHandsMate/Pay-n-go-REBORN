@@ -1,5 +1,8 @@
 package entity;
 
+import database.*;
+import exceptions.*;
+
 public class EntityValutazione {
     private long id;
     private int numeroStelle;
@@ -7,9 +10,18 @@ public class EntityValutazione {
 
     public EntityValutazione() {}
 
-    public EntityValutazione(int numeroStelle, String descrizione) {
-        this.numeroStelle = numeroStelle;
-        this.descrizione = descrizione;
+    public EntityValutazione(ValutazioneDAO valutazioneDAO) {
+        this.numeroStelle = valutazioneDAO.getNumeroStelle();
+        this.descrizione = valutazioneDAO.getDescrizione();
+    }
+
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getNumeroStelle() {

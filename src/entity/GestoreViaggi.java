@@ -29,6 +29,7 @@ public class GestoreViaggi {
         return uniqueInstance;
     }
 
+
     public Float GeneraReportIncassi() throws ReportIncassiFailedException {
 
         float reportIncassi = 0f;
@@ -38,7 +39,13 @@ public class GestoreViaggi {
             for (ViaggioDAO viaggioDAO : listaDAOViaggi) {
                 EntityViaggio viaggio = new EntityViaggio(viaggioDAO);
                 viaggio.popolaPrenotazioni();
-                reportIncassi = reportIncassi + viaggio.getContributoSpese() * viaggio.getPrenotazioni().size();
+                int numPrenotazioniAccettate = 0;
+                for(EntityPrenotazione prenotazione : viaggio.getPrenotazioni()) {
+                    if(prenotazione.isAccettata()) {
+                        numPrenotazioniAccettate++;
+                    }
+                }
+                reportIncassi = reportIncassi + viaggio.getContributoSpese() *numPrenotazioniAccettate;
             }
         }catch (DatabaseException e){
             throw new ReportIncassiFailedException(e.getMessage());

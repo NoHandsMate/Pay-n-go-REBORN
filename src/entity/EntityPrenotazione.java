@@ -41,4 +41,11 @@ public class EntityPrenotazione {
     }
 
 
+    public boolean isAccettata() {
+        return accettata;
+    }
+
+    public void setAccettata(boolean accettata) {
+        this.accettata = accettata;
+    }
 }

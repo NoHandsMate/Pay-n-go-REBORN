@@ -1,12 +1,9 @@
 package entity;
 
 import database.*;
-import exceptions.DatabaseException;
-import exceptions.ReportIncassiFailedException;
+import exceptions.*;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.ArrayList;
 
 public class EntityViaggio {

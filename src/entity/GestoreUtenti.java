@@ -57,6 +57,7 @@ public class GestoreUtenti {
         Sessione.getInstance().setUtenteCorrente(utenteCorrente);
     }
 
+
     public ArrayList<ArrayList<MyDto>> generaReportUtenti() throws ReportUtentiFailedException {
 
         //ArrayList di ArrayList di DTO: ogni utente può avere una serie di valutazioni
@@ -95,7 +96,7 @@ public class GestoreUtenti {
     }
 
     private void aggiornaUtenteCorrente(UtenteRegistratoDAO utenteRegistratoDAO) throws DatabaseException {
-        EntityUtenteRegistrato utenteCorrente = new EntityUtenteRegistrato(utenteRegistratoDAO.getIdUtenteRegistrato());
+        EntityUtenteRegistrato utenteCorrente = new EntityUtenteRegistrato(utenteRegistratoDAO);
         Sessione.getInstance().setUtenteCorrente(utenteCorrente);
     }
 
