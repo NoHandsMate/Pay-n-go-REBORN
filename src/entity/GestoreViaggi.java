@@ -31,12 +31,19 @@ public class GestoreViaggi {
 
     public Float GeneraReportIncassi() throws ReportIncassiFailedException {
         float reportIncassi = 0f;
-        ArrayList<ViaggioDAO> listaViaggi;
+        ArrayList<ViaggioDAO> listaDAOViaggi;
         ArrayList<PrenotazioneDAO> listaPrenotazioni;
+        ArrayList<EntityViaggio> listaEntityViaggi;
+        ArrayList<EntityPrenotazione> listaEntityPrenotazioni;
         try {
-            listaViaggi = ViaggioDAO.getViaggi();
+            listaDAOViaggi = GestoreViaggi.caricaViaggiDaDB();
+            for(int i=0; i<listaDAOViaggi.size(); i++) {
+                EntityViaggio viaggio = new EntityViaggio();
+
+
+            }
             listaPrenotazioni = PrenotazioneDAO.getPrenotazioni();
-            for (ViaggioDAO viaggio : listaViaggi) {
+            for (ViaggioDAO viaggio : listaDAOViaggi) {
                 for(PrenotazioneDAO prenotazione : listaPrenotazioni){
                     if(prenotazione.isAccettata() && prenotazione.getIdViaggioPrenotato() == viaggio.getIdViaggio()) {
                         reportIncassi = reportIncassi + viaggio.getContributoSpese();
@@ -86,5 +93,11 @@ public class GestoreViaggi {
         viaggioDTO.setCampo6(String.valueOf(viaggio.getContributoSpese()));
         viaggioDTO.setCampo7(String.format("%s %s", utenteRegistrato.getNome(), utenteRegistrato.getCognome()));
         return viaggioDTO;
+    }
+
+    private static ArrayList<ViaggioDAO> caricaViaggiDaDB() throws DatabaseException{
+        ArrayList<ViaggioDAO> listaDAOViaggi;
+        listaDAOViaggi = ViaggioDAO.getViaggi();
+        return listaDAOViaggi;
     }
 }
