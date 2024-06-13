@@ -1,5 +1,11 @@
 package entity;
 
+import database.PrenotazioneDAO;
+import database.ViaggioDAO;
+import exceptions.DatabaseException;
+import exceptions.ReportIncassiFailedException;
+
+import java.lang.reflect.Array;
 import java.util.Date;
 import java.util.ArrayList;
 
@@ -32,6 +38,12 @@ public class EntityViaggio {
         this.contributoSpese = contributoSpese;
         this.autista = autista;
         this.prenotazioni = prenotazioni;
+    }
+
+    private ArrayList<PrenotazioneDAO> caricaPrenotazioniDaDB() throws DatabaseException {
+        ArrayList<PrenotazioneDAO> listaDAOPrenotazioni;
+        listaDAOPrenotazioni = PrenotazioneDAO.getPrenotazioni();
+        return listaDAOPrenotazioni;
     }
 
     public String getLuogoPartenza() {
