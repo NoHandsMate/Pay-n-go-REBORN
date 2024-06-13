@@ -19,8 +19,8 @@ public class FormLogin extends JFrame {
         setSize(600, 300);
         setLocationRelativeTo(null);
         setResizable(false);
-        getContentPane().setLayout(new BorderLayout());
         getContentPane().add(new JScrollPane(loginPanel), BorderLayout.CENTER);
+        getRootPane().setDefaultButton(loginButton);
         loginButton.addActionListener(actionEvent -> {
 
             AbstractMap.SimpleEntry<Boolean, String> result = validateInput();

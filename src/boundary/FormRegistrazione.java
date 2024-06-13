@@ -28,6 +28,7 @@ public class FormRegistrazione extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         getContentPane().add(new JScrollPane(registrazionePanel), BorderLayout.CENTER);
+        getRootPane().setDefaultButton(registratiButton);
         registratiButton.addActionListener(actionEvent -> {
           AbstractMap.SimpleEntry<Boolean, String> result = validateInput();
 
