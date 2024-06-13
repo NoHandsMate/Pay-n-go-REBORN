@@ -67,7 +67,7 @@ public class FormRegistrazione extends JFrame {
             return new AbstractMap.SimpleEntry<>(false, "Il valore dei posti disponibili è incorretto");
         }
 
-        Pattern specialCharRegex = Pattern.compile("[^a-zA-Z]", Pattern.CASE_INSENSITIVE);
+        Pattern specialCharRegex = Pattern.compile("[^a-z A-Z]", Pattern.CASE_INSENSITIVE);
         Pattern numberRegex = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
         Pattern telRegex = Pattern.compile("[^+0-9]", Pattern.CASE_INSENSITIVE);
         Matcher nomeMatcher = specialCharRegex.matcher(nomeField.getText());

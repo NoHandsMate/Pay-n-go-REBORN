@@ -24,6 +24,10 @@ public class ControllerUtente {
         return uniqueInstance;
     }
 
+    public MyDto getSessione() {
+        return FacadeEntityUtente.getInstance().getSessione();
+    }
+
     public AbstractMap.SimpleEntry<Boolean, String> registraUtente(String nome,
                                                                    String cognome,
                                                                    String email,
@@ -56,12 +60,9 @@ public class ControllerUtente {
                                                                      LocalDateTime dataPartenza,
                                                                      LocalDateTime dataArrivo,
                                                                      float contributoSpese){
-        //Prelievo idAutista (chi sta condividendo il viaggio) dal DTO
-        long idAutista = UtenteCorrente.getInstance().getIdUtenteCorrente();
-
         try {
             FacadeEntityUtente.getInstance().condividiViaggio(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo,
-                    contributoSpese, idAutista);
+                    contributoSpese);
         } catch (CondivisioneViaggioFailedException e){
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }

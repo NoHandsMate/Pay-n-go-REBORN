@@ -1,7 +1,8 @@
 package boundary;
 
 import control.ControllerUtente;
-import dto.UtenteCorrente;
+import dto.MyDto;
+import entity.Sessione;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,12 +34,13 @@ public class FormLogin extends JFrame {
                 if (Boolean.FALSE.equals(result.getKey())) {
                     JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    if (UtenteCorrente.getInstance().getIdUtenteCorrente() == 0)
+                    MyDto sessione = ControllerUtente.getInstance().getSessione();
+                    if (Long.parseLong(sessione.getCampo1()) == 0)
                     {
-                        JOptionPane.showMessageDialog(rootPane, "Il login è stato effettuato, ma l'id della " +
-                                "sessione è invalido. Per favore riprova ad effettuare il login.", "Errore",
+                        JOptionPane.showMessageDialog(rootPane, "Il login è stato effettuato, ma la sessione " +
+                                "risulta invalida. Per favore riprova ad effettuare il login.", "Errore",
                                 JOptionPane.ERROR_MESSAGE);
-                    } else if (UtenteCorrente.getInstance().getIdUtenteCorrente() == 1) {
+                    } else if (Long.parseLong(sessione.getCampo1()) == 1) {
                         FormGestore formGestore = new FormGestore();
                         formGestore.setVisible(true);
                         setVisible(false);

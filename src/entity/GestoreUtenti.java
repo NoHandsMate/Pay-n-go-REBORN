@@ -53,7 +53,7 @@ public class GestoreUtenti {
                                       String telefono) throws AggiornamentoDatiFailedException {
 
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
-        utenteCorrente.aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, new String(password));
+        utenteCorrente.aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, telefono);
         Sessione.getInstance().setUtenteCorrente(utenteCorrente);
     }
 
@@ -100,4 +100,15 @@ public class GestoreUtenti {
         Sessione.getInstance().setUtenteCorrente(utenteCorrente);
     }
 
+    public MyDto getSessione() {
+        EntityUtenteRegistrato sessioneCorrente = Sessione.getInstance().getUtenteCorrente();
+        return new MyDto(String.valueOf(sessioneCorrente.getId()),
+                sessioneCorrente.getNome(),
+                sessioneCorrente.getCognome(),
+                sessioneCorrente.getEmail(),
+                sessioneCorrente.getPassword(),
+                sessioneCorrente.getContattoTelefonico(),
+                sessioneCorrente.getAutomobile(),
+                String.valueOf(sessioneCorrente.getPostiDisponibili()));
+    }
 }

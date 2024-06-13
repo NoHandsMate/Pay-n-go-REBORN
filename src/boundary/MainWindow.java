@@ -73,19 +73,21 @@ public class MainWindow extends JFrame {
             }
         });
 
-        if (UtenteCorrente.getInstance().getIdUtenteCorrente() == 0)
+        MyDto sessione = ControllerUtente.getInstance().getSessione();
+
+        if (Long.parseLong(sessione.getCampo1()) == 0)
         {
             JOptionPane.showMessageDialog(rootPane, "Non è presente una sessione utente attiva!", "Errore",
                     JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
-        } else if (UtenteCorrente.getInstance().getIdUtenteCorrente() == 1) {
+        } else if (Long.parseLong(sessione.getCampo1()) == 1) {
             FormGestore formGestore = new FormGestore();
             formGestore.setVisible(true);
             setVisible(false);
         }
 
         welcomeLabel.setText(String.format("Ciao %s %s!",
-                UtenteCorrente.getInstance().getNome(), UtenteCorrente.getInstance().getCognome()));
+                sessione.getCampo2(), sessione.getCampo3()));
 
         homeTabButton.addActionListener(actionEvent -> setTabActive(0));
         accountTabButton.addActionListener(actionEvent -> setTabActive(1));
@@ -96,8 +98,8 @@ public class MainWindow extends JFrame {
 
         contentTab.addChangeListener(e -> {
             if (contentTab.getSelectedIndex() == 0) {
-                welcomeLabel.setText(String.format("Ciao %s %s!",
-                        UtenteCorrente.getInstance().getNome(), UtenteCorrente.getInstance().getCognome()));
+                MyDto datiSessione = ControllerUtente.getInstance().getSessione();
+                welcomeLabel.setText(String.format("Ciao %s %s!", datiSessione.getCampo2(), datiSessione.getCampo3()));
             }
             else if (contentTab.getSelectedIndex() == 1) {
                 populateAccountTab();
@@ -177,13 +179,14 @@ public class MainWindow extends JFrame {
     }
 
     private void populateAccountTab() {
-        nomeField.setText(UtenteCorrente.getInstance().getNome());
-        cognomeField.setText(UtenteCorrente.getInstance().getCognome());
-        emailField.setText(UtenteCorrente.getInstance().getEmail());
-        passwordField.setText(UtenteCorrente.getInstance().getPassword());
-        telefonoField.setText(UtenteCorrente.getInstance().getContattoTelefonico());
-        autoField.setText(UtenteCorrente.getInstance().getAuto());
-        postiSpinner.setValue(Integer.valueOf(UtenteCorrente.getInstance().getPostiDisp()));
+        MyDto datiSessione = ControllerUtente.getInstance().getSessione();
+        nomeField.setText(datiSessione.getCampo2());
+        cognomeField.setText(datiSessione.getCampo3());
+        emailField.setText(datiSessione.getCampo4());
+        passwordField.setText(datiSessione.getCampo5());
+        telefonoField.setText(datiSessione.getCampo6());
+        autoField.setText(datiSessione.getCampo7());
+        postiSpinner.setValue(Integer.parseInt(datiSessione.getCampo8()));
     }
 
     private void aggiornaDatiPersonali() {

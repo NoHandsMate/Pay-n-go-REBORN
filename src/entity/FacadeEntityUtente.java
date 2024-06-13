@@ -34,7 +34,7 @@ public class FacadeEntityUtente {
                                  String luogoDestinazione,
                                  LocalDateTime dataPartenza,
                                  LocalDateTime dataArrivo,
-                                 float contributoSpese,long idAutista) throws CondivisioneViaggioFailedException {
+                                 float contributoSpese) throws CondivisioneViaggioFailedException {
 
     }
 
@@ -50,5 +50,9 @@ public class FacadeEntityUtente {
                                            LocalDate dataPartenza) throws RicercaViaggioFailedException {
 
         return GestoreViaggi.getInstance().ricercaViaggio(luogoPartenza, luogoDestinazione, dataPartenza);
+    }
+
+    public MyDto getSessione() {
+        return GestoreUtenti.getInstance().getSessione();
     }
 }

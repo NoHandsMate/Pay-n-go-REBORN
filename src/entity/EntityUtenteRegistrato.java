@@ -1,7 +1,11 @@
 package entity;
 
-import database.*;
-import exceptions.*;
+import database.UtenteRegistratoDAO;
+import database.PrenotazioneDAO;
+import database.ValutazioneDAO;
+import database.ViaggioDAO;
+import exceptions.AggiornamentoDatiFailedException;
+import exceptions.DatabaseException;
 
 import java.util.ArrayList;
 
@@ -13,7 +17,7 @@ public class EntityUtenteRegistrato {
     private String email;
     private String password;
     private String automobile;
-    private int numPostiDisponibili;
+    private int postiDisponibili;
     private ArrayList<EntityViaggio> viaggiCondivisi;
     private ArrayList<EntityPrenotazione> prenotazioni;
     private ArrayList<EntityValutazione> valutazioni;
@@ -23,14 +27,14 @@ public class EntityUtenteRegistrato {
 
     public EntityUtenteRegistrato(String nome, String cognome,
                                   String contattoTelefonico, String email, String password,
-                                  String automobile, int numPostiDisponibili) {
+                                  String automobile, int postiDisponibili) {
 
         this.nome = nome;
         this.cognome = cognome;
         this.contattoTelefonico = contattoTelefonico;
         this.email = email;
         this.automobile = automobile;
-        this.numPostiDisponibili = numPostiDisponibili;
+        this.postiDisponibili = postiDisponibili;
     }
 
     /**
@@ -38,15 +42,14 @@ public class EntityUtenteRegistrato {
      * prenotazioni e valutazioni non vengono popolati.
      */
     public EntityUtenteRegistrato(UtenteRegistratoDAO utenteRegistratoDAO) throws DatabaseException {
-
         this.id = utenteRegistratoDAO.getIdUtenteRegistrato();
         this.nome = utenteRegistratoDAO.getNome();
         this.cognome = utenteRegistratoDAO.getCognome();
+        this.contattoTelefonico = utenteRegistratoDAO.getContattoTelefonico();
         this.email = utenteRegistratoDAO.getEmail();
         this.automobile = utenteRegistratoDAO.getAutomobile();
         this.password = utenteRegistratoDAO.getPassword();
-        this.numPostiDisponibili = utenteRegistratoDAO.getPostiDisponibili();
-
+        this.postiDisponibili = utenteRegistratoDAO.getPostiDisponibili();
     }
 
     public void popolaPrenotazioni() throws DatabaseException {
@@ -105,7 +108,11 @@ public class EntityUtenteRegistrato {
         this.contattoTelefonico = utenteRegistratoDAO.getContattoTelefonico();
         this.automobile = utenteRegistratoDAO.getAutomobile();
         this.password = utenteRegistratoDAO.getPassword();
-        this.numPostiDisponibili = utenteRegistratoDAO.getPostiDisponibili();
+        this.postiDisponibili = utenteRegistratoDAO.getPostiDisponibili();
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getNome() {
@@ -140,6 +147,14 @@ public class EntityUtenteRegistrato {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getAutomobile() {
         return automobile;
     }
@@ -148,12 +163,12 @@ public class EntityUtenteRegistrato {
         this.automobile = automobile;
     }
 
-    public int getNumPostiDisponibili() {
-        return numPostiDisponibili;
+    public int getPostiDisponibili() {
+        return postiDisponibili;
     }
 
-    public void setNumPostiDisponibili(int numPostiDisponibili) {
-        this.numPostiDisponibili = numPostiDisponibili;
+    public void setPostiDisponibili(int postiDisponibili) {
+        this.postiDisponibili = postiDisponibili;
     }
 
     public ArrayList<EntityValutazione> getValutazioni() {
@@ -178,13 +193,5 @@ public class EntityUtenteRegistrato {
 
     public void setViaggiCondivisi(ArrayList<EntityViaggio> viaggiCondivisi) {
         this.viaggiCondivisi = viaggiCondivisi;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

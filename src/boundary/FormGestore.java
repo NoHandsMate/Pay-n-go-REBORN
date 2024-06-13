@@ -1,6 +1,8 @@
 package boundary;
 
-import dto.UtenteCorrente;
+import control.ControllerUtente;
+import dto.MyDto;
+import entity.Sessione;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
@@ -38,12 +40,14 @@ public class FormGestore extends JFrame {
             }
         });
 
-        if (UtenteCorrente.getInstance().getIdUtenteCorrente() == 0)
+        MyDto sessione = ControllerUtente.getInstance().getSessione();
+
+        if (Long.parseLong(sessione.getCampo1()) == 0)
         {
             JOptionPane.showMessageDialog(rootPane, "Non è presente una sessione utente attiva!", "Errore",
                     JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
-        } else if (UtenteCorrente.getInstance().getIdUtenteCorrente() != 1) {
+        } else if (Long.parseLong(sessione.getCampo1()) != 1) {
             MainWindow mainWindow = new MainWindow();
             mainWindow.setVisible(true);
             setVisible(false);
@@ -52,6 +56,14 @@ public class FormGestore extends JFrame {
         homeTabButton.addActionListener(actionEvent -> setTabActive(0));
         reportUtentiTabButton.addActionListener(actionEvent -> setTabActive(1));
         reportIncassiTabButton.addActionListener(actionEvent -> setTabActive(2));
+
+        contentTab.addChangeListener(e -> {
+            if (contentTab.getSelectedIndex() == 1) {
+                generaReportUtenti();
+            }
+        });
+
+        utentiTable.getSelectionModel().addListSelectionListener(selectionEvent -> visualizzaValutazioniUtente());
     }
 
     private void createUIComponents() {
@@ -71,6 +83,18 @@ public class FormGestore extends JFrame {
                 tabButtons[i].setForeground(Color.WHITE);
             }
         }
+    }
+
+    private void generaReportUtenti() {
+        /* TODO: qualcosa del tipo String[][] data = Controller.getInstance().generaReportUtenti() */
+
+        String[][] data = {{String.valueOf(1), "Matteo Arnese", "matteo.arnese@github.com", String.valueOf(4.65f)},
+                {String.valueOf(2), "Emanuele Barbato", "e@barb.com", String.valueOf(3.69f)}};
+        String[] columnNames = {"Id Utente", "Nome e cognome", "Email", "Valutazione media"};
+    }
+
+    private void visualizzaValutazioniUtente() {
+        /* TODO: implementa */
     }
 
     private void populateTable(JTable table, Object[] columnNames, Object[][] data) {

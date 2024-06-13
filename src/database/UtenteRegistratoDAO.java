@@ -1,7 +1,5 @@
 package database;
 
-
-import dto.UtenteCorrente;
 import exceptions.DatabaseException;
 
 import java.sql.ResultSet;
