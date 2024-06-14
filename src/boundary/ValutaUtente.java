@@ -1,10 +1,13 @@
 package boundary;
 
+import control.ControllerUtente;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.AbstractMap;
 
 public class ValutaUtente extends JDialog {
     private long idUtente;
@@ -49,7 +52,7 @@ public class ValutaUtente extends JDialog {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                starLeaveHandle(0);
+                starLeaveHandle();
             }
 
         });
@@ -67,7 +70,7 @@ public class ValutaUtente extends JDialog {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                starLeaveHandle(0);
+                starLeaveHandle();
             }
 
         });
@@ -85,7 +88,7 @@ public class ValutaUtente extends JDialog {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                starLeaveHandle(1);
+                starLeaveHandle();
             }
 
         });
@@ -103,7 +106,7 @@ public class ValutaUtente extends JDialog {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                starLeaveHandle(2);
+                starLeaveHandle();
             }
 
         });
@@ -120,7 +123,7 @@ public class ValutaUtente extends JDialog {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                starLeaveHandle(3);
+                starLeaveHandle();
             }
 
         });
@@ -138,7 +141,7 @@ public class ValutaUtente extends JDialog {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                starLeaveHandle(4);
+                starLeaveHandle();
             }
 
         });
@@ -189,7 +192,13 @@ public class ValutaUtente extends JDialog {
     }
 
     private void onOK() {
-        // add your code here
+        AbstractMap.SimpleEntry<Boolean, String> result = validateValutazione();
+        if (Boolean.FALSE.equals(result.getKey()))
+            JOptionPane.showMessageDialog(contentPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
+        else {
+            result = ControllerUtente.getInstance().valutaUtente(idUtente, numeroStelle, descrizioneTextArea.getText());
+            if ()
+        }
         dispose();
     }
 
@@ -228,7 +237,7 @@ public class ValutaUtente extends JDialog {
         }
     }
 
-    private void starLeaveHandle(int index) {
+    private void starLeaveHandle() {
         for (int i = 0; i < starPanels.length && numeroStelle == 0; i++) {
             ImagePanel.changeImage(starPanels[i], STARVOID, 32, 32);
         }
@@ -241,5 +250,18 @@ public class ValutaUtente extends JDialog {
             charCountLabel.setForeground(Color.RED);
         else
             charCountLabel.setForeground(Color.WHITE);
+    }
+
+    private AbstractMap.SimpleEntry<Boolean, String> validateValutazione() {
+        if (numeroStelle == 0) {
+            return new AbstractMap.SimpleEntry<>(false, "Seleziona almeno una stella.");
+        }
+        else if (numeroStelle > 5 || numeroStelle < 0) {
+            return new AbstractMap.SimpleEntry<>(false, "Numero di stelle invalido.");
+        }
+        else if (descrizioneTextArea.getText().length() > 1000) {
+            return new AbstractMap.SimpleEntry<>(false, "La descrizione supera il limite massimo di 1000 caratteri.");
+        }
+        return  new AbstractMap.SimpleEntry<>(true, "OK");
     }
 }

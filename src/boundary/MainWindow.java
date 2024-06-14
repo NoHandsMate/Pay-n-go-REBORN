@@ -350,6 +350,10 @@ public class MainWindow extends JFrame {
                     "data ed ora di partenza.");
         }
 
+        if (dataPartenzaTemp.isBefore(LocalDateTime.now()) || dataPartenzaTemp.isEqual(LocalDateTime.now())) {
+            return new AbstractMap.SimpleEntry<>(false, "La data di partenza è invalida.");
+        }
+
         return new AbstractMap.SimpleEntry<>(true, "OK");
 
     }
@@ -426,8 +430,9 @@ public class MainWindow extends JFrame {
     private void prenotaViaggio(long idViaggio) {
         AbstractMap.SimpleEntry<Boolean, String> result = ControllerUtente.getInstance().prenotaViaggio(idViaggio);
 
-        String title = !result.getKey() ? "Error" : "Info";
-        int messageType = !result.getKey() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
+        String title = Boolean.FALSE.equals(result.getKey()) ? "Error" : "Info";
+        int messageType =
+                Boolean.FALSE.equals(result.getKey()) ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
         JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), title, messageType);
     }
 

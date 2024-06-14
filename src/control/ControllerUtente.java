@@ -188,4 +188,6 @@ public class ControllerUtente {
         return new AbstractMap.SimpleEntry<>(true, "Prenotazione gestita con successo.");
     }
 
+    public AbstractMap.SimpleEntry<Boolean, String> valutaUtente(long idUtente, int numeroStelle, String text) {
+    }
 }
