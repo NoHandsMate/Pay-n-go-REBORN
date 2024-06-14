@@ -46,7 +46,7 @@ public class GestoreViaggi {
                         numPrenotazioniAccettate++;
                     }
                 }
-                reportIncassi = reportIncassi + viaggio.getContributoSpese() *numPrenotazioniAccettate;
+                reportIncassi = reportIncassi + viaggio.getContributoSpese() * numPrenotazioniAccettate;
             }
         }catch (DatabaseException e){
             throw new ReportIncassiFailedException(e.getMessage());

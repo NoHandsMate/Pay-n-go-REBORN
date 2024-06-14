@@ -49,16 +49,6 @@ public class GestoreUtenti {
         }
     }
 
-    public void aggiornaDatiPersonali(String nome, String cognome, String email,
-                                      String auto, char[] password, Integer postiDisp,
-                                      String telefono) throws AggiornamentoDatiFailedException {
-
-        EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
-        utenteCorrente.aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, telefono);
-        Sessione.getInstance().setUtenteCorrente(utenteCorrente);
-    }
-
-
     public ArrayList<ArrayList<MyDto>> generaReportUtenti() throws ReportUtentiFailedException {
 
         //ArrayList di ArrayList di DTO: ogni utente può avere una serie di valutazioni
@@ -103,8 +93,41 @@ public class GestoreUtenti {
         utenteCorrente.condividiViaggio(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese);
     }
 
+    public void aggiornaDatiPersonali(String nome, String cognome, String email,
+                                      String auto, char[] password, Integer postiDisp,
+                                      String telefono) throws AggiornamentoDatiFailedException {
+
+        /* TODO: nel momento in cui si decide di cambiare anche l'automobile, tutti i viaggi condivisi devono scomparire */
+        EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
+        utenteCorrente.aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, telefono);
+        Sessione.getInstance().setUtenteCorrente(utenteCorrente);
+    }
+
+    /**
+     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate sui suoi viaggi
+     * @return prenotazioni ArrayList di DTO prenotazioni
+     */
+    public ArrayList<MyDto> visualizzaPrenotazioni() {
+        EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
+        ArrayList<EntityPrenotazione> prenotazioniUtente = utenteCorrente.getPrenotazioni();
+        ArrayList<MyDto> prenotazioni = new ArrayList<>();
+        for(EntityPrenotazione prenotazione : prenotazioniUtente){
+            MyDto prenotazioneDto = new MyDto();
+            prenotazioneDto.setCampo1(String.valueOf(prenotazione.getId()));
+            prenotazioneDto.setCampo2(String.valueOf(prenotazione.isAccettata()));
+            prenotazioneDto.setCampo3(prenotazione.getPasseggero().getNome() + " " +
+                    prenotazione.getPasseggero().getCognome());
+
+            prenotazioni.add(prenotazioneDto);
+        }
+        return prenotazioni;
+    }
+
     private void aggiornaUtenteCorrente(UtenteRegistratoDAO utenteRegistratoDAO) throws DatabaseException {
         EntityUtenteRegistrato utenteCorrente = new EntityUtenteRegistrato(utenteRegistratoDAO);
+        utenteCorrente.popolaPrenotazioni();
+        utenteCorrente.popolaViaggiCondivisi();
+        utenteCorrente.popolaValutazioni();
         Sessione.getInstance().setUtenteCorrente(utenteCorrente);
     }
 

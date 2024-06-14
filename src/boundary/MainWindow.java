@@ -106,7 +106,7 @@ public class MainWindow extends JFrame {
             else if (contentTab.getSelectedIndex() == 1) {
                 populateAccountTab();
             } else if (contentTab.getSelectedIndex() == 3) {
-                visualizzaPrenotazioni();
+                visualizzaPrenotazioniEffettuate();
             } else if (contentTab.getSelectedIndex() == 5) {
                 visualizzaViaggiCondivisi();
             }
@@ -145,9 +145,9 @@ public class MainWindow extends JFrame {
         viaggiCondivisiTable.getSelectionModel().addListSelectionListener(selectionEvent -> {
             int selectedRow = viaggiCondivisiTable.getSelectedRow();
             if (selectedRow != -1) {
-                visualizzaPrenotazioniViaggi(Long.parseLong(
+                visualizzaPrenotazioni(Long.parseLong(
                         (String) viaggiCondivisiTable.getValueAt(selectedRow, 0)));
-            } else visualizzaPrenotazioniViaggi(0); // idViaggio nullo per svuotare la tabella.
+            } else visualizzaPrenotazioni(0); // idViaggio nullo per svuotare la tabella.
         });
     }
 
@@ -409,11 +409,11 @@ public class MainWindow extends JFrame {
         return new AbstractMap.SimpleEntry<>(true, "OK");
     }
 
-    private void visualizzaPrenotazioni() {
+    private void visualizzaPrenotazioniEffettuate() {
         /* TODO qualcosa del genere */
         // String[][] data = ControllerUtente.getInstance().visualizzaPrenotazioni();
 
-        String[] columnNames = {"Id prenotazione", "Passeggero", "Viaggio", "Stato"};
+        String[] columnNames = {"Id prenotazione", "Autista", "Viaggio", "Stato"};
         String[][] data = {{"1", "Nome Cognome", "3", "In sospeso"},
                 {"2", "Name Surname", "3", "Accettata"},
                 {"3", "Mario Rossi", "4", "In sospeso"}};
@@ -439,7 +439,7 @@ public class MainWindow extends JFrame {
         populateTable(viaggiCondivisiTable, columnNames, data);
     }
 
-    private void visualizzaPrenotazioniViaggi(long idViaggio) {
+    private void visualizzaPrenotazioni(long idViaggio) {
         /* TODO: idViaggio 0 significa nessun viaggio selezionato, la ricerca dovrebbe tornare null e si
             dovrebbe svuotare da sola la tabella */
         String[] columnNames = {"Id prenotazione", "Passeggero", "Viaggio", "Stato"};

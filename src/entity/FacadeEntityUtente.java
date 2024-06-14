@@ -46,6 +46,10 @@ public class FacadeEntityUtente {
 
     }
 
+    public ArrayList<MyDto> visualizzaPrenotazioni() {
+        return GestoreUtenti.getInstance().visualizzaPrenotazioni();
+    }
+
     public ArrayList<MyDto> ricercaViaggio(String luogoPartenza, String luogoDestinazione,
                                            LocalDate dataPartenza) throws RicercaViaggioFailedException {
 
