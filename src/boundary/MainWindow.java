@@ -106,7 +106,7 @@ public class MainWindow extends JFrame {
             else if (contentTab.getSelectedIndex() == 1) {
                 populateAccountTab();
             } else if (contentTab.getSelectedIndex() == 3) {
-                visuaizzaPrenotazioni();
+                visualizzaPrenotazioni();
             } else if (contentTab.getSelectedIndex() == 5) {
                 visualizzaViaggiCondivisi();
             }
@@ -131,35 +131,23 @@ public class MainWindow extends JFrame {
         });
 
         prenotazioniTable.getSelectionModel().addListSelectionListener(selectionEvent ->
-                prenotaViaggioButton.setEnabled(viaggiTrovatiTable.getSelectedRow() != -1));
+                valutaAutistaButton.setEnabled(prenotazioniTable.getSelectedRow() != -1));
 
-        condividiViaggioButton.addActionListener(actionEvent -> {
-            /* TODO: check e condividiViaggio() */
-            AbstractMap.SimpleEntry<Boolean, String> result = validateCondividiViaggioInput();
-
-            if (!result.getKey())
-                JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), "Error", JOptionPane.ERROR_MESSAGE);
-            else {
-                // Variabili temporanee per facilitare la lettura
-                String luogoPartenza = condividiLuogoPartenzaField.getText();
-                String luogoDestinazione = condividiLuogoDestinazioneField.getText();
-                LocalDateTime dataPartenza = condividiDataOraPartenzaPicker.getDateTimeStrict();
-                LocalDateTime dataArrivo = condividiDataOraArrivoPicker.getDateTimeStrict();
-                float contributoSpese = Float.parseFloat(condividiContributoSpeseField.getText());
-
-                result = ControllerUtente.getInstance().condividiViaggio(luogoPartenza, luogoDestinazione,
-                                                                         dataPartenza, dataArrivo, contributoSpese);
-
-                String title = !result.getKey() ? "Error" : "Info";
-                int messageType = !result.getKey() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
-
-                JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), title, messageType);
+        valutaAutistaButton.addActionListener(actionEvent -> {
+            int selectedRow = prenotazioniTable.getSelectedRow();
+            if (selectedRow != -1) {
+                valutaAutista(Long.parseLong((String) prenotazioniTable.getValueAt(selectedRow, 0)));
             }
         });
 
+        condividiViaggioButton.addActionListener(actionEvent -> condividiViaggio());
+
         viaggiCondivisiTable.getSelectionModel().addListSelectionListener(selectionEvent -> {
-            String s = (String) viaggiCondivisiTable.getValueAt(1, viaggiCondivisiTable.getSelectedRow());
-            System.out.println(s);
+            int selectedRow = viaggiCondivisiTable.getSelectedRow();
+            if (selectedRow != -1) {
+                visualizzaPrenotazioniViaggi(Long.parseLong(
+                        (String) viaggiCondivisiTable.getValueAt(selectedRow, 0)));
+            } else visualizzaPrenotazioniViaggi(0); // idViaggio nullo per svuotare la tabella.
         });
     }
 
@@ -293,18 +281,44 @@ public class MainWindow extends JFrame {
         return new AbstractMap.SimpleEntry<>(true, "OK");
     }
 
+    private void condividiViaggio() {
+        AbstractMap.SimpleEntry<Boolean, String> result = validateCondividiViaggioInput();
+
+        if (!result.getKey())
+            JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), "Error", JOptionPane.ERROR_MESSAGE);
+        else {
+            // Variabili temporanee per facilitare la lettura
+            String luogoPartenza = condividiLuogoPartenzaField.getText();
+            String luogoDestinazione = condividiLuogoDestinazioneField.getText();
+            LocalDateTime dataPartenza = condividiDataOraPartenzaPicker.getDateTimeStrict();
+            LocalDateTime dataArrivo = condividiDataOraArrivoPicker.getDateTimeStrict();
+            float contributoSpese = Float.parseFloat(condividiContributoSpeseField.getText());
+
+            result = ControllerUtente.getInstance().condividiViaggio(luogoPartenza, luogoDestinazione,
+                    dataPartenza, dataArrivo, contributoSpese);
+
+            String title = !result.getKey() ? "Error" : "Info";
+            int messageType = !result.getKey() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
+
+            JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), title, messageType);
+        }
+    }
+
     private AbstractMap.SimpleEntry<Boolean, String> validateCondividiViaggioInput() {
         if (condividiLuogoPartenzaField.getText().isBlank() || condividiLuogoDestinazioneField.getText().isBlank() ||
-            condividiDataOraPartenzaPicker.toString().isBlank() || condividiDataOraArrivoPicker.toString().isBlank() ||
-            condividiContributoSpeseField.getText().isBlank()) {
+                condividiDataOraPartenzaPicker.timePicker.getTime() == null ||
+                condividiDataOraPartenzaPicker.datePicker.getDate() == null ||
+                condividiDataOraArrivoPicker.timePicker.getTime() == null ||
+                condividiDataOraArrivoPicker.datePicker.getDate() == null ||
+                condividiContributoSpeseField.getText().isBlank()) {
             return new AbstractMap.SimpleEntry<>(false, "Riempi i campi obbligatori");
         }
 
         Pattern specialCharRegex = Pattern.compile("[^a-z A-Z]", Pattern.CASE_INSENSITIVE);
-        Pattern numberRegex = Pattern.compile("[^0-9]", Pattern.CASE_INSENSITIVE);
+        Pattern floatRegex = Pattern.compile("^[+]?([0-9]*[.])?[0-9]+$", Pattern.CASE_INSENSITIVE);
         Matcher condividiLuogoPartenzaMatcher = specialCharRegex.matcher(condividiLuogoPartenzaField.getText());
-        Matcher condividiLuogoDestinazioneMatcher = numberRegex.matcher(condividiLuogoDestinazioneField.getText());
-        Matcher condividiContributoSpeseMatcher = numberRegex.matcher(condividiContributoSpeseField.getText());
+        Matcher condividiLuogoDestinazioneMatcher = specialCharRegex.matcher(condividiLuogoDestinazioneField.getText());
+        Matcher condividiContributoSpeseMatcher = floatRegex.matcher(condividiContributoSpeseField.getText());
 
         if (condividiLuogoPartenzaField.getText().length() > 50) {
             return new AbstractMap.SimpleEntry<>(false, "Il luogo di partenza supera la lunghezza massima di 50 caratteri");
@@ -322,15 +336,16 @@ public class MainWindow extends JFrame {
             return new AbstractMap.SimpleEntry<>(false, "Il luogo di destinazione contiene caratteri non validi");
         }
 
-        if (condividiContributoSpeseMatcher.find()) {
+        if (!condividiContributoSpeseMatcher.find()) {
             return new AbstractMap.SimpleEntry<>(false, "Il contributo spese contiene caratteri non validi");
         }
 
         LocalDateTime dataPartenzaTemp = condividiDataOraPartenzaPicker.getDateTimeStrict();
-        LocalDateTime dataArrivoTemop = condividiDataOraArrivoPicker.getDateTimeStrict();
+        LocalDateTime dataArrivoTemp = condividiDataOraArrivoPicker.getDateTimeStrict();
 
-        if (dataPartenzaTemp.isAfter(dataArrivoTemop)) {
-            return new AbstractMap.SimpleEntry<>(false, "La data di partenza è invalida");
+        if (dataPartenzaTemp.isAfter(dataArrivoTemp) || dataPartenzaTemp.isEqual(dataArrivoTemp)) {
+            return new AbstractMap.SimpleEntry<>(false, "La data ed ora di arrivo deve essere successiva alla " +
+                    "data ed ora di partenza.");
         }
 
         return new AbstractMap.SimpleEntry<>(true, "OK");
@@ -394,7 +409,7 @@ public class MainWindow extends JFrame {
         return new AbstractMap.SimpleEntry<>(true, "OK");
     }
 
-    private void visuaizzaPrenotazioni() {
+    private void visualizzaPrenotazioni() {
         /* TODO qualcosa del genere */
         // String[][] data = ControllerUtente.getInstance().visualizzaPrenotazioni();
 
@@ -406,6 +421,11 @@ public class MainWindow extends JFrame {
         populateTable(prenotazioniTable, columnNames, data);
     }
 
+    private void valutaAutista(long idAutista) {
+        ValutaUtente valutaUtente = new ValutaUtente(idAutista);
+        valutaUtente.setVisible(true);
+    }
+
     private void visualizzaViaggiCondivisi() {
         /* TODO: qualcosa del genere */
         // String data[][] = ControllerUtente.getInstance().visualizzaViaggiCondivisi();
@@ -413,9 +433,15 @@ public class MainWindow extends JFrame {
         String[] columnNames = {"Id viaggio", "Partenza", "Destinazione", "Data e ora partenza",
                 "Data e ora arrivo", "Contributo spese"};
         String[][] data = {{String.valueOf(3), "Roma", "Napoli", "05/04/2024 15:30:00", "05/04/2024 17:10:00", String.valueOf(1.49f)},
-                {String.valueOf(3), "Torino", "Roma", "14/05/2024 10:30:00", "14/05/2024 18:00:00", String.valueOf(3.49f)},
-                {String.valueOf(3), "Casoria", "Bacoli", "25/06/2024 08:30:00", "25/06/2024 09:20:00", String.valueOf(1.49f)}};
+                {String.valueOf(4), "Torino", "Roma", "14/05/2024 10:30:00", "14/05/2024 18:00:00", String.valueOf(3.49f)},
+                {String.valueOf(5), "Casoria", "Bacoli", "25/06/2024 08:30:00", "25/06/2024 09:20:00", String.valueOf(1.49f)}};
 
         populateTable(viaggiCondivisiTable, columnNames, data);
+    }
+
+    private void visualizzaPrenotazioniViaggi(long idViaggio) {
+        /* TODO: idViaggio 0 significa nessun viaggio selezionato, la ricerca dovrebbe tornare null e si
+            dovrebbe svuotare da sola la tabella */
+        String[] columnNames = {"Id prenotazione", "Passeggero", "Viaggio", "Stato"};
     }
 }
