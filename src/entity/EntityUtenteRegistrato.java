@@ -99,14 +99,21 @@ public class EntityUtenteRegistrato {
         aggiornaDati(utenteDAO);
     }
 
-    /*TODO: gestisciPrenotazione*/
-
     public void prenotaViaggio(long idViaggio) throws DatabaseException {
         ViaggioDAO viaggioDAO = new ViaggioDAO(this.id);
         EntityViaggio entityViaggio = new EntityViaggio(viaggioDAO);
         EntityPrenotazione entityPrenotazione = new EntityPrenotazione();
         entityPrenotazione.setPasseggero(this);
         entityPrenotazione.creaPrenotazione();
+    }
+
+    public void gestisciPrenotazione(long idPrenotazione,boolean accettata) throws DatabaseException {
+        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO(idPrenotazione);
+        if(accettata) {
+            prenotazioneDAO.updatePrenotazione(true);
+        }else{
+            prenotazioneDAO.deletePrenotazione();
+        }
     }
 
     private void eliminaViaggiCondivisi() throws DatabaseException {

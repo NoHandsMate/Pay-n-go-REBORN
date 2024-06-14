@@ -60,6 +60,11 @@ public class FacadeEntityUtente {
         GestoreUtenti.getInstance().prenotaViaggio(idViaggio);
     }
 
+    public void gestisciPrenotazione(long idPrenotazione, boolean accettata) throws PrenotazioneGestitaFailedException {
+            GestoreUtenti.getInstance().gestisciPrenotazione(idPrenotazione,accettata);
+
+    }
+
 
     public MyDto getSessione() {
         return GestoreUtenti.getInstance().getSessione();

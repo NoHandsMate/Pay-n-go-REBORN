@@ -199,6 +199,17 @@ public class GestoreUtenti {
         }
     }
 
+    public void gestisciPrenotazione(long idPrenotazione,boolean accettata) throws PrenotazioneGestitaFailedException{
+        EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
+        try{
+            utenteCorrente.gestisciPrenotazione(idPrenotazione,accettata);
+        } catch (DatabaseException e){
+            if(e.isVisible()) {
+                throw new PrenotazioneGestitaFailedException("Gestione prenotazione fallita: "+ e.getMessage());
+            }
+        }
+    }
+
     /**
      * Funzione di supporto alle funzioni registraUtente e loginUtente che permette di evitare la ridondanza del
      * codice relativa all'aggiornamento dell'utente corrente, necessaria in entrambe le funzioni suddette.

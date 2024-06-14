@@ -117,18 +117,28 @@ public class ControllerUtente {
                                                                           String cognome,
                                                                           String email,
                                                                           char[] password,
-                                                                          String telefono,
+                                                                          String contattoTelefonico,
                                                                           String auto,
-                                                                          Integer postiDisp) {
+                                                                          Integer postiDisponibili) {
 
         try {
-            FacadeEntityUtente.getInstance().aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, telefono);
+            FacadeEntityUtente.getInstance().aggiornaDatiPersonali(nome, cognome, email, auto, password,
+                    postiDisponibili, contattoTelefonico);
+
         } catch (AggiornamentoDatiFailedException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
 
         return new AbstractMap.SimpleEntry<>(true, "Aggiornamento effettuato con successo.");
 
+    }
+
+    /**
+     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate sui suoi viaggi
+     * @return prenotazioni ArrayList di DTO prenotazioni
+     */
+    public ArrayList<MyDto> visualizzaPrenotazioni() {
+        return FacadeEntityUtente.getInstance().visualizzaPrenotazioni();
     }
 
     /**
@@ -159,4 +169,15 @@ public class ControllerUtente {
 
          }
     }
+
+    public AbstractMap.SimpleEntry<Boolean, String> gestisciPrenotazione(long idPrenotazione,boolean accettata){
+
+        try {
+            FacadeEntityUtente.getInstance().gestisciPrenotazione(idPrenotazione,accettata);
+        }catch (PrenotazioneGestitaFailedException e){
+            return new AbstractMap.SimpleEntry<>(false,e.getMessage());
+        }
+        return new AbstractMap.SimpleEntry<>(true, "Prenotazione gestita con successo.");
+    }
+
 }
