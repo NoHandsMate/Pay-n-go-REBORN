@@ -90,6 +90,7 @@ public class FacadeEntityUtente {
      * @return prenotazioni ArrayList di DTO prenotazioni
      */
     public ArrayList<MyDto> visualizzaPrenotazioni() throws VisualizzaPrenotazioniFailedException {
+
         return GestoreUtenti.getInstance().visualizzaPrenotazioni();
     }
 

@@ -187,7 +187,10 @@ public class GestoreUtenti {
             }
 
         } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+            if(e.isVisible()) {
+                throw new VisualizzaPrenotazioniFailedException("Visualizzazione prenotazioni fallita: " + e.getMessage());
+            }
+            throw new VisualizzaPrenotazioniFailedException(e.getMessage());
         }
         return prenotazioniDTO;
     }
