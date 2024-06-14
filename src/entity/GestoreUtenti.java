@@ -170,24 +170,24 @@ public class GestoreUtenti {
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate sui suoi viaggi
      * @return prenotazioni ArrayList di DTO prenotazioni, vuoto se non presenti
      */
-    public ArrayList<MyDto> visualizzaPrenotazioni() {
+    public ArrayList<MyDto> visualizzaPrenotazioni() throws VisualizzaPrenotazioniFailedException{
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
-        ArrayList<EntityPrenotazione> prenotazioni = utenteCorrente.visualizzaPrenotazioni();
-
-        if(prenotazioni.isEmpty()){
-            return new ArrayList<MyDto>(); //Ritorno un DTO vuoto
-        }
-
+        ArrayList<EntityPrenotazione> prenotazioni;
         ArrayList<MyDto> prenotazioniDTO = new ArrayList<>();
+        try {
+            prenotazioni = utenteCorrente.visualizzaPrenotazioni();
+            for(EntityPrenotazione entityPrenotazione : prenotazioni) {
+                MyDto prenotazioneDto = new MyDto();
+                prenotazioneDto.setCampo1(String.valueOf(entityPrenotazione.getId()));
+                prenotazioneDto.setCampo2(String.valueOf(entityPrenotazione.isAccettata()));
+                prenotazioneDto.setCampo3(entityPrenotazione.getPasseggero().getNome() + " " +
+                        entityPrenotazione.getPasseggero().getCognome());
 
-        for(EntityPrenotazione entityPrenotazione : prenotazioni) {
-            MyDto prenotazioneDto = new MyDto();
-            prenotazioneDto.setCampo1(String.valueOf(entityPrenotazione.getId()));
-            prenotazioneDto.setCampo2(String.valueOf(entityPrenotazione.isAccettata()));
-            prenotazioneDto.setCampo3(entityPrenotazione.getPasseggero().getNome() + " " +
-                    entityPrenotazione.getPasseggero().getCognome());
+                prenotazioniDTO.add(prenotazioneDto);
+            }
 
-            prenotazioniDTO.add(prenotazioneDto);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
         }
         return prenotazioniDTO;
     }

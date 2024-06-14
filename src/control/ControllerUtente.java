@@ -137,8 +137,14 @@ public class ControllerUtente {
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate sui suoi viaggi
      * @return prenotazioni ArrayList di DTO prenotazioni
      */
-    public ArrayList<MyDto> visualizzaPrenotazioni() {
-        return FacadeEntityUtente.getInstance().visualizzaPrenotazioni();
+    public AbstractMap.SimpleEntry<Boolean,Object> visualizzaPrenotazioni() {
+        ArrayList<MyDto> prenotazioni;
+        try {
+            prenotazioni = FacadeEntityUtente.getInstance().visualizzaPrenotazioni();
+        } catch (VisualizzaPrenotazioniFailedException e) {
+            return new AbstractMap.SimpleEntry<>(false,e.getMessage());
+        }
+        return new AbstractMap.SimpleEntry<>(true, prenotazioni);
     }
 
     /**
