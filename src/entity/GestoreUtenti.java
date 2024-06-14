@@ -218,7 +218,7 @@ public class GestoreUtenti {
             utenteCorrente.gestisciPrenotazione(idPrenotazione,accettata);
         } catch (DatabaseException e){
             if(e.isVisible()) {
-                throw new PrenotazioneGestitaFailedException("Gestione prenotazione fallita: "+ e.getMessage());
+                throw new PrenotazioneGestitaFailedException("Gestione prenotazione fallita: " + e.getMessage());
             }
         }
     }
