@@ -1,6 +1,7 @@
 package entity;
 
 import database.*;
+import exceptions.DatabaseException;
 
 import java.util.ArrayList;
 
@@ -43,5 +44,18 @@ public class EntityPrenotazione {
 
     public void setAccettata(boolean accettata) {
         this.accettata = accettata;
+    }
+
+    public EntityViaggio getViaggioPrenotato() {
+        return viaggioPrenotato;
+    }
+
+    public void setViaggioPrenotato(EntityViaggio viaggioPrenotato) {
+        this.viaggioPrenotato = viaggioPrenotato;
+    }
+
+    public void salvaInDB() throws DatabaseException {
+        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
+        prenotazioneDAO.createPrenotazione(this.passeggero.getId(), this.viaggioPrenotato.getId());
     }
 }

@@ -19,12 +19,15 @@ public class EntityUtenteRegistrato {
     private ArrayList<EntityPrenotazione> prenotazioni;
     private ArrayList<EntityValutazione> valutazioni;
 
-
+    /**
+     * Costruttore di default
+     */
     public EntityUtenteRegistrato() {}
 
+
     /**
-     * Costruttore che popola l'EntityUtenteRegistrato a partire dall'id specificato. Gli attributi viaggiCondivisi,
-     * prenotazioni e valutazioni non vengono popolati.
+     * Costruttore di EntityUtenteRegistrato a partire da una utenteRegistratoDAO popolata
+     * @param utenteRegistratoDAO che permette di popolare l'istanza corrente di EntityUtenteRegistrato
      */
     public EntityUtenteRegistrato(UtenteRegistratoDAO utenteRegistratoDAO) {
         this.id = utenteRegistratoDAO.getIdUtenteRegistrato();
@@ -37,6 +40,11 @@ public class EntityUtenteRegistrato {
         this.postiDisponibili = utenteRegistratoDAO.getPostiDisponibili();
     }
 
+
+    /**
+     * Funzione che carica dal database le prenotazioni effettuate dall'utente
+     * @throws DatabaseException nel caso in cui ci sia stato un errore nel DB durante il prelievo delle prenotazioni
+     */
     public void popolaPrenotazioni() throws DatabaseException {
         ArrayList<PrenotazioneDAO> prenotazioni = PrenotazioneDAO.getPrenotazioni();
         this.prenotazioni = new ArrayList<>();
@@ -48,6 +56,11 @@ public class EntityUtenteRegistrato {
         }
     }
 
+
+    /**
+     * Funzione che carica dal database le valutazioni dell'utente
+     * @throws DatabaseException nel caso in cui ci sia stato un errore nel DB durante il prelievo delle valutazioni
+     */
     public void popolaValutazioni() throws DatabaseException {
         ArrayList<ValutazioneDAO> valutazioni = ValutazioneDAO.getValutazioni();
         this.valutazioni = new ArrayList<>();
@@ -60,6 +73,11 @@ public class EntityUtenteRegistrato {
 
     }
 
+
+    /**
+     * Funzione che carica dal database i viaggi condivisi dall'utente
+     * @throws DatabaseException nel caso in cui ci sia stato un errore nel DB durante il prelievo delle valutazioni
+     */
     public void popolaViaggiCondivisi() throws DatabaseException {
         ArrayList<ViaggioDAO> viaggi = ViaggioDAO.getViaggi();
         this.viaggiCondivisi = new ArrayList<>();
@@ -72,6 +90,15 @@ public class EntityUtenteRegistrato {
 
     }
 
+    /**
+     * Funzione che permette all'utente corrente di condividere un nuovo viaggio
+     * @param luogoPartenza il luogo di partenza del viaggio da condividere
+     * @param luogoDestinazione il luogo di destinazione del viaggio da condividere
+     * @param dataPartenza la data di partenza del viaggio da condividere
+     * @param dataArrivo la data di arrivo del viaggio da condividere
+     * @param contributoSpese il contributo spese per ogni passegero del viaggio da condividere
+     * @throws DatabaseException se la condivisione del viaggio fallisce
+     */
     public void condividiViaggio(String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
                                  LocalDateTime dataArrivo, float contributoSpese) throws DatabaseException {
 
@@ -86,25 +113,52 @@ public class EntityUtenteRegistrato {
         viaggioCondiviso.salvaInDB();
 
     }
-
+    /**
+     * Funzione che permette all'utente corrente di aggiornare i propri dati personali
+     * @param nome il nuovo nome dell'utente corrente
+     * @param cognome il nuovo cognome dell'utente corrente
+     * @param email il nuovo indirizzo email dell'utente corrente
+     * @param auto la nuova automobile dell'utente corrente
+     * @param password la nuova password dell'utente corrente
+     * @param postiDisponibili il nuovo numero di posti disponibili dell'utente corrente
+     * @param contattoTelefonico il nuovo numero di telefono dell'utente corrente
+     * @throws DatabaseException se l'aggiornamento dei dati personali fallisce
+     */
     public void aggiornaDatiPersonali(String nome, String cognome, String email,
-                                      String auto, char[] password, Integer postiDisp,
-                                      String telefono) throws DatabaseException {
+                                      String auto, char[] password, Integer postiDisponibili,
+                                      String contattoTelefonico) throws DatabaseException {
 
-        if (!this.automobile.equals(auto) || this.postiDisponibili != postiDisp) {
+        if (!this.automobile.equals(auto) || this.postiDisponibili != postiDisponibili) {
             this.eliminaViaggiCondivisi();
         }
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(this.id);
-        utenteDAO.updateUtenteRegistrato(nome, cognome, telefono, email, auto, postiDisp, new String(password));
+        utenteDAO.updateUtenteRegistrato(nome, cognome, contattoTelefonico, email, auto, postiDisponibili, new String(password));
         aggiornaDati(utenteDAO);
     }
 
+    /**
+     * Funzione che permette all'utente corrente di prenotare un viaggio
+     * @param idViaggio l'id del viaggio che si intende prenotare
+     * @throws DatabaseException nel caso in cui la prenotazione non vada a buon fine
+     */
     public void prenotaViaggio(long idViaggio) throws DatabaseException {
         ViaggioDAO viaggioDAO = new ViaggioDAO(this.id);
         EntityViaggio entityViaggio = new EntityViaggio(viaggioDAO);
+
+        if (viaggioDAO.getIdAutista() == this.id) {
+            throw new DatabaseException("Non puoi prenotare un viaggio di cui sei autista", true);
+        }
+
+        if (entityViaggio.getDataPartenza().isBefore(LocalDateTime.now())) {
+           throw new DatabaseException("Non puoi prenotare un viaggio già iniziato", true);
+        }
+
         EntityPrenotazione entityPrenotazione = new EntityPrenotazione();
         entityPrenotazione.setPasseggero(this);
-        entityPrenotazione.creaPrenotazione();
+        entityPrenotazione.setViaggioPrenotato(entityViaggio);
+
+        entityPrenotazione.salvaInDB();
+
     }
 
     /**

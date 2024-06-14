@@ -41,7 +41,7 @@ public class PrenotazioneDAO {
      * altrimenti (l'oggetto non sarà valorizzato).
      * @throws DatabaseException se si è verificato un errore nella creazione dell'oggetto PrenotazioneDAO.
      */
-    public boolean createPrenotazione(long idPasseggero,
+    public void createPrenotazione(long idPasseggero,
                                       long idViaggioPrenotato) throws DatabaseException {
         if (cercaInDB(idPasseggero, idViaggioPrenotato) != 0)
             throw new DatabaseException("Esiste già una prenotazione identica.",true);
@@ -52,7 +52,6 @@ public class PrenotazioneDAO {
         this.idPasseggero = idPasseggero;
         this.idViaggioPrenotato = idViaggioPrenotato;
         this.accettata = false;
-        return true;
     }
 
     /**

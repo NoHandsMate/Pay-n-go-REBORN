@@ -166,8 +166,10 @@ public class ControllerUtente {
          try {
              FacadeEntityUtente.getInstance().prenotaViaggio(idViaggio);
          } catch (PrenotaViaggioFailedException e) {
-
+            return new AbstractMap.SimpleEntry<>(false, e.getMessage());
          }
+
+         return new AbstractMap.SimpleEntry<>(true, "Prenotazione effettuata con successo");
     }
 
     /**
