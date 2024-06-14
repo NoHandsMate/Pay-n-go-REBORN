@@ -2,7 +2,6 @@ package boundary;
 
 import control.ControllerUtente;
 import dto.MyDto;
-import entity.Sessione;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
@@ -67,7 +66,7 @@ public class FormGestore extends JFrame {
     }
 
     private void createUIComponents() {
-        circularLogoPanel = new MainWindowCircularLogoPanel();
+        circularLogoPanel = new ImagePanel("resources/payngo-circlogo.png", 32, 32);
     }
 
     private void setTabActive(int index) {

@@ -154,7 +154,7 @@ public class MainWindow extends JFrame {
     }
 
     private void createUIComponents() {
-        circularLogoPanel = new MainWindowCircularLogoPanel();
+        circularLogoPanel = new ImagePanel("resources/payngo-circlogo.png", 42, 42);
     }
 
     private void setTabActive(int index) {

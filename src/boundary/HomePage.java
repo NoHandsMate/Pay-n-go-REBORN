@@ -63,6 +63,6 @@ public class HomePage extends JFrame {
     }
 
     private void createUIComponents() {
-        logoPanel = new HomePageLogoPanel();
+        logoPanel = new ImagePanel("resources/payngo-reborn-logo.png", 2437, 1112);
     }
 }
