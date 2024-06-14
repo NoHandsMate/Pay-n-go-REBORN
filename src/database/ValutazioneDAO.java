@@ -14,7 +14,6 @@ public class ValutazioneDAO {
     private String descrizione;
     private long idUtente;
 
-    /* TODO: rimuovi logging delle query eseguite dopo il testing. */
     private static final Logger logger = Logger.getLogger("loggerValutazioneDAO");
 
     /**

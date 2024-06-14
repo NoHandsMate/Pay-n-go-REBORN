@@ -3,7 +3,6 @@ package entity;
 import database.*;
 import exceptions.*;
 
-import javax.xml.crypto.Data;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -37,9 +36,9 @@ public class EntityViaggio {
      * @throws DatabaseException se il caricamento delle prenotazioni dal database fallisce
      */
     public void popolaPrenotazioni() throws DatabaseException {
-        ArrayList<PrenotazioneDAO> prenotazioni = PrenotazioneDAO.getPrenotazioni();
+        ArrayList<PrenotazioneDAO> listaPrenotazioni = PrenotazioneDAO.getPrenotazioni();
         this.prenotazioni = new ArrayList<>();
-        for (PrenotazioneDAO prenotazioneDAO : prenotazioni) {
+        for (PrenotazioneDAO prenotazioneDAO : listaPrenotazioni) {
             if(prenotazioneDAO.getIdPrenotazione() == this.id) {
                 EntityPrenotazione prenotazione = new EntityPrenotazione(prenotazioneDAO);
                 this.prenotazioni.add(prenotazione);

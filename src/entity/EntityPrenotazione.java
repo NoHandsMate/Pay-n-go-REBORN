@@ -3,8 +3,6 @@ package entity;
 import database.*;
 import exceptions.DatabaseException;
 
-import java.util.ArrayList;
-
 public class EntityPrenotazione {
 
 

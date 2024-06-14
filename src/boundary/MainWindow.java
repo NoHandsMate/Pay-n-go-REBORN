@@ -287,8 +287,8 @@ public class MainWindow extends JFrame {
     private void condividiViaggio() {
         AbstractMap.SimpleEntry<Boolean, String> result = validateCondividiViaggioInput();
 
-        if (!result.getKey())
-            JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), "Error", JOptionPane.ERROR_MESSAGE);
+        if (Boolean.FALSE.equals(result.getKey()))
+            JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
         else {
             // Variabili temporanee per facilitare la lettura
             String luogoPartenza = condividiLuogoPartenzaField.getText();
@@ -300,8 +300,8 @@ public class MainWindow extends JFrame {
             result = ControllerUtente.getInstance().condividiViaggio(luogoPartenza, luogoDestinazione,
                     dataPartenza, dataArrivo, contributoSpese);
 
-            String title = !result.getKey() ? "Error" : "Info";
-            int messageType = !result.getKey() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
+            String title = Boolean.FALSE.equals(result.getKey()) ? "Errore" : "Info";
+            int messageType = Boolean.FALSE.equals(result.getKey()) ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
 
             JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), title, messageType);
         }
@@ -396,7 +396,7 @@ public class MainWindow extends JFrame {
             populateTable(viaggiTrovatiTable, columnNames, data);
 
         } else {
-            JOptionPane.showMessageDialog(rootPane, result.getValue(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -449,7 +449,7 @@ public class MainWindow extends JFrame {
     private void prenotaViaggio(long idViaggio) {
         AbstractMap.SimpleEntry<Boolean, String> result = ControllerUtente.getInstance().prenotaViaggio(idViaggio);
 
-        String title = Boolean.FALSE.equals(result.getKey()) ? "Error" : "Info";
+        String title = Boolean.FALSE.equals(result.getKey()) ? "Errore" : "Info";
         int messageType =
                 Boolean.FALSE.equals(result.getKey()) ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
         JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), title, messageType);

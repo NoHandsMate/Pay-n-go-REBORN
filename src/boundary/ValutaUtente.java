@@ -166,43 +166,36 @@ public class ValutaUtente extends JDialog {
             }
         });
 
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
+        buttonOK.addActionListener(e -> onOK());
 
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
+        buttonCancel.addActionListener(actionEvent -> onCancel());
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 onCancel();
             }
         });
 
         // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        contentPane.registerKeyboardAction(actionEvent -> onCancel(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
     private void onOK() {
         AbstractMap.SimpleEntry<Boolean, String> result = validateValutazione();
-        if (Boolean.FALSE.equals(result.getKey()))
+        if (Boolean.FALSE.equals(result.getKey())) {
             JOptionPane.showMessageDialog(contentPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         else {
             result = ControllerUtente.getInstance().valutaUtente(idPrenotazione, numeroStelle, descrizioneTextArea.getText());
 
-            String title = !result.getKey() ? "Error" : "Info";
-            int messageType = !result.getKey() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
+            String title = Boolean.FALSE.equals(result.getKey()) ? "Error" : "Info";
+            int messageType = Boolean.FALSE.equals(result.getKey()) ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
 
             JOptionPane.showMessageDialog(contentPane, result.getValue(), title, messageType);
         }

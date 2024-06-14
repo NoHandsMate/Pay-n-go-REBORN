@@ -6,11 +6,14 @@ import database.UtenteRegistratoDAO;
 import dto.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class GestoreUtenti {
 
     private static GestoreUtenti uniqueInstance;
+
+    private static final String NATURALDATEFORMAT = "dd/MM/yyyy HH:mm:ss";
 
     private GestoreUtenti() {}
 
@@ -210,8 +213,12 @@ public class GestoreUtenti {
                 prenotazioneDto.setCampo1(String.valueOf(prenotazione.getId()));
                 prenotazioneDto.setCampo2(prenotazione.getViaggioPrenotato().getAutista().getNome() + " " +
                         prenotazione.getViaggioPrenotato().getAutista().getCognome());
-                prenotazioneDto.setCampo3(String.valueOf(prenotazione.getViaggioPrenotato().getId()));
-                prenotazioneDto.setCampo4(String.valueOf(prenotazione.isAccettata()));
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(NATURALDATEFORMAT);
+                prenotazioneDto.setCampo3(String.format("%d: %s -> %s - %s", prenotazione.getViaggioPrenotato().getId(),
+                        prenotazione.getViaggioPrenotato().getLuogoPartenza(),
+                        prenotazione.getViaggioPrenotato().getLuogoDestinazione(),
+                        prenotazione.getViaggioPrenotato().getDataPartenza().format(dateTimeFormatter)));
+                prenotazioneDto.setCampo4(prenotazione.isAccettata()? "Accettata" : "In attesa");
                 prenotazioni.add(prenotazioneDto);
             }
         } catch (DatabaseException e) {

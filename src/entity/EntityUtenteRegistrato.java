@@ -46,9 +46,9 @@ public class EntityUtenteRegistrato {
      * @throws DatabaseException nel caso in cui ci sia stato un errore nel DB durante il prelievo delle prenotazioni
      */
     public void popolaPrenotazioni() throws DatabaseException {
-        ArrayList<PrenotazioneDAO> prenotazioni = PrenotazioneDAO.getPrenotazioni();
+        ArrayList<PrenotazioneDAO> listaPrenotazioni = PrenotazioneDAO.getPrenotazioni();
         this.prenotazioni = new ArrayList<>();
-        for (PrenotazioneDAO prenotazioneDAO : prenotazioni) {
+        for (PrenotazioneDAO prenotazioneDAO : listaPrenotazioni) {
             if (prenotazioneDAO.getIdPasseggero() == this.id) {
                 EntityPrenotazione prenotazione = new EntityPrenotazione(prenotazioneDAO);
                 this.prenotazioni.add(prenotazione);
@@ -62,9 +62,9 @@ public class EntityUtenteRegistrato {
      * @throws DatabaseException nel caso in cui ci sia stato un errore nel DB durante il prelievo delle valutazioni
      */
     public void popolaValutazioni() throws DatabaseException {
-        ArrayList<ValutazioneDAO> valutazioni = ValutazioneDAO.getValutazioni();
+        ArrayList<ValutazioneDAO> listaValutazioni = ValutazioneDAO.getValutazioni();
         this.valutazioni = new ArrayList<>();
-        for (ValutazioneDAO valutazioneDAO : valutazioni) {
+        for (ValutazioneDAO valutazioneDAO : listaValutazioni) {
             if (valutazioneDAO.getIdUtente() == this.id) {
                 EntityValutazione valutazione = new EntityValutazione(valutazioneDAO);
                 this.valutazioni.add(valutazione);
@@ -141,12 +141,12 @@ public class EntityUtenteRegistrato {
      * @return prenotazioni ArrayList di Entity prenotazioni, vuoto se non presenti
      */
     public ArrayList<EntityPrenotazione> visualizzaPrenotazioni() throws DatabaseException{
-        ArrayList<EntityPrenotazione> prenotazioni = new ArrayList<>();
+        ArrayList<EntityPrenotazione> listaPrenotazioni = new ArrayList<>();
         for(EntityViaggio viaggio : this.viaggiCondivisi){
             viaggio.popolaPrenotazioni();
-            prenotazioni.addAll(viaggio.getPrenotazioni());
+            listaPrenotazioni.addAll(viaggio.getPrenotazioni());
         }
-        return prenotazioni;
+        return listaPrenotazioni;
     }
 
     /**
