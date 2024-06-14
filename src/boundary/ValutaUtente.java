@@ -10,7 +10,7 @@ import java.awt.event.*;
 import java.util.AbstractMap;
 
 public class ValutaUtente extends JDialog {
-    private long idUtente;
+    private long idPrenotazione;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -21,6 +21,7 @@ public class ValutaUtente extends JDialog {
     private JPanel fourStarPanel;
     private JPanel fiveStarPanel;
     private JLabel charCountLabel;
+    private JLabel valutaUtenteLabel;
     private int numeroStelle;
 
     private static final String STARVOID = "resources/starVoid.png";
@@ -30,14 +31,16 @@ public class ValutaUtente extends JDialog {
 
     private JPanel[] starPanels = {oneStarPanel, twoStarPanel, threeStarPanel, fourStarPanel, fiveStarPanel};
 
-    public ValutaUtente(long idUtente) {
-        this.idUtente = idUtente;
+    public ValutaUtente(long idPrenotazione, String nomeAutista) {
+        this.idPrenotazione = idPrenotazione;
         this.numeroStelle = 0;
         setContentPane(contentPane);
         setSize(600, 400);
         setLocationRelativeTo(null);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+
+        valutaUtenteLabel.setText("Valuta il tuo viaggio con " + nomeAutista);
 
         oneStarPanel.addMouseListener(new MouseAdapter() {
             @Override
@@ -196,7 +199,7 @@ public class ValutaUtente extends JDialog {
         if (Boolean.FALSE.equals(result.getKey()))
             JOptionPane.showMessageDialog(contentPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
         else {
-            result = ControllerUtente.getInstance().valutaUtente(idUtente, numeroStelle, descrizioneTextArea.getText());
+            result = ControllerUtente.getInstance().valutaUtente(idPrenotazione, numeroStelle, descrizioneTextArea.getText());
 
             String title = !result.getKey() ? "Error" : "Info";
             int messageType = !result.getKey() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;

@@ -98,7 +98,7 @@ public class FacadeEntityUtente {
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate ad altri viaggi
      * @return prenotazioni ArrayList di DTO prenotazioni
      */
-    public ArrayList<MyDto> visualizzaPrenotazioniEffettuate() {
+    public ArrayList<MyDto> visualizzaPrenotazioniEffettuate() throws VisualizzaPrenotazioniEffettuateFailedException {
         return GestoreUtenti.getInstance().visualizzaPrenotazioniEffettuate();
     }
 

@@ -138,7 +138,8 @@ public class MainWindow extends JFrame {
         valutaAutistaButton.addActionListener(actionEvent -> {
             int selectedRow = prenotazioniEffettuateTable.getSelectedRow();
             if (selectedRow != -1) {
-                valutaAutista(Long.parseLong((String) prenotazioniEffettuateTable.getValueAt(selectedRow, 0)));
+                valutaAutista(Long.parseLong((String) prenotazioniEffettuateTable.getValueAt(selectedRow, 0)),
+                        (String) prenotazioniEffettuateTable.getValueAt(selectedRow, 1));
             }
         });
 
@@ -418,9 +419,29 @@ public class MainWindow extends JFrame {
     private void visualizzaPrenotazioniEffettuate() {
 
         String[] columnNames = {"Id prenotazione", "Autista", "Viaggio", "Stato"};
-        String[][] data = {{"1", "Nome Cognome", "3", "In sospeso"},
-                {"2", "Name Surname", "3", "Accettata"},
-                {"3", "Mario Rossi", "4", "In sospeso"}};
+        AbstractMap.SimpleEntry<Boolean, Object> result =
+                ControllerUtente.getInstance().visualizzaPrenotazioniEffettuate();
+        if (Boolean.FALSE.equals(result.getKey())) {
+            JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        ArrayList<MyDto> prenotazioniEffettuate = (ArrayList<MyDto>)result.getValue();
+        ArrayList<String> rows = new ArrayList<>();
+        for (MyDto prenotazioni : prenotazioniEffettuate) {
+            rows.add(prenotazioni.getCampo1());
+            rows.add(prenotazioni.getCampo2());
+            rows.add(prenotazioni.getCampo3());
+            rows.add(prenotazioni.getCampo4());
+        }
+
+        String[][] data = new String[rows.size() / columnNames.length][columnNames.length];
+
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++)
+            {
+                data[i][j] = rows.get(i * columnNames.length + j);
+            }
+        }
 
         populateTable(prenotazioniEffettuateTable, columnNames, data);
     }
@@ -434,8 +455,8 @@ public class MainWindow extends JFrame {
         JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), title, messageType);
     }
 
-    private void valutaAutista(long idAutista) {
-        ValutaUtente valutaUtente = new ValutaUtente(idAutista);
+    private void valutaAutista(long idPrenotazione, String nomeAutista) {
+        ValutaUtente valutaUtente = new ValutaUtente(idPrenotazione, nomeAutista);
         valutaUtente.setVisible(true);
     }
 

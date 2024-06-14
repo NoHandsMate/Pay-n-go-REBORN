@@ -199,18 +199,26 @@ public class GestoreUtenti {
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate ad altri viaggi
      * @return prenotazioni ArrayList di DTO prenotazioni
      */
-    public ArrayList<MyDto> visualizzaPrenotazioniEffettuate() {
+    public ArrayList<MyDto> visualizzaPrenotazioniEffettuate() throws VisualizzaPrenotazioniEffettuateFailedException {
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
         ArrayList<EntityPrenotazione> prenotazioniUtente = utenteCorrente.getPrenotazioni();
         ArrayList<MyDto> prenotazioni = new ArrayList<>();
-        for(EntityPrenotazione prenotazione : prenotazioniUtente){
-            MyDto prenotazioneDto = new MyDto();
-            prenotazioneDto.setCampo1(String.valueOf(prenotazione.getId()));
-            prenotazioneDto.setCampo2(String.valueOf(prenotazione.isAccettata()));
-            prenotazioneDto.setCampo3(prenotazione.getPasseggero().getNome() + " " +
-                    prenotazione.getPasseggero().getCognome());
-
-            prenotazioni.add(prenotazioneDto);
+        try {
+            for (EntityPrenotazione prenotazione : prenotazioniUtente) {
+                prenotazione.popolaViaggio();
+                MyDto prenotazioneDto = new MyDto();
+                prenotazioneDto.setCampo1(String.valueOf(prenotazione.getId()));
+                prenotazioneDto.setCampo2(prenotazione.getViaggioPrenotato().getAutista().getNome() + " " +
+                        prenotazione.getViaggioPrenotato().getAutista().getCognome());
+                prenotazioneDto.setCampo3(String.valueOf(prenotazione.getViaggioPrenotato().getId()));
+                prenotazioneDto.setCampo4(String.valueOf(prenotazione.isAccettata()));
+                prenotazioni.add(prenotazioneDto);
+            }
+        } catch (DatabaseException e) {
+            if(e.isVisible())
+                throw new VisualizzaPrenotazioniEffettuateFailedException(
+                        "Visualizzazione prenotazioni effettuate fallita: " + e.getMessage());
+            throw new VisualizzaPrenotazioniEffettuateFailedException("Visualizzazione prenotazioni effettuate fallita.");
         }
         return prenotazioni;
     }

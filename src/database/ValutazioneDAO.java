@@ -93,7 +93,6 @@ public class ValutazioneDAO {
     private boolean caricaDaDB(long id) throws DatabaseException {
         String query = String.format("SELECT * from valutazioni WHERE (id = %d);", id);
         logger.info(query);
-            /* TODO: debug di ResultSet */
             try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
                 while (rs.next()) {
                     this.numeroStelle = rs.getInt("numeroStelle");
@@ -121,7 +120,7 @@ public class ValutazioneDAO {
     private long cercaInDB(int numeroStelle, String descrizione, long idUtente)
             throws DatabaseException {
         String query = String.format("SELECT * FROM valutazioni WHERE (idValutazione = %d AND numeroStelle = %d " +
-                        "AND descrizione = '%s' AND idUtente = %d);",this.idValutazione,numeroStelle, descrizione, idUtente);
+                        "AND descrizione = '%s' AND utente = %d);",this.idValutazione,numeroStelle, descrizione, idUtente);
         logger.info(query);
         long newIdValutazione;
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
@@ -144,7 +143,7 @@ public class ValutazioneDAO {
      * @return true in caso di successo, false altrimenti.
      */
     private int salvaInDB(int numeroStelle, String descrizione, long idUtente) throws DatabaseException{
-        String query = String.format("INSERT INTO valutazioni (numeroStelle, descrizione, idUtente) VALUES " +
+        String query = String.format("INSERT INTO valutazioni (numeroStelle, descrizione, utente) VALUES " +
                 "(%d, '%s', %d);",numeroStelle, descrizione, idUtente);
         logger.info(query);
         int rs;
