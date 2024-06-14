@@ -20,10 +20,6 @@ public class EntityPrenotazione {
         this.accettata = prenotazioneDAO.isAccettata();
     }
 
-    public void creaPrenotazione() {
-        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
-    }
-
     public long getId() {
         return id;
     }

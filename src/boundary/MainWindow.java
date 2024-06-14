@@ -126,7 +126,10 @@ public class MainWindow extends JFrame {
         });
 
         prenotaViaggioButton.addActionListener(actionEvent -> {
-
+            int selectedRow = viaggiTrovatiTable.getSelectedRow();
+            if (selectedRow != -1) {
+                prenotaViaggio(Long.parseLong((String) viaggiTrovatiTable.getValueAt(selectedRow, 0)));
+            }
         });
 
         prenotazioniEffettuateTable.getSelectionModel().addListSelectionListener(selectionEvent ->
@@ -418,6 +421,14 @@ public class MainWindow extends JFrame {
                 {"3", "Mario Rossi", "4", "In sospeso"}};
 
         populateTable(prenotazioniEffettuateTable, columnNames, data);
+    }
+
+    private void prenotaViaggio(long idViaggio) {
+        AbstractMap.SimpleEntry<Boolean, String> result = ControllerUtente.getInstance().prenotaViaggio(idViaggio);
+
+        String title = !result.getKey() ? "Error" : "Info";
+        int messageType = !result.getKey() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
+        JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), title, messageType);
     }
 
     private void valutaAutista(long idAutista) {

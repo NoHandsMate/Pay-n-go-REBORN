@@ -117,14 +117,12 @@ public class ControllerUtente {
                                                                           String cognome,
                                                                           String email,
                                                                           char[] password,
-                                                                          String contattoTelefonico,
+                                                                          String telefono,
                                                                           String auto,
-                                                                          Integer postiDisponibili) {
+                                                                          Integer postiDisp) {
 
         try {
-            FacadeEntityUtente.getInstance().aggiornaDatiPersonali(nome, cognome, email, auto, password,
-                    postiDisponibili, contattoTelefonico);
-
+            FacadeEntityUtente.getInstance().aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, telefono);
         } catch (AggiornamentoDatiFailedException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
@@ -152,5 +150,13 @@ public class ControllerUtente {
         }
 
         return new AbstractMap.SimpleEntry<>(true, viaggiTrovatiDTO);
+    }
+
+    public AbstractMap.SimpleEntry<Boolean, String> prenotaViaggio(long idViaggio) {
+         try {
+             FacadeEntityUtente.getInstance().prenotaViaggio(idViaggio);
+         } catch (PrenotaViaggioFailedException e) {
+
+         }
     }
 }

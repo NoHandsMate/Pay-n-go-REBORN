@@ -56,7 +56,13 @@ public class FacadeEntityUtente {
         return GestoreViaggi.getInstance().ricercaViaggio(luogoPartenza, luogoDestinazione, dataPartenza);
     }
 
+    public void prenotaViaggio(long idViaggio) throws PrenotaViaggioFailedException {
+        GestoreUtenti.getInstance().prenotaViaggio(idViaggio);
+    }
+
+
     public MyDto getSessione() {
         return GestoreUtenti.getInstance().getSessione();
     }
+
 }

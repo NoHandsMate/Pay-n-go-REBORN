@@ -186,6 +186,19 @@ public class GestoreUtenti {
         return prenotazioni;
     }
 
+    /*TODO: gestisciPrenotazione*/
+
+    public void prenotaViaggio(long idViaggio) throws PrenotaViaggioFailedException {
+        EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
+        try {
+            utenteCorrente.prenotaViaggio(idViaggio);
+        } catch (DatabaseException e) {
+            if(e.isVisible()) {
+                throw new PrenotaViaggioFailedException("Prenotazione viaggio fallita: " + e.getMessage());
+            }
+        }
+    }
+
     /**
      * Funzione di supporto alle funzioni registraUtente e loginUtente che permette di evitare la ridondanza del
      * codice relativa all'aggiornamento dell'utente corrente, necessaria in entrambe le funzioni suddette.
