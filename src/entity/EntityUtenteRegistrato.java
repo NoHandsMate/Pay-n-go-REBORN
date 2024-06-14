@@ -179,17 +179,24 @@ public class EntityUtenteRegistrato {
 
     /**
      * Funzione che permette all'utente corrente di valutare un altro utente
-     * @param idUtente l'id dell'utente che si intende prenotare
+     * @param idPrenotazione l'id della prenotazione della cui si vuole valutare l'utente
      * @param numeroStelle il numero di stelle da assegnare
      * @param text la descrizione della valutazione
-     * @throws DatabaseException se la gestione della valutazione del database fallisce
+     * @throws DatabaseException se il salvataggio della valutazione nel database fallisce
      */
-    public void valutaUtente(long idUtente, int numeroStelle, String text) throws DatabaseException {
+    public void valutaUtente(long idPrenotazione, int numeroStelle, String text) throws DatabaseException {
         EntityValutazione entityValutazione = new EntityValutazione();
+
+        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO(idPrenotazione);
+        EntityPrenotazione prenotazione = new EntityPrenotazione(prenotazioneDAO);
+
+        if(prenotazione.getViaggioPrenotato().getDataPartenza().isAfter(LocalDateTime.now())) {
+            throw new DatabaseException("Impossibile valutare un utente il cui viaggio non è ancora iniziato",true);
+        }
 
         entityValutazione.setNumeroStelle(numeroStelle);
         entityValutazione.setDescrizione(text);
-        entityValutazione.setIdUtenteValutato(idUtente);
+        entityValutazione.setIdUtenteValutato(prenotazione.getPasseggero().getId());
 
         entityValutazione.salvaInDB();
     }

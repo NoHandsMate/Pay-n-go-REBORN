@@ -22,13 +22,13 @@ public class EntityViaggio {
 
     public EntityViaggio(ViaggioDAO viaggioDAO) throws DatabaseException {
 
+        UtenteRegistratoDAO utenteRegistratoDAO = new UtenteRegistratoDAO(viaggioDAO.getIdAutista());
         this.id = viaggioDAO.getIdViaggio();
         this.luogoPartenza = viaggioDAO.getLuogoPartenza();
         this.luogoDestinazione = viaggioDAO.getLuogoDestinazione();
         this.dataPartenza = viaggioDAO.getDataPartenza();
         this.dataArrivo = viaggioDAO.getDataArrivo();
         this.contributoSpese = viaggioDAO.getContributoSpese();
-        UtenteRegistratoDAO utenteRegistratoDAO = new UtenteRegistratoDAO(viaggioDAO.getIdAutista());
         this.autista = new EntityUtenteRegistrato(utenteRegistratoDAO);
     }
 

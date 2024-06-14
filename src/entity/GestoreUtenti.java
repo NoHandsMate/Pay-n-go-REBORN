@@ -172,6 +172,34 @@ public class GestoreUtenti {
      */
     public ArrayList<MyDto> visualizzaPrenotazioni() {
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
+        ArrayList<EntityViaggio> viaggiCondivisi = utenteCorrente.getViaggiCondivisi();
+        ArrayList<MyDto> prenotazioni = new ArrayList<>();
+        for(EntityViaggio entityViaggio : viaggiCondivisi){
+            try {
+                entityViaggio.popolaPrenotazioni();
+                for(EntityPrenotazione entityPrenotazione : entityViaggio.getPrenotazioni()) {
+                    MyDto prenotazioneDto = new MyDto();
+                    prenotazioneDto.setCampo1(String.valueOf(entityPrenotazione.getId()));
+                    prenotazioneDto.setCampo2(String.valueOf(entityPrenotazione.isAccettata()));
+                    prenotazioneDto.setCampo3(entityPrenotazione.getPasseggero().getNome() + " " +
+                            entityPrenotazione.getPasseggero().getCognome());
+
+                    prenotazioni.add(prenotazioneDto);
+                }
+            } catch (DatabaseException e) {
+                /*TODO risolvi cosa deve fare il catch*/
+                throw new RuntimeException(e);
+            }
+        }
+        return prenotazioni;
+    }
+
+    /**
+     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate ad altri viaggi
+     * @return prenotazioni ArrayList di DTO prenotazioni
+     */
+    public ArrayList<MyDto> visualizzaPrenotazioniEffettuate() {
+        EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
         ArrayList<EntityPrenotazione> prenotazioniUtente = utenteCorrente.getPrenotazioni();
         ArrayList<MyDto> prenotazioni = new ArrayList<>();
         for(EntityPrenotazione prenotazione : prenotazioniUtente){
@@ -223,11 +251,20 @@ public class GestoreUtenti {
         }
     }
 
-    public void valutaUtenti(long idUtente, int numeroStelle, String text) throws ValutazioneFailedException {
+    /**
+     * Funzione che permette all'utente corrente di valutare un altro utente
+     * @param idPrenotazione l'id della prenotazione della cui si vuole valutare l'utente
+     * @param numeroStelle il numero di stelle da assegnare
+     * @param text la descrizione della valutazione
+     * @throws ValutazioneFailedException se la valutazione fallisce
+     */
+    public void valutaUtente(long idPrenotazione, int numeroStelle, String text) throws ValutazioneFailedException {
+
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
-        /*TODO: Va verificato che tu non possa valutare un utente se il viaggio non è ancora iniziato!!!*/
+
         try {
-            utenteCorrente.valutaUtente(idUtente, numeroStelle, text);
+
+            utenteCorrente.valutaUtente(idPrenotazione, numeroStelle, text);
         } catch (DatabaseException e) {
             if (e.isVisible()) {
                 throw new ValutazioneFailedException("Valutazione fallita: " + e.getMessage());
@@ -235,8 +272,8 @@ public class GestoreUtenti {
 
             throw new ValutazioneFailedException("Valutazione fallita");
         }
-
     }
+
     /**
      * Funzione di supporto alle funzioni registraUtente e loginUtente che permette di evitare la ridondanza del
      * codice relativa all'aggiornamento dell'utente corrente, necessaria in entrambe le funzioni suddette.

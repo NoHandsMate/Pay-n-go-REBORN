@@ -16,10 +16,17 @@ public class EntityPrenotazione {
 
     public EntityPrenotazione() {}
 
-    public EntityPrenotazione(PrenotazioneDAO prenotazioneDAO) {
+    public EntityPrenotazione(PrenotazioneDAO prenotazioneDAO) throws DatabaseException {
+
+        UtenteRegistratoDAO utenteRegistratoDAO = new UtenteRegistratoDAO(prenotazioneDAO.getIdPasseggero());
+        ViaggioDAO viaggioDAO = new ViaggioDAO();
         this.id = prenotazioneDAO.getIdPrenotazione();
         this.accettata = prenotazioneDAO.isAccettata();
+        this.passeggero = new EntityUtenteRegistrato(utenteRegistratoDAO);
+        this.viaggioPrenotato = new EntityViaggio(viaggioDAO);
+
     }
+
 
     public void salvaInDB() throws DatabaseException {
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();

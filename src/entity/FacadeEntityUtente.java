@@ -94,6 +94,14 @@ public class FacadeEntityUtente {
     }
 
     /**
+     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate ad altri viaggi
+     * @return prenotazioni ArrayList di DTO prenotazioni
+     */
+    public ArrayList<MyDto> visualizzaPrenotazioniEffettuate() {
+        return GestoreUtenti.getInstance().visualizzaPrenotazioniEffettuate();
+    }
+
+    /**
      * Funzione che permette la ricerca di un viaggio all'interno del sistema sulla base di determinati filtri
      * @param luogoPartenza il luogo di partenza del viaggio da ricercare
      * @param luogoDestinazione il luogo di destinazione del viaggio da ricercare
@@ -124,8 +132,15 @@ public class FacadeEntityUtente {
 
     }
 
-    public void valutaUtente(long idUtente, int numeroStelle, String text) throws ValutazioneFailedException {
-        GestoreUtenti.getInstance().valutaUtenti(idUtente, numeroStelle, text);
+    /**
+     * Funzione che permette all'utente corrente di valutare un altro utente
+     * @param idPrenotazione l'id della prenotazione della cui si vuole valutare l'utente
+     * @param numeroStelle il numero di stelle da assegnare
+     * @param text la descrizione della valutazione
+     * @throws ValutazioneFailedException se la valutazione fallisce
+     */
+    public void valutaUtente(long idPrenotazione, int numeroStelle, String text) throws ValutazioneFailedException {
+        GestoreUtenti.getInstance().valutaUtente(idPrenotazione, numeroStelle, text);
     }
     /**
      * Funzione che permette alle form (mediante i livelli superiori) di accedere ai dati relativi all'utente corrente

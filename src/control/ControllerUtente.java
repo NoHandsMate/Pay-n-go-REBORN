@@ -142,6 +142,14 @@ public class ControllerUtente {
     }
 
     /**
+     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate ad altri viaggi
+     * @return prenotazioni ArrayList di DTO prenotazioni
+     */
+    public ArrayList<MyDto> visualizzaPrenotazioniEffettuate() {
+        return FacadeEntityUtente.getInstance().visualizzaPrenotazioniEffettuate();
+    }
+
+    /**
      * Funzione che permette la ricerca di un viaggio all'interno del sistema sulla base di determinati filtri
      * @param luogoPartenza il luogo di partenza del viaggio da ricercare
      * @param luogoDestinazione il luogo di destinazione del viaggio da ricercare
@@ -190,13 +198,13 @@ public class ControllerUtente {
 
     /**
      * Funzione che permette all'utente registrato di valutare un altro utente
-     * @param idUtente l'id dell'utente che si intende valutare
+     * @param idPrenotazione l'id dell'utente che si intende valutare
      * @param numeroStelle il numero di stelle da assegnare
      * @param text la descrizione della valutazione
      */
-    public AbstractMap.SimpleEntry<Boolean, String> valutaUtente(long idUtente, int numeroStelle, String text) {
+    public AbstractMap.SimpleEntry<Boolean, String> valutaUtente(long idPrenotazione, int numeroStelle, String text) {
         try {
-            FacadeEntityUtente.getInstance().valutaUtente(idUtente, numeroStelle, text);
+            FacadeEntityUtente.getInstance().valutaUtente(idPrenotazione, numeroStelle, text);
         } catch (ValutazioneFailedException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }

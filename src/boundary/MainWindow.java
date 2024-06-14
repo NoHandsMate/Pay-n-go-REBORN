@@ -416,8 +416,6 @@ public class MainWindow extends JFrame {
     }
 
     private void visualizzaPrenotazioniEffettuate() {
-        /* TODO qualcosa del genere */
-        // String[][] data = ControllerUtente.getInstance().visualizzaPrenotazioni();
 
         String[] columnNames = {"Id prenotazione", "Autista", "Viaggio", "Stato"};
         String[][] data = {{"1", "Nome Cognome", "3", "In sospeso"},
@@ -457,6 +455,7 @@ public class MainWindow extends JFrame {
     private void visualizzaPrenotazioni(long idViaggio) {
         /* TODO: idViaggio 0 significa nessun viaggio selezionato, la ricerca dovrebbe tornare null e si
             dovrebbe svuotare da sola la tabella */
+        // String[][] data = ControllerUtente.getInstance().visualizzaPrenotazioni();
         String[] columnNames = {"Id prenotazione", "Passeggero", "Viaggio", "Stato"};
     }
 }
