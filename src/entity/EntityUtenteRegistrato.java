@@ -142,7 +142,7 @@ public class EntityUtenteRegistrato {
      * @throws DatabaseException nel caso in cui la prenotazione non vada a buon fine
      */
     public void prenotaViaggio(long idViaggio) throws DatabaseException {
-        ViaggioDAO viaggioDAO = new ViaggioDAO(this.id);
+        ViaggioDAO viaggioDAO = new ViaggioDAO(idViaggio);
         EntityViaggio entityViaggio = new EntityViaggio(viaggioDAO);
 
         if (viaggioDAO.getIdAutista() == this.id) {
@@ -177,6 +177,11 @@ public class EntityUtenteRegistrato {
         }
     }
 
+    /**
+     * Funzione di utilità ad aggiornaDatiPersonali che permette di eliminare i viaggi condvisi fino a quel momento,
+     * quando l'utente aggiorna la sua automobile o il numero di posti disponibili
+     * @throws DatabaseException se l'eliminazione dei viaggi dal database non va a buon fine
+     */
     private void eliminaViaggiCondivisi() throws DatabaseException {
         for (EntityViaggio viaggio : this.viaggiCondivisi) {
             ViaggioDAO viaggioDAO = new ViaggioDAO(viaggio.getId());
@@ -186,6 +191,10 @@ public class EntityUtenteRegistrato {
     }
 
 
+    /**
+     * Funzione di utilità ad aggiornaDatiPersonali che permette di aggiornare la DAO in ingresso con i dati dell'entity
+     * @param utenteRegistratoDAO DAO da aggiornare con i dati dell'entity
+     */
     private void aggiornaDati(UtenteRegistratoDAO utenteRegistratoDAO) {
         this.nome = utenteRegistratoDAO.getNome();
         this.cognome = utenteRegistratoDAO.getCognome();
