@@ -107,6 +107,13 @@ public class EntityUtenteRegistrato {
         entityPrenotazione.creaPrenotazione();
     }
 
+    /**
+     * Funzione che permette all'utente registrato in quanto autista, di gestire una prenotazione
+     * ricevuta (accettarla o rifiutarla)
+     * @param idPrenotazione l'id della prenotazione da gestire
+     * @param accettata lo stato attuale della prenotazione
+     * @throws DatabaseException se la gestione della prenotazione nel database fallisce
+     */
     public void gestisciPrenotazione(long idPrenotazione,boolean accettata) throws DatabaseException {
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO(idPrenotazione);
         if(accettata) {

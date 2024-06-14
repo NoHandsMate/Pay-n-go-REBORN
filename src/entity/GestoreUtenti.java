@@ -186,7 +186,6 @@ public class GestoreUtenti {
         return prenotazioni;
     }
 
-    /*TODO: gestisciPrenotazione*/
 
     public void prenotaViaggio(long idViaggio) throws PrenotaViaggioFailedException {
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
@@ -199,6 +198,13 @@ public class GestoreUtenti {
         }
     }
 
+    /**
+     * Funzione che permette all'utente registrato in quanto autista, di gestire una prenotazione
+     * ricevuta (accettarla o rifiutarla)
+     * @param idPrenotazione l'id della prenotazione da gestire
+     * @param accettata lo stato attuale della prenotazione
+     * @throws PrenotazioneGestitaFailedException se la gestione della prenotazione fallisce
+     */
     public void gestisciPrenotazione(long idPrenotazione,boolean accettata) throws PrenotazioneGestitaFailedException{
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
         try{

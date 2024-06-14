@@ -170,6 +170,12 @@ public class ControllerUtente {
          }
     }
 
+    /**
+     * Funzione che permette all'utente registrato in quanto autista, di gestire una prenotazione
+     * ricevuta (accettarla o rifiutarla)
+     * @param idPrenotazione l'id della prenotazione da gestire
+     * @param accettata lo stato attuale della prenotazione
+     */
     public AbstractMap.SimpleEntry<Boolean, String> gestisciPrenotazione(long idPrenotazione,boolean accettata){
 
         try {

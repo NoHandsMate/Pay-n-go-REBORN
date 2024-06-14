@@ -28,7 +28,7 @@ public class ControllerGestore {
     /**
      * Funzione che permette al gestore dell'applicazione di generare un report degli incassi di tutti i viaggi nel
      * sistema
-     * @return reportIncass float che rappresenta l'incasso complessivo
+     * @return reportIncassi float che rappresenta l'incasso complessivo
      */
     public AbstractMap.SimpleEntry<Boolean, Object> generaReportIncassi(){
 
