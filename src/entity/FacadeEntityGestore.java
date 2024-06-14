@@ -19,11 +19,11 @@ public class FacadeEntityGestore {
     }
 
 
-    public Float GeneraReportIncassi() throws ReportIncassiFailedException {
-        return GestoreViaggi.getInstance().GeneraReportIncassi();
+    public Float generaReportIncassi() throws ReportIncassiFailedException {
+        return GestoreViaggi.getInstance().generaReportIncassi();
     }
 
-    public ArrayList<ArrayList<MyDto>> GeneraReportUtenti() throws ReportUtentiFailedException {
+    public ArrayList<ArrayList<MyDto>> generaReportUtenti() throws ReportUtentiFailedException {
         return GestoreUtenti.getInstance().generaReportUtenti();
     }
 }

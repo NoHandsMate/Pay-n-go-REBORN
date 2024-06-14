@@ -32,6 +32,10 @@ public class EntityViaggio {
         this.autista = new EntityUtenteRegistrato(utenteRegistratoDAO);
     }
 
+    /**
+     * Funzione che permette di popolare un viaggio con le prenotazioni associate
+     * @throws DatabaseException se il caricamento delle prenotazioni dal database fallisce
+     */
     public void popolaPrenotazioni() throws DatabaseException {
         ArrayList<PrenotazioneDAO> prenotazioni = PrenotazioneDAO.getPrenotazioni();
         this.prenotazioni = new ArrayList<>();

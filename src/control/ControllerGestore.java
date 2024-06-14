@@ -13,7 +13,6 @@ import dto.*;
 
 public class ControllerGestore {
 
-    //Variabile statica univoca per implementare il pattern Singleton
     private static ControllerGestore uniqueInstance;
 
     private ControllerGestore() {}
@@ -26,13 +25,18 @@ public class ControllerGestore {
     }
 
 
+    /**
+     * Funzione che permette al gestore dell'applicazione di generare un report degli incassi di tutti i viaggi nel
+     * sistema
+     * @return reportIncass float che rappresenta l'incasso complessivo
+     */
     public AbstractMap.SimpleEntry<Boolean, Object> generaReportIncassi(){
 
         Float reportIncassi;
 
         try {
 
-             reportIncassi = FacadeEntityGestore.getInstance().GeneraReportIncassi();
+             reportIncassi = FacadeEntityGestore.getInstance().generaReportIncassi();
         } catch (ReportIncassiFailedException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
@@ -40,13 +44,18 @@ public class ControllerGestore {
         return new AbstractMap.SimpleEntry<>(true, reportIncassi);
     }
 
+    /**
+     * Funzione che permette al gestore dell'applicazione di generare un report di valutazioni per tutti gli utenti del
+     * sistema
+     * @return reportUtenti un ArrayList di ArrayList di DTO (matrice) che rappresenta il report
+     */
     public AbstractMap.SimpleEntry<Boolean, Object> generaReportUtenti(){
 
         ArrayList<ArrayList<MyDto>> reportUtenti;
 
         try {
 
-           reportUtenti = FacadeEntityGestore.getInstance().GeneraReportUtenti();
+           reportUtenti = FacadeEntityGestore.getInstance().generaReportUtenti();
         } catch (ReportUtentiFailedException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
