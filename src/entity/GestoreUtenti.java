@@ -168,30 +168,28 @@ public class GestoreUtenti {
 
     /**
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate sui suoi viaggi
-     * @return prenotazioni ArrayList di DTO prenotazioni
+     * @return prenotazioni ArrayList di DTO prenotazioni, vuoto se non presenti
      */
     public ArrayList<MyDto> visualizzaPrenotazioni() {
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
-        ArrayList<EntityViaggio> viaggiCondivisi = utenteCorrente.getViaggiCondivisi();
-        ArrayList<MyDto> prenotazioni = new ArrayList<>();
-        for(EntityViaggio entityViaggio : viaggiCondivisi){
-            try {
-                entityViaggio.popolaPrenotazioni();
-                for(EntityPrenotazione entityPrenotazione : entityViaggio.getPrenotazioni()) {
-                    MyDto prenotazioneDto = new MyDto();
-                    prenotazioneDto.setCampo1(String.valueOf(entityPrenotazione.getId()));
-                    prenotazioneDto.setCampo2(String.valueOf(entityPrenotazione.isAccettata()));
-                    prenotazioneDto.setCampo3(entityPrenotazione.getPasseggero().getNome() + " " +
-                            entityPrenotazione.getPasseggero().getCognome());
+        ArrayList<EntityPrenotazione> prenotazioni = utenteCorrente.visualizzaPrenotazioni();
 
-                    prenotazioni.add(prenotazioneDto);
-                }
-            } catch (DatabaseException e) {
-                /*TODO risolvi cosa deve fare il catch*/
-                throw new RuntimeException(e);
-            }
+        if(prenotazioni.isEmpty()){
+            return new ArrayList<MyDto>(); //Ritorno un DTO vuoto
         }
-        return prenotazioni;
+
+        ArrayList<MyDto> prenotazioniDTO = new ArrayList<>();
+
+        for(EntityPrenotazione entityPrenotazione : prenotazioni) {
+            MyDto prenotazioneDto = new MyDto();
+            prenotazioneDto.setCampo1(String.valueOf(entityPrenotazione.getId()));
+            prenotazioneDto.setCampo2(String.valueOf(entityPrenotazione.isAccettata()));
+            prenotazioneDto.setCampo3(entityPrenotazione.getPasseggero().getNome() + " " +
+                    entityPrenotazione.getPasseggero().getCognome());
+
+            prenotazioniDTO.add(prenotazioneDto);
+        }
+        return prenotazioniDTO;
     }
 
     /**
