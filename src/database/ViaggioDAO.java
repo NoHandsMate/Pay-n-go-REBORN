@@ -33,7 +33,7 @@ public class ViaggioDAO {
      * @param idViaggio l'identificativo della prenotazione.
      * @throws DatabaseException se non è stato possibile creare un'istanza di ViaggioDAO.
      */
-    public ViaggioDAO(int idViaggio) throws DatabaseException {
+    public ViaggioDAO(long idViaggio) throws DatabaseException {
         if (!caricaDaDB(idViaggio))
             throw new DatabaseException("Errore nella creazione di ViaggioDAO.",false);
         this.idViaggio = idViaggio;
