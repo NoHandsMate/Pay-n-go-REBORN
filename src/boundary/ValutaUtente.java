@@ -197,7 +197,11 @@ public class ValutaUtente extends JDialog {
             JOptionPane.showMessageDialog(contentPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
         else {
             result = ControllerUtente.getInstance().valutaUtente(idUtente, numeroStelle, descrizioneTextArea.getText());
-            if ()
+
+            String title = !result.getKey() ? "Error" : "Info";
+            int messageType = !result.getKey() ? JOptionPane.ERROR_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
+
+            JOptionPane.showMessageDialog(contentPane, result.getValue(), title, messageType);
         }
         dispose();
     }

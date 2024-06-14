@@ -42,7 +42,7 @@ public class ValutazioneDAO {
      * altrimenti (l'oggetto non sarà valorizzato).
      * @throws DatabaseException se si è verificato un errore nella creazione dell'oggetto ValutazioneDAO.
      */
-    public boolean createValutazione(int numeroStelle, String descrizione, long idUtente) throws DatabaseException{
+    public void createValutazione(int numeroStelle, String descrizione, long idUtente) throws DatabaseException{
 
         if (cercaInDB(numeroStelle, descrizione,idUtente) != 0)
             throw new DatabaseException("Esiste già una valutazione identica.",true);
@@ -53,7 +53,6 @@ public class ValutazioneDAO {
         this.numeroStelle = numeroStelle;
         this.descrizione = descrizione;
         this.idUtente = idUtente;
-        return true;
     }
 
     /**

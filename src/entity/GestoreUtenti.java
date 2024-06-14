@@ -223,6 +223,20 @@ public class GestoreUtenti {
         }
     }
 
+    public void valutaUtenti(long idUtente, int numeroStelle, String text) throws ValutazioneFailedException {
+        EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
+        /*TODO: Va verificato che tu non possa valutare un utente se il viaggio non è ancora iniziato!!!*/
+        try {
+            utenteCorrente.valutaUtente(idUtente, numeroStelle, text);
+        } catch (DatabaseException e) {
+            if (e.isVisible()) {
+                throw new ValutazioneFailedException("Valutazione fallita: " + e.getMessage());
+            }
+
+            throw new ValutazioneFailedException("Valutazione fallita");
+        }
+
+    }
     /**
      * Funzione di supporto alle funzioni registraUtente e loginUtente che permette di evitare la ridondanza del
      * codice relativa all'aggiornamento dell'utente corrente, necessaria in entrambe le funzioni suddette.
@@ -251,4 +265,5 @@ public class GestoreUtenti {
                 sessioneCorrente.getAutomobile(),
                 String.valueOf(sessioneCorrente.getPostiDisponibili()));
     }
+
 }

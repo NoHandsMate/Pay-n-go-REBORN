@@ -21,6 +21,11 @@ public class EntityPrenotazione {
         this.accettata = prenotazioneDAO.isAccettata();
     }
 
+    public void salvaInDB() throws DatabaseException {
+        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
+        prenotazioneDAO.createPrenotazione(this.passeggero.getId(), this.viaggioPrenotato.getId());
+    }
+
     public long getId() {
         return id;
     }
@@ -54,8 +59,4 @@ public class EntityPrenotazione {
         this.viaggioPrenotato = viaggioPrenotato;
     }
 
-    public void salvaInDB() throws DatabaseException {
-        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
-        prenotazioneDAO.createPrenotazione(this.passeggero.getId(), this.viaggioPrenotato.getId());
-    }
 }

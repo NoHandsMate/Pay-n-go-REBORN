@@ -188,6 +188,19 @@ public class ControllerUtente {
         return new AbstractMap.SimpleEntry<>(true, "Prenotazione gestita con successo.");
     }
 
+    /**
+     * Funzione che permette all'utente registrato di valutare un altro utente
+     * @param idUtente l'id dell'utente che si intende valutare
+     * @param numeroStelle il numero di stelle da assegnare
+     * @param text la descrizione della valutazione
+     */
     public AbstractMap.SimpleEntry<Boolean, String> valutaUtente(long idUtente, int numeroStelle, String text) {
+        try {
+            FacadeEntityUtente.getInstance().valutaUtente(idUtente, numeroStelle, text);
+        } catch (ValutazioneFailedException e) {
+            return new AbstractMap.SimpleEntry<>(false, e.getMessage());
+        }
+
+        return new AbstractMap.SimpleEntry<>(true, "Valutazione effettuata con successo.");
     }
 }

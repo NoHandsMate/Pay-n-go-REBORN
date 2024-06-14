@@ -124,6 +124,9 @@ public class FacadeEntityUtente {
 
     }
 
+    public void valutaUtente(long idUtente, int numeroStelle, String text) throws ValutazioneFailedException {
+        GestoreUtenti.getInstance().valutaUtenti(idUtente, numeroStelle, text);
+    }
     /**
      * Funzione che permette alle form (mediante i livelli superiori) di accedere ai dati relativi all'utente corrente
      * @return MyDto il DTO popolato con i dati relativi all'utente corrente

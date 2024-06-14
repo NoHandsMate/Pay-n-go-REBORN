@@ -178,6 +178,23 @@ public class EntityUtenteRegistrato {
     }
 
     /**
+     * Funzione che permette all'utente corrente di valutare un altro utente
+     * @param idUtente l'id dell'utente che si intende prenotare
+     * @param numeroStelle il numero di stelle da assegnare
+     * @param text la descrizione della valutazione
+     * @throws DatabaseException se la gestione della valutazione del database fallisce
+     */
+    public void valutaUtente(long idUtente, int numeroStelle, String text) throws DatabaseException {
+        EntityValutazione entityValutazione = new EntityValutazione();
+
+        entityValutazione.setNumeroStelle(numeroStelle);
+        entityValutazione.setDescrizione(text);
+        entityValutazione.setIdUtenteValutato(idUtente);
+
+        entityValutazione.salvaInDB();
+    }
+
+    /**
      * Funzione di utilità ad aggiornaDatiPersonali che permette di eliminare i viaggi condvisi fino a quel momento,
      * quando l'utente aggiorna la sua automobile o il numero di posti disponibili
      * @throws DatabaseException se l'eliminazione dei viaggi dal database non va a buon fine
