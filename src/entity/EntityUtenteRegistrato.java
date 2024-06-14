@@ -22,23 +22,11 @@ public class EntityUtenteRegistrato {
 
     public EntityUtenteRegistrato() {}
 
-    public EntityUtenteRegistrato(String nome, String cognome,
-                                  String contattoTelefonico, String email, String password,
-                                  String automobile, int postiDisponibili) {
-
-        this.nome = nome;
-        this.cognome = cognome;
-        this.contattoTelefonico = contattoTelefonico;
-        this.email = email;
-        this.automobile = automobile;
-        this.postiDisponibili = postiDisponibili;
-    }
-
     /**
      * Costruttore che popola l'EntityUtenteRegistrato a partire dall'id specificato. Gli attributi viaggiCondivisi,
      * prenotazioni e valutazioni non vengono popolati.
      */
-    public EntityUtenteRegistrato(UtenteRegistratoDAO utenteRegistratoDAO) throws DatabaseException {
+    public EntityUtenteRegistrato(UtenteRegistratoDAO utenteRegistratoDAO) {
         this.id = utenteRegistratoDAO.getIdUtenteRegistrato();
         this.nome = utenteRegistratoDAO.getNome();
         this.cognome = utenteRegistratoDAO.getCognome();
@@ -85,7 +73,7 @@ public class EntityUtenteRegistrato {
     }
 
     public void condividiViaggio(String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
-                                 LocalDateTime dataArrivo, float contributoSpese) throws CondivisioneViaggioFailedException {
+                                 LocalDateTime dataArrivo, float contributoSpese) throws DatabaseException {
 
         EntityViaggio viaggioCondiviso = new EntityViaggio();
         viaggioCondiviso.setLuogoPartenza(luogoPartenza);
@@ -95,28 +83,28 @@ public class EntityUtenteRegistrato {
         viaggioCondiviso.setContributoSpese(contributoSpese);
         viaggioCondiviso.setAutista(this);
 
-        try {
-            viaggioCondiviso.salvaInDB();
-        } catch (DatabaseException e) {
-            if(e.isVisible()) {
-                throw new CondivisioneViaggioFailedException("Condivisione viaggio fallita: " + e.getMessage());
-            }
-            throw new CondivisioneViaggioFailedException("Condivisione viaggio fallita");
-        }
+        viaggioCondiviso.salvaInDB();
+
     }
 
     public void aggiornaDatiPersonali(String nome, String cognome, String email,
                                       String auto, char[] password, Integer postiDisp,
-                                      String telefono) throws AggiornamentoDatiFailedException {
-        try {
-            UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(this.id);
-            utenteDAO.updateUtenteRegistrato(nome, cognome, telefono, email, auto, postiDisp, new String(password));
-            aggiornaDati(utenteDAO);
-        } catch (DatabaseException e) {
-            if (e.isVisible())
-                throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito: " + e.getMessage());
-            throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito.");
+                                      String telefono) throws DatabaseException {
+
+        if (!this.automobile.equals(auto) || this.postiDisponibili != postiDisp) {
+            this.eliminaViaggiCondivisi();
         }
+        UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(this.id);
+        utenteDAO.updateUtenteRegistrato(nome, cognome, telefono, email, auto, postiDisp, new String(password));
+        aggiornaDati(utenteDAO);
+    }
+
+    private void eliminaViaggiCondivisi() throws DatabaseException {
+        for (EntityViaggio viaggio : this.viaggiCondivisi) {
+            ViaggioDAO viaggioDAO = new ViaggioDAO(viaggio.getId());
+            viaggioDAO.deleteViaggio();
+        }
+        this.viaggiCondivisi = new ArrayList<>();
     }
 
 

@@ -5,7 +5,6 @@ import exceptions.*;
 import database.UtenteRegistratoDAO;
 import dto.*;
 
-import javax.swing.text.html.parser.Entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -25,11 +24,11 @@ public class GestoreUtenti {
     public void registraUtente(String nome, String cognome, String email,
                                String auto, char[] password, Integer postiDisp,
                                String telefono) throws RegistrationFailedException {
-
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
             utenteDAO.createUtenteRegistrato(nome, cognome, telefono, email, auto, postiDisp, new String(password));
-            aggiornaUtenteCorrente(utenteDAO);
+            EntityUtenteRegistrato utenteRegistrato = new EntityUtenteRegistrato(utenteDAO);
+            aggiornaUtenteCorrente(utenteRegistrato);
         } catch (DatabaseException e) {
             if (e.isVisible())
                 throw new RegistrationFailedException("Registrazione Utente fallita: " + e.getMessage());
@@ -41,7 +40,8 @@ public class GestoreUtenti {
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
         try {
             utenteDAO.readUtenteRegistrato(email, new String(password));
-            aggiornaUtenteCorrente(utenteDAO);
+            EntityUtenteRegistrato utenteRegistrato = new EntityUtenteRegistrato(utenteDAO);
+            aggiornaUtenteCorrente(utenteRegistrato);
         } catch (DatabaseException e) {
             if (e.isVisible())
                 throw new LoginFailedException("Login Utente fallito: %s" + e.getMessage());
@@ -86,21 +86,39 @@ public class GestoreUtenti {
         return reportUtenti;
     }
 
-    public void condividiViaggio(String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
-                                 LocalDateTime dataArrivo, float contributoSpese) throws CondivisioneViaggioFailedException {
+    public void condividiViaggio(String luogoPartenza,
+                                 String luogoDestinazione,
+                                 LocalDateTime dataPartenza,
+                                 LocalDateTime dataArrivo,
+                                 float contributoSpese) throws CondivisioneViaggioFailedException {
 
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
-        utenteCorrente.condividiViaggio(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese);
+        try {
+            utenteCorrente.condividiViaggio(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese);
+        } catch (DatabaseException e) {
+            if(e.isVisible()) {
+                throw new CondivisioneViaggioFailedException("Condivisione viaggio fallita: " + e.getMessage());
+            }
+            throw new CondivisioneViaggioFailedException("Condivisione viaggio fallita");
+        }
     }
 
-    public void aggiornaDatiPersonali(String nome, String cognome, String email,
-                                      String auto, char[] password, Integer postiDisp,
+    public void aggiornaDatiPersonali(String nome,
+                                      String cognome,
+                                      String email,
+                                      String auto,
+                                      char[] password,
+                                      Integer postiDisp,
                                       String telefono) throws AggiornamentoDatiFailedException {
-
-        /* TODO: nel momento in cui si decide di cambiare anche l'automobile, tutti i viaggi condivisi devono scomparire */
-        EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
-        utenteCorrente.aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, telefono);
-        Sessione.getInstance().setUtenteCorrente(utenteCorrente);
+        try {
+            EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
+            utenteCorrente.aggiornaDatiPersonali(nome, cognome, email, auto, password, postiDisp, telefono);
+            aggiornaUtenteCorrente(utenteCorrente);
+        } catch (DatabaseException e) {
+            if (e.isVisible())
+                throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito: " + e.getMessage());
+            throw new AggiornamentoDatiFailedException("Aggiornamento Dati fallito.");
+        }
     }
 
     /**
@@ -123,8 +141,7 @@ public class GestoreUtenti {
         return prenotazioni;
     }
 
-    private void aggiornaUtenteCorrente(UtenteRegistratoDAO utenteRegistratoDAO) throws DatabaseException {
-        EntityUtenteRegistrato utenteCorrente = new EntityUtenteRegistrato(utenteRegistratoDAO);
+    private void aggiornaUtenteCorrente(EntityUtenteRegistrato utenteCorrente) throws DatabaseException {
         utenteCorrente.popolaPrenotazioni();
         utenteCorrente.popolaViaggiCondivisi();
         utenteCorrente.popolaValutazioni();

@@ -6,7 +6,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class MainWindow extends JFrame {
     private JPanel circularLogoPanel;
     private JButton accountTabButton;
     private JButton homeTabButton;
-    private JButton prenotazioniTabButton;
+    private JButton valutaTabButton;
     private JButton ricercaTabButton;
     private JButton condividiTabButton;
     private JButton viaggiTabButton;
@@ -43,7 +42,7 @@ public class MainWindow extends JFrame {
     private JButton cercaViaggioButton;
     private JTable viaggiTrovatiTable;
     private JButton prenotaViaggioButton;
-    private JTable prenotazioniTable;
+    private JTable prenotazioniEffettuateTable;
     private DatePicker dataPartenzaPicker;
     private JButton valutaAutistaButton;
     private JTextField condividiLuogoPartenzaField;
@@ -53,11 +52,11 @@ public class MainWindow extends JFrame {
     private JTextField condividiContributoSpeseField;
     private JButton condividiViaggioButton;
     private JTable viaggiCondivisiTable;
-    private JTable prenotazioniViaggioCondivisoTable;
+    private JTable prenotazioniTable;
     private JButton gestisciPrenotazioneButton;
     private JButton valutaPasseggeroButton;
 
-    private final JButton[] tabButtons = {homeTabButton, accountTabButton, ricercaTabButton, prenotazioniTabButton,
+    private final JButton[] tabButtons = {homeTabButton, accountTabButton, ricercaTabButton, valutaTabButton,
             condividiTabButton, viaggiTabButton};
 
     public MainWindow() {
@@ -94,7 +93,7 @@ public class MainWindow extends JFrame {
         homeTabButton.addActionListener(actionEvent -> setTabActive(0));
         accountTabButton.addActionListener(actionEvent -> setTabActive(1));
         ricercaTabButton.addActionListener(actionListener -> setTabActive(2));
-        prenotazioniTabButton.addActionListener(actionListener -> setTabActive(3));
+        valutaTabButton.addActionListener(actionListener -> setTabActive(3));
         condividiTabButton.addActionListener(actionListener -> setTabActive(4));
         viaggiTabButton.addActionListener(actionListener -> setTabActive(5));
 
@@ -130,13 +129,13 @@ public class MainWindow extends JFrame {
 
         });
 
-        prenotazioniTable.getSelectionModel().addListSelectionListener(selectionEvent ->
-                valutaAutistaButton.setEnabled(prenotazioniTable.getSelectedRow() != -1));
+        prenotazioniEffettuateTable.getSelectionModel().addListSelectionListener(selectionEvent ->
+                valutaAutistaButton.setEnabled(prenotazioniEffettuateTable.getSelectedRow() != -1));
 
         valutaAutistaButton.addActionListener(actionEvent -> {
-            int selectedRow = prenotazioniTable.getSelectedRow();
+            int selectedRow = prenotazioniEffettuateTable.getSelectedRow();
             if (selectedRow != -1) {
-                valutaAutista(Long.parseLong((String) prenotazioniTable.getValueAt(selectedRow, 0)));
+                valutaAutista(Long.parseLong((String) prenotazioniEffettuateTable.getValueAt(selectedRow, 0)));
             }
         });
 
@@ -418,7 +417,7 @@ public class MainWindow extends JFrame {
                 {"2", "Name Surname", "3", "Accettata"},
                 {"3", "Mario Rossi", "4", "In sospeso"}};
 
-        populateTable(prenotazioniTable, columnNames, data);
+        populateTable(prenotazioniEffettuateTable, columnNames, data);
     }
 
     private void valutaAutista(long idAutista) {
