@@ -235,7 +235,6 @@ public class GestoreUtenti {
      * @param idViaggio l'id del viaggio che si intende prenotare
      * @throws PrenotaViaggioFailedException nel caso in cui la prenotazione non vada a buon fine
      */
-
     public void prenotaViaggio(long idViaggio) throws PrenotaViaggioFailedException {
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
         try {
@@ -264,6 +263,7 @@ public class GestoreUtenti {
             if(e.isVisible()) {
                 throw new PrenotazioneGestitaFailedException("Gestione prenotazione fallita: " + e.getMessage());
             }
+            throw new PrenotazioneGestitaFailedException("Gestione prenotazione fallita.");
         }
     }
 

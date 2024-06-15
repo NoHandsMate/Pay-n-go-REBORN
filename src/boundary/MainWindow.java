@@ -152,6 +152,8 @@ public class MainWindow extends JFrame {
                         (String) viaggiCondivisiTable.getValueAt(selectedRow, 0)));
             } else visualizzaPrenotazioni(0); // idViaggio nullo per svuotare la tabella.
         });
+
+        gestisciPrenotazioneButton.addActionListener(actionEvent -> gestisciPrenotazione(0)); /* TODO: aggiornare*/
     }
 
     private void createUIComponents() {
@@ -417,7 +419,6 @@ public class MainWindow extends JFrame {
     }
 
     private void visualizzaPrenotazioniEffettuate() {
-
         String[] columnNames = {"Id prenotazione", "Autista", "Viaggio", "Stato"};
         AbstractMap.SimpleEntry<Boolean, Object> result =
                 ControllerUtente.getInstance().visualizzaPrenotazioniEffettuate();
@@ -462,6 +463,7 @@ public class MainWindow extends JFrame {
 
     private void visualizzaViaggiCondivisi() {
         /* TODO: qualcosa del genere */
+        ControllerUtente.getInstance().visualizzaPrenotazioni();
         // String data[][] = ControllerUtente.getInstance().visualizzaViaggiCondivisi();
 
         String[] columnNames = {"Id viaggio", "Partenza", "Destinazione", "Data e ora partenza",
@@ -478,5 +480,10 @@ public class MainWindow extends JFrame {
             dovrebbe svuotare da sola la tabella */
         // String[][] data = ControllerUtente.getInstance().visualizzaPrenotazioni();
         String[] columnNames = {"Id prenotazione", "Passeggero", "Viaggio", "Stato"};
+    }
+
+    private void gestisciPrenotazione(long idPrenotazione) {
+        GestisciPrenotazione gestisciPrenotazione = new GestisciPrenotazione(idPrenotazione);
+        gestisciPrenotazione.setVisible(true);
     }
 }

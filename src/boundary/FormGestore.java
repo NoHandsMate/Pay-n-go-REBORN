@@ -24,6 +24,10 @@ public class FormGestore extends JFrame {
 
     private final JButton[] tabButtons = {homeTabButton, reportUtentiTabButton, reportIncassiTabButton};
 
+    /**
+     * FormGestore è il pannello di amministratore dedicato al gestore dell'applicazione. È possibile accedervi
+     * digitando le credenziali associate all'account di amministrazione.
+     */
     public FormGestore() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Pay-n-go REBORN - Amministrazione");
@@ -65,10 +69,17 @@ public class FormGestore extends JFrame {
         utentiTable.getSelectionModel().addListSelectionListener(selectionEvent -> visualizzaValutazioniUtente());
     }
 
+    /**
+     * Creazione degli ImagePanel per la visualizzazione delle immagini.
+     */
     private void createUIComponents() {
         circularLogoPanel = new ImagePanel("resources/payngo-circlogo.png", 32, 32);
     }
 
+    /**
+     * Funzione di utilità che permette di cambiare tab attivo dell'applicazione attraverso JTabbedPane.
+     * @param index l'indice del tab da visualizzare.
+     */
     private void setTabActive(int index) {
         contentTab.setSelectedIndex(index);
         if (index < 0 || index > 3)
@@ -84,6 +95,11 @@ public class FormGestore extends JFrame {
         }
     }
 
+    /**
+     * Funzione che, insieme con <code>visualizzaValutazioniUtente</code>, implementa il caso d'uso
+     * <code>generaReportUtenti</code>. Restituisce a schermo la lista degli utenti iscritti al sistema, con una
+     * valutazione sintetica degli stessi.
+     */
     private void generaReportUtenti() {
         /* TODO: qualcosa del tipo String[][] data = Controller.getInstance().generaReportUtenti() */
 
@@ -92,10 +108,20 @@ public class FormGestore extends JFrame {
         String[] columnNames = {"Id Utente", "Nome e cognome", "Email", "Valutazione media"};
     }
 
+    /**
+     * Funzione che, insieme con <code>generaReportUtenti</code>, implementa il caso d'uso
+     * <code>generaReportUtenti</code>. Restituisce a schermo la lista delle valutazioni relative a ogni utente.
+     */
     private void visualizzaValutazioniUtente() {
         /* TODO: implementa */
     }
 
+    /**
+     * Funzione di utilità che consente di popolare le tabelle con uno stile standard.
+     * @param table la tabella da popolare.
+     * @param columnNames i nome delle colonne da attribuire alla tabella.
+     * @param data i dati da inserire nella tabella.
+     */
     private void populateTable(JTable table, Object[] columnNames, Object[][] data) {
         TableModel tableModel = new DefaultTableModel(data, columnNames) {
             @Override

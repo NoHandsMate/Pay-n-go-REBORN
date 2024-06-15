@@ -14,6 +14,13 @@ public class ImagePanel extends JPanel {
     private int imageWidth;
     private int imageHeight;
 
+    /**
+     * ImagePanel è una estensione di JPanel che consente di visualizzare staticamente a schermo un'immagine situata in
+     * una source directory del progetto attuale.
+     * @param imagePath il percorso dell'immagine da visualizzare.
+     * @param imageWidth la larghezza originale, in pixel, dell'immagine da visualizzare.
+     * @param imageHeight l'altezza originale, in pixel, dell'immagine da visualizzare.
+     */
     public ImagePanel(String imagePath, int imageWidth, int imageHeight) {
         try {
             pngLogoImage = ImageIO.read(new File(imagePath));
@@ -25,6 +32,16 @@ public class ImagePanel extends JPanel {
         }
     }
 
+    /**
+     * Funzione statica che permette il cambiamento dinamico dell'immagine da visualizzare. Utilizzabile nel caso si
+     * sia creato un riferimento a JPanel al quale è stato assegnato un JPanel, e si vuole cambiare l'immagine
+     * mostrata da tale JPanel.
+     * @param jPanel l'ImagePanel di cui si vuole cambiare l'immagine visualizzata. Non è possibile fornire un JPanel
+     *               generico.
+     * @param imagePath il percorso dell'immagine da visualizzare.
+     * @param imageWidth la larghezza originale, in pixel, dell'immagine da visualizzare.
+     * @param imageHeight l'altezza originale, in pixel, dell'immagine da visualizzare.
+     */
     public static void changeImage(JPanel jPanel,
                                    String imagePath,
                                    int imageWidth,
@@ -41,6 +58,11 @@ public class ImagePanel extends JPanel {
         }
     }
 
+    /**
+     * Override della funzione <code>paintComponent</code> di JPanel, adattata per la visualizzazione dell'immagine
+     * desiderata.
+     * @param g the <code>Graphics</code> object to protect
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

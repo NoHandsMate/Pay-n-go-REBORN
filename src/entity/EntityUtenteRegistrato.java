@@ -20,7 +20,7 @@ public class EntityUtenteRegistrato {
     private ArrayList<EntityValutazione> valutazioni;
 
     /**
-     * Costruttore di default
+     * Costruttore di default, crea un'EntityUtenteRegistrato vuota da popolare successivamente.
      */
     public EntityUtenteRegistrato() {}
 
@@ -96,7 +96,7 @@ public class EntityUtenteRegistrato {
      * @param luogoDestinazione il luogo di destinazione del viaggio da condividere
      * @param dataPartenza la data di partenza del viaggio da condividere
      * @param dataArrivo la data di arrivo del viaggio da condividere
-     * @param contributoSpese il contributo spese per ogni passegero del viaggio da condividere
+     * @param contributoSpese il contributo spese per ogni passeggero del viaggio da condividere
      * @throws DatabaseException se la condivisione del viaggio fallisce
      */
     public void condividiViaggio(String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
@@ -215,7 +215,7 @@ public class EntityUtenteRegistrato {
     }
 
     /**
-     * Funzione di utilità ad aggiornaDatiPersonali che permette di eliminare i viaggi condvisi fino a quel momento,
+     * Funzione di utilità ad aggiornaDatiPersonali che permette di eliminare i viaggi condivisi fino a quel momento,
      * quando l'utente aggiorna la sua automobile o il numero di posti disponibili
      * @throws DatabaseException se l'eliminazione dei viaggi dal database non va a buon fine
      */

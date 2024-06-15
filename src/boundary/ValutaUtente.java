@@ -10,7 +10,7 @@ import java.awt.event.*;
 import java.util.AbstractMap;
 
 public class ValutaUtente extends JDialog {
-    private long idPrenotazione;
+    private final long idPrenotazione;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -29,13 +29,15 @@ public class ValutaUtente extends JDialog {
     private static final String STARHOVER = "resources/starHover.png";
 
 
-    private JPanel[] starPanels = {oneStarPanel, twoStarPanel, threeStarPanel, fourStarPanel, fiveStarPanel};
+    private final JPanel[] starPanels = {oneStarPanel, twoStarPanel, threeStarPanel, fourStarPanel, fiveStarPanel};
 
     public ValutaUtente(long idPrenotazione, String nomeAutista) {
         this.idPrenotazione = idPrenotazione;
         this.numeroStelle = 0;
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setContentPane(contentPane);
         setSize(600, 400);
+        setMinimumSize(new Dimension(600, 400));
         setLocationRelativeTo(null);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -166,26 +168,12 @@ public class ValutaUtente extends JDialog {
             }
         });
 
-        buttonOK.addActionListener(e -> onOK());
+        buttonOK.addActionListener(actionEvent -> valutaUtente());
 
         buttonCancel.addActionListener(actionEvent -> onCancel());
-
-        // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
-
-        // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(actionEvent -> onCancel(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
-    private void onOK() {
+    private void valutaUtente() {
         AbstractMap.SimpleEntry<Boolean, String> result = validateValutazione();
         if (Boolean.FALSE.equals(result.getKey())) {
             JOptionPane.showMessageDialog(contentPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
@@ -203,7 +191,6 @@ public class ValutaUtente extends JDialog {
     }
 
     private void onCancel() {
-        // add your code here if necessary
         dispose();
     }
 
