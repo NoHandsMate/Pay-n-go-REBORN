@@ -235,7 +235,7 @@ public class ControllerUtente {
         try {
             prenotazioni = FacadeEntityUtente.getInstance().visualizzaPrenotazioni(idViaggio);
         } catch (VisualizzaPrenotazioniFailedException e) {
-            return new AbstractMap.SimpleEntry<>(false,e.getMessage());
+            return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
         return new AbstractMap.SimpleEntry<>(true, prenotazioni);
     }

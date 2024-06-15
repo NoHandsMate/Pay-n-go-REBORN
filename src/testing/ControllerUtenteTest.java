@@ -36,7 +36,6 @@ public class ControllerUtenteTest {
 
     @org.junit.Test
     public void getSessione() {
-        char [] password = {'p', 'a', 'y', 'n', 'g', 'o'};
         MyDto sessione = ControllerUtente.getInstance().getSessione();
         String nome = sessione.getCampo2();
         assertEquals("Non è stato possibile ricavare la sessione", nome, "Mario");
@@ -116,7 +115,7 @@ public class ControllerUtenteTest {
         AbstractMap.SimpleEntry<Boolean, String> result;
         result = ControllerUtente.getInstance().prenotaViaggio(18);
 
-        assertTrue("Prenotazione viaggio fallita\n" + (String) result.getValue(), result.getKey());
+        assertTrue("Prenotazione viaggio fallita", result.getKey());
     }
 
     @org.junit.Test
@@ -132,7 +131,7 @@ public class ControllerUtenteTest {
         AbstractMap.SimpleEntry<Boolean, String> result;
         result = ControllerUtente.getInstance().valutaUtente(1,4,"....");
 
-        assertTrue("Valutazione utente fallita\n" + (String) result.getValue(), result.getKey());
+        assertTrue("Valutazione utente fallita", result.getKey());
     }
 
     @org.junit.Test
@@ -151,6 +150,6 @@ public class ControllerUtenteTest {
     public void visualizzaPrenotazioni() {
         AbstractMap.SimpleEntry<Boolean, Object> result;
         result = ControllerUtente.getInstance().visualizzaPrenotazioni(1);
-        assertTrue("Visualizza prenotazioni fallita\n" + (String) result.getValue(), result.getKey());
+        assertTrue("Visualizza prenotazioni fallita", result.getKey());
     }
 }
