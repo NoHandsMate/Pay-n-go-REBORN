@@ -30,6 +30,8 @@ public class FormRegistrazione extends JFrame {
         setResizable(false);
         getContentPane().add(new JScrollPane(registrazionePanel), BorderLayout.CENTER);
         getRootPane().setDefaultButton(registratiButton);
+        postiSpinner.setModel(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+
         registratiButton.addActionListener(actionEvent -> {
           AbstractMap.SimpleEntry<Boolean, String> result = Utilities.validateDatiPersonali(nomeField.getText(),
                   cognomeField.getText(),

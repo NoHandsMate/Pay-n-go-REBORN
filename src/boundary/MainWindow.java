@@ -71,6 +71,7 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
         getContentPane().add(new JScrollPane(mainWindowPanel), BorderLayout.CENTER);
+        postiSpinner.setModel(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
         contentTab.setUI(new BasicTabbedPaneUI() {
             @Override
             protected int calculateTabAreaHeight(int tabPlacement, int runCount, int maxTabHeight) {
