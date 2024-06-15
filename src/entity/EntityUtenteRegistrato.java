@@ -140,6 +140,7 @@ public class EntityUtenteRegistrato {
         if (!this.automobile.equals(auto) || this.postiDisponibili != postiDisponibili) {
 
             for (EntityViaggio entityViaggio : this.viaggiCondivisi) {
+                entityViaggio.popolaPrenotazioni();
                 for(EntityPrenotazione entityPrenotazione : entityViaggio.getPrenotazioni()) {
                     if (entityPrenotazione.isAccettata() && entityViaggio.getDataPartenza().isAfter(LocalDateTime.now())) {
                         throw new DatabaseException("Non puoi modificare l'automobile o i posti disponibili " +
