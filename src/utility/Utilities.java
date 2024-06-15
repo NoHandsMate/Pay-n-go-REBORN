@@ -86,6 +86,11 @@ public final class Utilities {
         if (automobile.length() > 50) {
             return new AbstractMap.SimpleEntry<>(false, "Il modello dell'automobile supera la lunghezza massima di 50 caratteri.");
         }
+
+        if (postiDisponibili < 0) {
+            return new AbstractMap.SimpleEntry<>(false, "Il numero di posti disponibili non può essere negativo.");
+        }
+
         return new AbstractMap.SimpleEntry<>(true, "OK");
     }
 }
