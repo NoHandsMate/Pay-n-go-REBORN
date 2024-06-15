@@ -6,7 +6,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -154,7 +157,14 @@ public class MainWindow extends JFrame {
             } else visualizzaPrenotazioni(0); // idViaggio nullo per svuotare la tabella.
         });
 
-        gestisciPrenotazioneButton.addActionListener(actionEvent -> gestisciPrenotazione(0)); /* TODO: aggiornare*/
+        prenotazioniTable.getSelectionModel().addListSelectionListener(selectionEvent -> handlePrenotazioneButtons());
+
+        gestisciPrenotazioneButton.addActionListener(actionEvent -> {
+            int selectedRow = prenotazioniTable.getSelectedRow();
+            if (selectedRow != -1)
+                gestisciPrenotazione(Long.parseLong((String) prenotazioniTable.getValueAt(selectedRow, 0)));
+
+        });
 
         valutaPasseggeroButton.addActionListener(actionEvent -> {
             int selectedRow = prenotazioniTable.getSelectedRow();
@@ -475,8 +485,31 @@ public class MainWindow extends JFrame {
         populateTable(prenotazioniTable, columnNames, data);
     }
 
+    private void handlePrenotazioneButtons() {
+        int selectedViaggiRow = viaggiCondivisiTable.getSelectedRow();
+        int selectedPrenotazioniRow = prenotazioniTable.getSelectedRow();
+        if (selectedPrenotazioniRow == -1) {
+            gestisciPrenotazioneButton.setEnabled(false);
+            valutaPasseggeroButton.setEnabled(false);
+        } else {
+            String dataPartenza = (String) viaggiCondivisiTable.getValueAt(selectedViaggiRow, 3);
+            String accettata = (String) prenotazioniTable.getValueAt(selectedPrenotazioniRow, 2);
+            LocalDateTime dataPartenzaViaggio =
+                    LocalDateTime.parse(dataPartenza, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            valutaPasseggeroButton.setEnabled(dataPartenzaViaggio.isBefore(LocalDateTime.now()));
+            gestisciPrenotazioneButton.setEnabled(accettata.equals("In attesa"));
+        }
+    }
+
     private void gestisciPrenotazione(long idPrenotazione) {
         GestisciPrenotazione gestisciPrenotazione = new GestisciPrenotazione(idPrenotazione);
+        gestisciPrenotazione.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                visualizzaPrenotazioni(Long.parseLong(
+                        (String) viaggiCondivisiTable.getValueAt(viaggiCondivisiTable.getSelectedRow(), 0)));
+            }
+        });
         gestisciPrenotazione.setVisible(true);
     }
 }

@@ -178,7 +178,7 @@ public class PrenotazioneDAO {
      */
     private int aggiornaInDB(boolean accettata) throws DatabaseException {
 
-        String query = String.format("UPDATE prenotazioni SET (accettata = %b WHERE (idPrenotazione = %d);",
+        String query = String.format("UPDATE prenotazioni SET accettata = %b WHERE (idPrenotazione = %d);",
                 accettata,this.idPrenotazione);
         logger.info(query);
         int rs;
