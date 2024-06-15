@@ -159,6 +159,7 @@ public class GestoreUtenti {
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
         try {
             utenteCorrente.condividiViaggio(luogoPartenza, luogoDestinazione, dataPartenza, dataArrivo, contributoSpese);
+            aggiornaUtenteCorrente(utenteCorrente);
         } catch (DatabaseException e) {
             if(e.isVisible()) {
                 throw new CondivisioneViaggioFailedException("Condivisione viaggio fallita: " + e.getMessage());

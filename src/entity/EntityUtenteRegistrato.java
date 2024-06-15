@@ -134,8 +134,18 @@ public class EntityUtenteRegistrato {
                                       String contattoTelefonico) throws DatabaseException {
 
         if (!this.automobile.equals(auto) || this.postiDisponibili != postiDisponibili) {
+
+            for (EntityViaggio entityViaggio : this.viaggiCondivisi) {
+                for(EntityPrenotazione entityPrenotazione : entityViaggio.getPrenotazioni()) {
+                    if (entityPrenotazione.isAccettata() && entityViaggio.getDataPartenza().isBefore(LocalDateTime.now())) {
+                        throw new DatabaseException("Non puoi modificare l'automobile o i posti disponibili " +
+                                "se hai prenotazioni accettate ad almeno uno dei tuoi viaggi condivisi", true);
+                    }
+                }
+            }
             this.eliminaViaggiCondivisi();
         }
+
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(this.id);
         utenteDAO.updateUtenteRegistrato(nome, cognome, contattoTelefonico, email, auto, postiDisponibili, new String(password));
         aggiornaDati(utenteDAO);
@@ -171,6 +181,12 @@ public class EntityUtenteRegistrato {
 
         if (entityViaggio.getDataPartenza().isBefore(LocalDateTime.now())) {
            throw new DatabaseException("Non puoi prenotare un viaggio già iniziato", true);
+        }
+
+        entityViaggio.popolaPrenotazioni();
+
+        if (entityViaggio.getPrenotazioni().size() == this.postiDisponibili) {
+            throw new DatabaseException("Tutti i posti disponibili per il viaggio sono stati prenotati", true);
         }
 
         EntityPrenotazione entityPrenotazione = new EntityPrenotazione();

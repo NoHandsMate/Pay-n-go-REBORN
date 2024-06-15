@@ -41,7 +41,12 @@ public class EntityViaggio {
         for (PrenotazioneDAO prenotazioneDAO : listaPrenotazioni) {
             if(prenotazioneDAO.getIdViaggioPrenotato() == this.id) {
                 EntityPrenotazione prenotazione = new EntityPrenotazione(prenotazioneDAO);
-                this.prenotazioni.add(prenotazione);
+
+                if (this.dataPartenza.isBefore(LocalDateTime.now()) && !prenotazione.isAccettata()) {
+                    prenotazioneDAO.deletePrenotazione();
+                } else {
+                    this.prenotazioni.add(prenotazione);
+                }
             }
         }
     }
