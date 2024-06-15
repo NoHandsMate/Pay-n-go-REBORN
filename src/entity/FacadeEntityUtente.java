@@ -143,6 +143,15 @@ public class FacadeEntityUtente {
     public void valutaUtente(long idPrenotazione, int numeroStelle, String text) throws ValutazioneFailedException {
         GestoreUtenti.getInstance().valutaUtente(idPrenotazione, numeroStelle, text);
     }
+
+    /**
+     * Funzione che permette all'utente corrente di visualizzare i propri viaggi condivisi
+     * @return ArrayList di DTO che racchiude le informazioni sui viaggi condivisi
+     */
+    public ArrayList<MyDto> visualizzaViaggiCondivisi(){
+        return GestoreUtenti.getInstance().visualizzaViaggiCondivisi();
+    }
+
     /**
      * Funzione che permette alle form (mediante i livelli superiori) di accedere ai dati relativi all'utente corrente
      * @return MyDto il DTO popolato con i dati relativi all'utente corrente

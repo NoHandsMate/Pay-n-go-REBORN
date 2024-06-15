@@ -291,6 +291,27 @@ public class GestoreUtenti {
     }
 
     /**
+     * Funzione che permette all'utente corrente di visualizzare i propri viaggi condivisi
+     * @return ArrayList di DTO che racchiude le informazioni sui viaggi condivisi
+     */
+    public ArrayList<MyDto> visualizzaViaggiCondivisi(){
+        EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
+        ArrayList<EntityViaggio> viaggiCondivisi = utenteCorrente.getViaggiCondivisi();
+        ArrayList<MyDto> viaggiCondivisiDto = new ArrayList<>();
+        for(EntityViaggio viaggio : viaggiCondivisi){
+            MyDto viaggioDTO = new MyDto();
+            viaggioDTO.setCampo1(String.valueOf(viaggio.getId()));
+            viaggioDTO.setCampo2(viaggio.getLuogoPartenza());
+            viaggioDTO.setCampo3(viaggio.getLuogoDestinazione());
+            viaggioDTO.setCampo4(viaggio.getDataPartenza().toString());
+            viaggioDTO.setCampo4(viaggio.getDataArrivo().toString());
+            viaggioDTO.setCampo5(String.valueOf(viaggio.getContributoSpese()));
+            viaggiCondivisiDto.add(viaggioDTO);
+        }
+        return viaggiCondivisiDto;
+    }
+
+    /**
      * Funzione di supporto alle funzioni registraUtente e loginUtente che permette di evitare la ridondanza del
      * codice relativa all'aggiornamento dell'utente corrente, necessaria in entrambe le funzioni suddette.
      * @param utenteCorrente DAO a partire dalla quale costruire il nuovo utente corrente

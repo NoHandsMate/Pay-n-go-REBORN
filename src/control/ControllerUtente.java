@@ -223,4 +223,14 @@ public class ControllerUtente {
 
         return new AbstractMap.SimpleEntry<>(true, "Valutazione effettuata con successo.");
     }
+
+    /**
+     * Funzione che permette all'utente corrente di visualizzare i propri viaggi condivisi
+     * @return ArrayList di DTO che racchiude le informazioni sui viaggi condivisi
+     */
+    public ArrayList<MyDto> visualizzaViaggiCondivisi() {
+        ArrayList<MyDto> viaggiCondivisi;
+        viaggiCondivisi = FacadeEntityUtente.getInstance().visualizzaViaggiCondivisi();
+        return viaggiCondivisi;
+    }
 }

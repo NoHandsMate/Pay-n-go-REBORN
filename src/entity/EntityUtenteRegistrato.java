@@ -214,6 +214,7 @@ public class EntityUtenteRegistrato {
         entityValutazione.salvaInDB();
     }
 
+
     /**
      * Funzione di utilità ad aggiornaDatiPersonali che permette di eliminare i viaggi condivisi fino a quel momento,
      * quando l'utente aggiorna la sua automobile o il numero di posti disponibili
