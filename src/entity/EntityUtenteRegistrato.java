@@ -52,7 +52,11 @@ public class EntityUtenteRegistrato {
         for (PrenotazioneDAO prenotazioneDAO : listaPrenotazioni) {
             if (prenotazioneDAO.getIdPasseggero() == this.id) {
                 EntityPrenotazione prenotazione = new EntityPrenotazione(prenotazioneDAO);
-                this.prenotazioni.add(prenotazione);
+                if (prenotazione.getViaggioPrenotato().getDataPartenza().isBefore(LocalDateTime.now())
+                        && !prenotazione.isAccettata()) {
+                    prenotazioneDAO.deletePrenotazione();
+                } else
+                    this.prenotazioni.add(prenotazione);
             }
         }
     }
@@ -137,7 +141,7 @@ public class EntityUtenteRegistrato {
 
             for (EntityViaggio entityViaggio : this.viaggiCondivisi) {
                 for(EntityPrenotazione entityPrenotazione : entityViaggio.getPrenotazioni()) {
-                    if (entityPrenotazione.isAccettata() && entityViaggio.getDataPartenza().isBefore(LocalDateTime.now())) {
+                    if (entityPrenotazione.isAccettata() && entityViaggio.getDataPartenza().isAfter(LocalDateTime.now())) {
                         throw new DatabaseException("Non puoi modificare l'automobile o i posti disponibili " +
                                 "se hai prenotazioni accettate ad almeno uno dei tuoi viaggi condivisi", true);
                     }
@@ -185,7 +189,13 @@ public class EntityUtenteRegistrato {
 
         entityViaggio.popolaPrenotazioni();
 
-        if (entityViaggio.getPrenotazioni().size() == this.postiDisponibili) {
+        int numPrenotazioniConfermate = 0;
+        for (EntityPrenotazione prenotazione : entityViaggio.getPrenotazioni()) {
+            if (prenotazione.isAccettata())
+                numPrenotazioniConfermate++;
+        }
+
+        if (numPrenotazioniConfermate >= entityViaggio.getAutista().postiDisponibili) {
             throw new DatabaseException("Tutti i posti disponibili per il viaggio sono stati prenotati", true);
         }
 
