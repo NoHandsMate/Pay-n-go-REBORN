@@ -2,7 +2,7 @@ package control;
 
 
 import java.util.AbstractMap;
-import java.util.ArrayList;
+import java.util.List;
 
 import entity.FacadeEntityGestore;
 import exceptions.ReportIncassiFailedException;
@@ -11,13 +11,26 @@ import exceptions.ReportUtentiFailedException;
 import dto.*;
 import exceptions.VisualizzaValutazioniFailedException;
 
-
+/**
+ * Classe del package controller nel modello BCED, essa implementa tutte le funzionalità utilizzabili dal gestore
+ * dell'applicazione.
+ */
 public class ControllerGestore {
 
+    /**
+     * L'unica istanza di ControllerGestore che implementa il pattern Singleton.
+     */
     private static ControllerGestore uniqueInstance;
 
+    /**
+     * Costruttore privato per impedire la creazione di istanze multiple.
+     */
     private ControllerGestore() {}
 
+    /**
+     * Funzione statica per richiamare l'unica istanza di ControllerGestore o crearne una se non esiste già.
+     * @return l'istanza singleton di ControllerGestore.
+     */
     public static ControllerGestore getInstance(){
         if(uniqueInstance == null) {
             uniqueInstance = new ControllerGestore();
@@ -28,8 +41,9 @@ public class ControllerGestore {
 
     /**
      * Funzione che permette al gestore dell'applicazione di generare un report degli incassi di tutti i viaggi nel
-     * sistema
-     * @return reportIncassi float che rappresenta l'incasso complessivo
+     * sistema.
+     * @return una tupla <code>(Boolean, Object)</code>: nel caso di boolean <code>true</code> l'oggetto conterrà
+     * l'incasso complessivo del sistema, nel caso di boolean <code>false</code> esso conterrà il messaggio di errore.
      */
     public AbstractMap.SimpleEntry<Boolean, Object> generaReportIncassi(){
         Float reportIncassi;
@@ -44,12 +58,14 @@ public class ControllerGestore {
     }
 
     /**
-     * Funzione che permette al gestore dell'applicazione di generare un report di valutazioni per tutti gli utenti del
-     * sistema
-     * @return reportUtenti un ArrayList di ArrayList di DTO (matrice) che rappresenta il report
+     * Funzione che permette al gestore dell'applicazione di generare un report di valutazioni sommario per tutti gli
+     * utenti del sistema.
+     * @return una tupla <code>(Boolean, Object)</code>: nel caso di boolean <code>true</code> l'oggetto conterrà il
+     * report di valutazione sommario per tutti gli utenti del sistema, nel caso di boolean <code>false</code> esso
+     * conterrà il messaggio di errore.
      */
     public AbstractMap.SimpleEntry<Boolean, Object> generaReportUtenti(){
-        ArrayList<MyDto> reportUtenti;
+        List<MyDto> reportUtenti;
         try {
            reportUtenti = FacadeEntityGestore.getInstance().generaReportUtenti();
         } catch (ReportUtentiFailedException e) {
@@ -60,13 +76,15 @@ public class ControllerGestore {
     }
 
     /**
-     * Funzione d'ausilio a <close> generaReportUtenti </close> che permette di visualizzare tutte le valutazioni di
-     * un utente
-     * @param idUtente l'utente del quale si vogliono visualizzare le valutazioni
-     * @return un ArrayList di DTO con le valutazioni dell'utente in caso di successo
+     * Funzione che, dopo aver visualizzato il report di valutazione sommario di
+     * {@link #visualizzaValutazioniUtente(long) visualizzaValutazioniUtente}, permette di visualizzare i dettagli di
+     * tutte le valutazioni associate a un determinato utente.
+     * @param idUtente l'identificativo dell'utente del quale si vogliono visualizzare le valutazioni.
+     * @return una tupla <code>(Boolean, Object)</code>: nel caso di boolean <code>true</code> l'oggetto conterrà
+     * l'elenco di valutazioni dell'utente, nel caso di boolean <code>false</code> esso conterrà il messaggio di errore.
      */
     public AbstractMap.SimpleEntry<Boolean, Object> visualizzaValutazioniUtente(long idUtente) {
-        ArrayList<MyDto> valutazioniUtente;
+        List<MyDto> valutazioniUtente;
         try {
             valutazioniUtente = FacadeEntityGestore.getInstance().visualizzaValutazioniUtente(idUtente);
         } catch (VisualizzaValutazioniFailedException e) {

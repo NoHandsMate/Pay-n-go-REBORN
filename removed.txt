@@ -1,0 +1,7 @@
+GestoreViaggi.java - 136
+
+    private static ArrayList<PrenotazioneDAO> caricaPrenotazioniDaDB() throws DatabaseException {
+        ArrayList<PrenotazioneDAO> listaDAOPrenotazioni;
+        listaDAOPrenotazioni = PrenotazioneDAO.getPrenotazioni();
+        return listaDAOPrenotazioni;
+    }

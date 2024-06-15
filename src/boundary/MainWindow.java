@@ -430,7 +430,8 @@ public class MainWindow extends JFrame {
         String[][] data;
 
         ArrayList<String> rows = new ArrayList<>();
-        ArrayList<MyDto> listaValutazioni = ControllerUtente.getInstance().visualizzaViaggiCondivisi();
+        ArrayList<MyDto> listaValutazioni =
+                (ArrayList<MyDto>) ControllerUtente.getInstance().visualizzaViaggiCondivisi();
         for (MyDto valutazione : listaValutazioni) {
             rows.add(valutazione.getCampo1());
             rows.add(valutazione.getCampo2());

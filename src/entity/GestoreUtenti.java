@@ -1,7 +1,5 @@
 package entity;
 
-import database.ValutazioneDAO;
-import database.ViaggioDAO;
 import exceptions.*;
 import database.UtenteRegistratoDAO;
 import dto.*;
@@ -9,15 +7,32 @@ import dto.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Classe del package entity nel modello BCED, essa implementa l'information expert degli utenti.
+ */
 public class GestoreUtenti {
 
+    /**
+     * L'unica istanza di GestoreUtenti che implementa il pattern Singleton.
+     */
     private static GestoreUtenti uniqueInstance;
 
+    /**
+     * Costante utilizzata da DateTimeFormatter per la conversione da data simbolica a stringa.
+     */
     private static final String NATURALDATEFORMAT = "dd/MM/yyyy HH:mm:ss";
 
+    /**
+     * Costruttore privato per impedire la creazione di istanze multiple.
+     */
     private GestoreUtenti() {}
 
+    /**
+     * Funzione statica per richiamare l'unica istanza di GestoreUtenti o crearne una se non esiste già.
+     * @return l'istanza singleton di GestoreUtenti.
+     */
     public static GestoreUtenti getInstance() {
         if (uniqueInstance == null) {
             uniqueInstance = new GestoreUtenti();
@@ -26,15 +41,31 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione che permette di registrare un utente nel sistema
-     * @param nome il nome dell'utente da registrare
-     * @param cognome il cognome dell'utente  da registrare
-     * @param email l'indirizzo email dell'utente da registrare
-     * @param auto l'automobile dell'utente da registrare
-     * @param password la password dell'utente da registrare
-     * @param postiDisponibili il numero di posti disponibili dell'utente da registrare
-     * @param contattoTelefonico il contatto telefonico dell'utente da registrare
-     * @throws RegistrationFailedException se la registrazione non è avvenuta correttamente
+     * Funzione che permette alle form (mediante i livelli superiori) di accedere ai dati relativi all'utente corrente.
+     * @return MyDto il DTO popolato con i dati relativi all'utente corrente.
+     */
+    public MyDto getSessione() {
+        EntityUtenteRegistrato sessioneCorrente = Sessione.getInstance().getUtenteCorrente();
+        return new MyDto(String.valueOf(sessioneCorrente.getId()),
+                sessioneCorrente.getNome(),
+                sessioneCorrente.getCognome(),
+                sessioneCorrente.getEmail(),
+                sessioneCorrente.getPassword(),
+                sessioneCorrente.getContattoTelefonico(),
+                sessioneCorrente.getAutomobile(),
+                String.valueOf(sessioneCorrente.getPostiDisponibili()));
+    }
+
+    /**
+     * Funzione che permette di registrare un utente nel sistema.
+     * @param nome il nome dell'utente da registrare.
+     * @param cognome il cognome dell'utente da registrare.
+     * @param email l'indirizzo email dell'utente da registrare.
+     * @param auto l'automobile dell'utente da registrare.
+     * @param password la password dell'utente da registrare.
+     * @param postiDisponibili il numero di posti disponibili dell'utente da registrare.
+     * @param contattoTelefonico il contatto telefonico dell'utente da registrare.
+     * @throws RegistrationFailedException se non è stato possibile effettuare la registrazione.
      */
     public void registraUtente(String nome, String cognome, String email,
                                String auto, char[] password, Integer postiDisponibili,
@@ -53,12 +84,11 @@ public class GestoreUtenti {
         }
     }
 
-
     /**
-     * Funzione che permette a un utente registrato di effettuare il login nel sistema
-     * @param email l'email dell'utente che deve effettuare il login
-     * @param password la password dell'utente che deve effettuare il login
-     * @throws LoginFailedException se il login dell'utente fallisce
+     * Funzione che permette a un utente registrato di effettuare il login nel sistema.
+     * @param email l'email dell'utente che deve effettuare il login.
+     * @param password la password dell'utente che deve effettuare il login.
+     * @throws LoginFailedException se non è stato possibile effettuare il login.
      */
     public void loginUtente(String email, char[] password) throws LoginFailedException {
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO();
@@ -74,12 +104,12 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione che permette al gestore dell'applicazione di generare un report di valutazioni per tutti gli utenti del
-     * sistema
-     * @return reportUtenti un ArrayList di ArrayList di DTO (matrice) che rappresenta il report
-     * @throws ReportUtentiFailedException se la generazione del report utenti fallisce
+     * Funzione che permette al gestore dell'applicazione di generare un report di valutazioni sommario per tutti gli
+     * utenti del sistema.
+     * @return il report di valutazione sommario per tutti gli utenti del sistema.
+     * @throws ReportUtentiFailedException se non è stato possibile generare il report di valutazione sommario.
      */
-    public ArrayList<MyDto> generaReportUtenti() throws ReportUtentiFailedException {
+    public List<MyDto> generaReportUtenti() throws ReportUtentiFailedException {
         ArrayList<MyDto> reportUtenti = new ArrayList<>();
         try{
             ArrayList<UtenteRegistratoDAO> utentiRegistratiDAO = UtenteRegistratoDAO.getUtentiRegistrati();
@@ -115,12 +145,15 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione d'ausilio a <close> generaReportUtenti </close> che permette di visualizzare tutte le valutazioni di
-     * un utente
-     * @param idUtente l'utente del quale si vogliono visualizzare le valutazioni
-     * @return un ArrayList di DTO con le valutazioni dell'utente in caso di successo
+     * Funzione che, dopo aver visualizzato il report di valutazione sommario di
+     * {@link #visualizzaValutazioniUtente(long) visualizzaValutazioniUtente}, permette di visualizzare i dettagli di
+     * tutte le valutazioni associate a un determinato utente.
+     * @param idUtente l'identificativo dell'utente del quale si vogliono visualizzare le valutazioni.
+     * @return l'elenco valutazioni dell'utente.
+     * @throws VisualizzaValutazioniFailedException se non è stato possibile creare l'elenco delle valutazioni
+     * dell'utente.
      */
-    public ArrayList<MyDto> visualizzaValutazioniUtente(long idUtente) throws VisualizzaValutazioniFailedException {
+    public List<MyDto> visualizzaValutazioniUtente(long idUtente) throws VisualizzaValutazioniFailedException {
         ArrayList<MyDto> valutazioniUtente = new ArrayList<>();
         try {
             UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(idUtente);
@@ -142,13 +175,13 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione che permette all'utente corrente di condividere un nuovo viaggio
-     * @param luogoPartenza il luogo di partenza del viaggio da condividere
-     * @param luogoDestinazione il luogo di destinazione del viaggio da condividere
-     * @param dataPartenza la data di partenza del viaggio da condividere
-     * @param dataArrivo la data di arrivo del viaggio da condividere
-     * @param contributoSpese il contributo spese per ogni passegero del viaggio da condividere
-     * @throws CondivisioneViaggioFailedException se la condivisione del viaggio fallisce
+     * Funzione che permette all'utente corrente di condividere un nuovo viaggio.
+     * @param luogoPartenza il luogo di partenza del viaggio da condividere.
+     * @param luogoDestinazione il luogo di destinazione del viaggio da condividere.
+     * @param dataPartenza la data di partenza del viaggio da condividere.
+     * @param dataArrivo la data di arrivo del viaggio da condividere.
+     * @param contributoSpese il contributo spese per ogni passeggero del viaggio da condividere
+     * @throws CondivisioneViaggioFailedException se non è stato possibile condividere il viaggio.
      */
     public void condividiViaggio(String luogoPartenza,
                                  String luogoDestinazione,
@@ -169,23 +202,23 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione che permette all'utente corrente di aggiornare i propri dati personali
-     * @param nome il nuovo nome dell'utente corrente
-     * @param cognome il nuovo cognome dell'utente corrente
-     * @param email il nuovo indirizzo email dell'utente corrente
-     * @param auto la nuova automobile dell'utente corrente
-     * @param password la nuova password dell'utente corrente
-     * @param postiDisponibili il nuovo numero di posti disponibili dell'utente corrente
-     * @param contattoTelefonico il nuovo numero di telefono dell'utente corrente
-     * @throws AggiornamentoDatiFailedException se l'aggiornamento dei dati personali fallisce
+     * Funzione che permette all'utente corrente di aggiornare i propri dati personali.
+     * @param nome il nuovo nome dell'utente corrente.
+     * @param cognome il nuovo cognome dell'utente corrente.
+     * @param email il nuovo indirizzo email dell'utente corrente.
+     * @param password la nuova password dell'utente corrente.
+     * @param contattoTelefonico il nuovo numero di telefono dell'utente corrente.
+     * @param auto la nuova automobile dell'utente corrente.
+     * @param postiDisponibili il nuovo numero di posti disponibili dell'utente corrente.
+     * @throws AggiornamentoDatiFailedException se non è stato possibile aggiornare i dati personali.
      */
     public void aggiornaDatiPersonali(String nome,
                                       String cognome,
                                       String email,
-                                      String auto,
                                       char[] password,
-                                      Integer postiDisponibili,
-                                      String contattoTelefonico) throws AggiornamentoDatiFailedException {
+                                      String contattoTelefonico,
+                                      String auto,
+                                      Integer postiDisponibili) throws AggiornamentoDatiFailedException {
         try {
             EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
             utenteCorrente.aggiornaDatiPersonali(nome, cognome, email, auto, password,
@@ -200,10 +233,13 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate ad altri viaggi
-     * @return prenotazioni ArrayList di DTO prenotazioni
+     * Funzione che permette all'utente corrente di visualizzare le prenotazioni da lui effettuate sui viaggi degli
+     * altri autisti.
+     * @return la lista di prenotazioni effettuate.
+     * @throws  VisualizzaPrenotazioniEffettuateFailedException se non è stato possibile ottenere la lista di
+     * prenotazioni effettuate.
      */
-    public ArrayList<MyDto> visualizzaPrenotazioniEffettuate() throws VisualizzaPrenotazioniEffettuateFailedException {
+    public List<MyDto> visualizzaPrenotazioniEffettuate() throws VisualizzaPrenotazioniEffettuateFailedException {
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
         ArrayList<EntityPrenotazione> prenotazioniUtente = utenteCorrente.getPrenotazioni();
         ArrayList<MyDto> prenotazioni = new ArrayList<>();
@@ -232,9 +268,9 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione che permette all'utente corrente di prenotare un viaggio
-     * @param idViaggio l'id del viaggio che si intende prenotare
-     * @throws PrenotaViaggioFailedException nel caso in cui la prenotazione non vada a buon fine
+     * Funzione che permette all'utente registrato di prenotare un viaggio.
+     * @param idViaggio l'identificativo del viaggio che si intende prenotare.
+     * @throws PrenotaViaggioFailedException se non è stato possibile prenotare il viaggio.
      */
     public void prenotaViaggio(long idViaggio) throws PrenotaViaggioFailedException {
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
@@ -250,11 +286,11 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione che permette all'utente registrato in quanto autista, di gestire una prenotazione
-     * ricevuta (accettarla o rifiutarla)
-     * @param idPrenotazione l'id della prenotazione da gestire
-     * @param accettata lo stato attuale della prenotazione
-     * @throws PrenotazioneGestitaFailedException se la gestione della prenotazione fallisce
+     * Funzione che permette all'utente registrato in quanto autista, di gestire una prenotazione ricevuta, accettandola
+     * o rifiutandola.
+     * @param idPrenotazione l'identificativo della prenotazione da gestire.
+     * @param accettata <code>true</code> per accettarla, <code>false</code> per rifiutarla.
+     * @throws PrenotazioneGestitaFailedException se non è stato possibile gestire la prenotazione.
      */
     public void gestisciPrenotazione(long idPrenotazione,boolean accettata) throws PrenotazioneGestitaFailedException{
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
@@ -269,11 +305,13 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione che permette all'utente corrente di valutare un altro utente
-     * @param idPrenotazione l'id della prenotazione della cui si vuole valutare l'utente
-     * @param numeroStelle il numero di stelle da assegnare
-     * @param text la descrizione della valutazione
-     * @throws ValutazioneFailedException se la valutazione fallisce
+     * Funzione che permette all'utente registrato, data una prenotazione, di valutare l'altro utente riferito dalla
+     * stessa. Di conseguenza, se si è l'autista del viaggio associato alla prenotazione si valuterà il passeggero; se
+     * si è il passeggero associato alla prenotazione si valuterà l'autista del viaggio associato alla prenotazione.
+     * @param idPrenotazione l'identificativo della prenotazione a cui si fa riferimento.
+     * @param numeroStelle il numero di stelle da assegnare.
+     * @param text la descrizione della valutazione.
+     * @throws ValutazioneFailedException se non è stato possibile valutare l'utente.
      */
     public void valutaUtente(long idPrenotazione, int numeroStelle, String text) throws ValutazioneFailedException {
 
@@ -292,10 +330,10 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione che permette all'utente corrente di visualizzare i propri viaggi condivisi
-     * @return ArrayList di DTO che racchiude le informazioni sui viaggi condivisi
+     * Funzione che permette all'utente corrente di visualizzare i propri viaggi condivisi.
+     * @return ArrayList di DTO che racchiude le informazioni sui viaggi condivisi.
      */
-    public ArrayList<MyDto> visualizzaViaggiCondivisi(){
+    public List<MyDto> visualizzaViaggiCondivisi(){
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
         ArrayList<EntityViaggio> viaggiCondivisi = utenteCorrente.getViaggiCondivisi();
         ArrayList<MyDto> viaggiCondivisiDto = new ArrayList<>();
@@ -316,9 +354,10 @@ public class GestoreUtenti {
     /**
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate su uno dei suoi viaggi.
      * @param idViaggio l'identificativo del viaggio di cui visualizzare la prenotazione.
-     * @return prenotazioni ArrayList di DTO prenotazioni
+     * @return la lista di prenotazioni.
+     * @throws VisualizzaPrenotazioniFailedException se non è stato possibile ottenere la lista di prenotazioni.
      */
-    public ArrayList<MyDto> visualizzaPrenotazioni(long idViaggio) throws VisualizzaPrenotazioniFailedException{
+    public List<MyDto> visualizzaPrenotazioni(long idViaggio) throws VisualizzaPrenotazioniFailedException{
         ArrayList<EntityPrenotazione> prenotazioni;
         ArrayList<MyDto> prenotazioniDTO = new ArrayList<>();
         try {
@@ -342,31 +381,17 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione di supporto alle funzioni registraUtente e loginUtente che permette di evitare la ridondanza del
-     * codice relativa all'aggiornamento dell'utente corrente, necessaria in entrambe le funzioni suddette.
-     * @param utenteCorrente DAO a partire dalla quale costruire il nuovo utente corrente
-     * @throws DatabaseException se si è verificato un errore nel salvataggio nel database del nuovo utente corrente
+     * Funzione di supporto alle funzioni {@link #registraUtente(String, String, String, String, char[], Integer, String)
+     * registraUtente} e {@link #loginUtente(String, char[]) loginUtente} che permette di evitare la ridondanza del
+     * codice relativa all'aggiornamento dell'utente corrente, necessaria in entrambe le funzioni suddette. L'utente
+     * corrente viene popolato con le sue prenotazioni, i suoi viaggi condivisi e le sue valutazioni.
+     * @param utenteCorrente l'utente corrente da popolare.
+     * @throws DatabaseException se si è verificato un errore nel popolamento dei campi dell'utente corrente.
      */
     private void aggiornaUtenteCorrente(EntityUtenteRegistrato utenteCorrente) throws DatabaseException {
         utenteCorrente.popolaPrenotazioni();
         utenteCorrente.popolaViaggiCondivisi();
         utenteCorrente.popolaValutazioni();
         Sessione.getInstance().setUtenteCorrente(utenteCorrente);
-    }
-
-    /**
-     * Funzione che permette alle form (mediante i livelli superiori) di accedere ai dati relativi all'utente corrente
-     * @return MyDto il DTO popolato con i dati relativi all'utente corrente
-     */
-    public MyDto getSessione() {
-        EntityUtenteRegistrato sessioneCorrente = Sessione.getInstance().getUtenteCorrente();
-        return new MyDto(String.valueOf(sessioneCorrente.getId()),
-                sessioneCorrente.getNome(),
-                sessioneCorrente.getCognome(),
-                sessioneCorrente.getEmail(),
-                sessioneCorrente.getPassword(),
-                sessioneCorrente.getContattoTelefonico(),
-                sessioneCorrente.getAutomobile(),
-                String.valueOf(sessioneCorrente.getPostiDisponibili()));
     }
 }

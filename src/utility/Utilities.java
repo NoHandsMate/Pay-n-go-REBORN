@@ -4,8 +4,14 @@ import java.util.AbstractMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Package di utility, esterno al modello BCED, implementa delle funzioni di utilità.
+ */
 public final class Utilities {
 
+    /**
+     * Costruttore privato per impedire la creazione di istanze della classe.
+     */
     private Utilities(){}
 
     /**
