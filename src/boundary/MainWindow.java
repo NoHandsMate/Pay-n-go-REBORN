@@ -6,6 +6,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -156,6 +158,14 @@ public class MainWindow extends JFrame {
         });
 
         gestisciPrenotazioneButton.addActionListener(actionEvent -> gestisciPrenotazione(0)); /* TODO: aggiornare*/
+
+        valutaPasseggeroButton.addActionListener(actionEvent -> {
+            int selectedRow = prenotazioniTable.getSelectedRow();
+            if (selectedRow != -1) {
+               valutaPasseggero(Long.parseLong((String)prenotazioniTable.getValueAt(selectedRow, 0)),
+                               (String)prenotazioniTable.getValueAt(selectedRow, 1));
+            }
+        });
     }
 
     private void createUIComponents() {
@@ -402,6 +412,11 @@ public class MainWindow extends JFrame {
 
     private void valutaAutista(long idPrenotazione, String nomeAutista) {
         ValutaUtente valutaUtente = new ValutaUtente(idPrenotazione, nomeAutista);
+        valutaUtente.setVisible(true);
+    }
+
+    private void valutaPasseggero(long idPrenotazione, String nomePasseggero) {
+        ValutaUtente valutaUtente = new ValutaUtente(idPrenotazione, nomePasseggero);
         valutaUtente.setVisible(true);
     }
 
