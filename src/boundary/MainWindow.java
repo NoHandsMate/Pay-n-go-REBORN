@@ -6,8 +6,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -16,7 +14,6 @@ import java.util.regex.Pattern;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DateTimePicker;
-import control.ControllerGestore;
 import control.ControllerUtente;
 import dto.*;
 import utility.Utilities;
@@ -142,7 +139,7 @@ public class MainWindow extends JFrame {
         valutaAutistaButton.addActionListener(actionEvent -> {
             int selectedRow = prenotazioniEffettuateTable.getSelectedRow();
             if (selectedRow != -1) {
-                valutaAutista(Long.parseLong((String) prenotazioniEffettuateTable.getValueAt(selectedRow, 0)),
+                valutaUtente(Long.parseLong((String) prenotazioniEffettuateTable.getValueAt(selectedRow, 0)),
                         (String) prenotazioniEffettuateTable.getValueAt(selectedRow, 1));
             }
         });
@@ -162,7 +159,7 @@ public class MainWindow extends JFrame {
         valutaPasseggeroButton.addActionListener(actionEvent -> {
             int selectedRow = prenotazioniTable.getSelectedRow();
             if (selectedRow != -1) {
-               valutaPasseggero(Long.parseLong((String)prenotazioniTable.getValueAt(selectedRow, 0)),
+               valutaUtente(Long.parseLong((String)prenotazioniTable.getValueAt(selectedRow, 0)),
                                (String)prenotazioniTable.getValueAt(selectedRow, 1));
             }
         });
@@ -410,15 +407,11 @@ public class MainWindow extends JFrame {
         JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), title, messageType);
     }
 
-    private void valutaAutista(long idPrenotazione, String nomeAutista) {
-        ValutaUtente valutaUtente = new ValutaUtente(idPrenotazione, nomeAutista);
+    private void valutaUtente(long idPrenotazione, String nomeUtente) {
+        ValutaUtente valutaUtente = new ValutaUtente(idPrenotazione, nomeUtente);
         valutaUtente.setVisible(true);
     }
 
-    private void valutaPasseggero(long idPrenotazione, String nomePasseggero) {
-        ValutaUtente valutaUtente = new ValutaUtente(idPrenotazione, nomePasseggero);
-        valutaUtente.setVisible(true);
-    }
 
     private void visualizzaViaggiCondivisi() {
         String[] columnNames = {"Id viaggio", "Partenza", "Destinazione", "Data e ora partenza",
