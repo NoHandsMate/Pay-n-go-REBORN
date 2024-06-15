@@ -145,11 +145,13 @@ public class EntityUtenteRegistrato {
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate sui suoi viaggi
      * @return prenotazioni ArrayList di Entity prenotazioni, vuoto se non presenti
      */
-    public ArrayList<EntityPrenotazione> visualizzaPrenotazioni() throws DatabaseException{
+    public ArrayList<EntityPrenotazione> visualizzaPrenotazioni(long idViaggio) throws DatabaseException{
         ArrayList<EntityPrenotazione> listaPrenotazioni = new ArrayList<>();
         for(EntityViaggio viaggio : this.viaggiCondivisi){
-            viaggio.popolaPrenotazioni();
-            listaPrenotazioni.addAll(viaggio.getPrenotazioni());
+            if (viaggio.getId() == idViaggio){
+                viaggio.popolaPrenotazioni();
+                listaPrenotazioni.addAll(viaggio.getPrenotazioni());
+            }
         }
         return listaPrenotazioni;
     }

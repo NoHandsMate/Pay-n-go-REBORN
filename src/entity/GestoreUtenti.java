@@ -1,6 +1,7 @@
 package entity;
 
 import database.ValutazioneDAO;
+import database.ViaggioDAO;
 import exceptions.*;
 import database.UtenteRegistratoDAO;
 import dto.*;
@@ -198,35 +199,6 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate sui suoi viaggi
-     * @return prenotazioni ArrayList di DTO prenotazioni, vuoto se non presenti
-     */
-    public ArrayList<MyDto> visualizzaPrenotazioni() throws VisualizzaPrenotazioniFailedException{
-        EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
-        ArrayList<EntityPrenotazione> prenotazioni;
-        ArrayList<MyDto> prenotazioniDTO = new ArrayList<>();
-        try {
-            prenotazioni = utenteCorrente.visualizzaPrenotazioni();
-            for(EntityPrenotazione entityPrenotazione : prenotazioni) {
-                MyDto prenotazioneDto = new MyDto();
-                prenotazioneDto.setCampo1(String.valueOf(entityPrenotazione.getId()));
-                prenotazioneDto.setCampo2(String.valueOf(entityPrenotazione.isAccettata()));
-                prenotazioneDto.setCampo3(entityPrenotazione.getPasseggero().getNome() + " " +
-                        entityPrenotazione.getPasseggero().getCognome());
-
-                prenotazioniDTO.add(prenotazioneDto);
-            }
-
-        } catch (DatabaseException e) {
-            if(e.isVisible()) {
-                throw new VisualizzaPrenotazioniFailedException("Visualizzazione prenotazioni fallita: " + e.getMessage());
-            }
-            throw new VisualizzaPrenotazioniFailedException(e.getMessage());
-        }
-        return prenotazioniDTO;
-    }
-
-    /**
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate ad altri viaggi
      * @return prenotazioni ArrayList di DTO prenotazioni
      */
@@ -331,13 +303,41 @@ public class GestoreUtenti {
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(NATURALDATEFORMAT);
             viaggioDTO.setCampo1(String.valueOf(viaggio.getId()));
             viaggioDTO.setCampo2(viaggio.getLuogoPartenza());
-            viaggioDTO.setCampo3(viaggio.getDataPartenza().format(dateTimeFormatter));
-            viaggioDTO.setCampo4(viaggio.getLuogoDestinazione());
+            viaggioDTO.setCampo3(viaggio.getLuogoDestinazione());
+            viaggioDTO.setCampo4(viaggio.getDataPartenza().format(dateTimeFormatter));
             viaggioDTO.setCampo5(viaggio.getDataArrivo().format(dateTimeFormatter));
             viaggioDTO.setCampo6(String.format("%.2f", viaggio.getContributoSpese()).replace(',', '.'));
             viaggiCondivisiDto.add(viaggioDTO);
         }
         return viaggiCondivisiDto;
+    }
+
+    /**
+     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate su uno dei suoi viaggi.
+     * @param idViaggio l'identificativo del viaggio di cui visualizzare la prenotazione.
+     * @return prenotazioni ArrayList di DTO prenotazioni
+     */
+    public ArrayList<MyDto> visualizzaPrenotazioni(long idViaggio) throws VisualizzaPrenotazioniFailedException{
+        ArrayList<EntityPrenotazione> prenotazioni;
+        ArrayList<MyDto> prenotazioniDTO = new ArrayList<>();
+        try {
+            EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
+            prenotazioni = utenteCorrente.visualizzaPrenotazioni(idViaggio);
+            for (EntityPrenotazione prenotazione : prenotazioni) {
+                MyDto prenotazioneDTO = new MyDto();
+                prenotazioneDTO.setCampo1(String.valueOf(prenotazione.getId()));
+                prenotazioneDTO.setCampo2(String.format("%s %s", prenotazione.getPasseggero().getNome(),
+                        prenotazione.getPasseggero().getCognome()));
+                prenotazioneDTO.setCampo3(prenotazione.isAccettata()? "Accettata" : "In attesa");
+                prenotazioniDTO.add(prenotazioneDTO);
+            }
+        } catch (DatabaseException e) {
+            if(e.isVisible()) {
+                throw new VisualizzaPrenotazioniFailedException("Visualizza prenotazioni fallita: " + e.getMessage());
+            }
+            throw new VisualizzaPrenotazioniFailedException("Visualizza prenotazioni fallita.");
+        }
+        return prenotazioniDTO;
     }
 
     /**

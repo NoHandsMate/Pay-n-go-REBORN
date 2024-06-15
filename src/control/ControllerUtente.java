@@ -134,20 +134,6 @@ public class ControllerUtente {
     }
 
     /**
-     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate sui suoi viaggi
-     * @return prenotazioni ArrayList di DTO prenotazioni
-     */
-    public AbstractMap.SimpleEntry<Boolean,Object> visualizzaPrenotazioni() {
-        ArrayList<MyDto> prenotazioni;
-        try {
-            prenotazioni = FacadeEntityUtente.getInstance().visualizzaPrenotazioni();
-        } catch (VisualizzaPrenotazioniFailedException e) {
-            return new AbstractMap.SimpleEntry<>(false,e.getMessage());
-        }
-        return new AbstractMap.SimpleEntry<>(true, prenotazioni);
-    }
-
-    /**
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate ad altri viaggi
      * @return prenotazioni ArrayList di DTO prenotazioni
      */
@@ -230,12 +216,27 @@ public class ControllerUtente {
     }
 
     /**
-     * Funzione che permette all'utente corrente di visualizzare i propri viaggi condivisi
-     * @return ArrayList di DTO che racchiude le informazioni sui viaggi condivisi
+     * Funzione che permette all'utente corrente di visualizzare i propri viaggi condivisi.
+     * @return ArrayList di DTO che racchiude le informazioni sui viaggi condivisi.
      */
     public ArrayList<MyDto> visualizzaViaggiCondivisi() {
         ArrayList<MyDto> viaggiCondivisi;
         viaggiCondivisi = FacadeEntityUtente.getInstance().visualizzaViaggiCondivisi();
         return viaggiCondivisi;
+    }
+
+    /**
+     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate su uno dei suoi viaggi.
+     * @param idViaggio l'identificativo del viaggio di cui visualizzare la prenotazione.
+     * @return prenotazioni ArrayList di DTO prenotazioni
+     */
+    public AbstractMap.SimpleEntry<Boolean,Object> visualizzaPrenotazioni(long idViaggio) {
+        ArrayList<MyDto> prenotazioni;
+        try {
+            prenotazioni = FacadeEntityUtente.getInstance().visualizzaPrenotazioni(idViaggio);
+        } catch (VisualizzaPrenotazioniFailedException e) {
+            return new AbstractMap.SimpleEntry<>(false,e.getMessage());
+        }
+        return new AbstractMap.SimpleEntry<>(true, prenotazioni);
     }
 }

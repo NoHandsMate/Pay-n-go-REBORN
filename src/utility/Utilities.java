@@ -38,7 +38,7 @@ public final class Utilities {
         Pattern specialCharRegex = Pattern.compile("[^a-zA-Z]", Pattern.CASE_INSENSITIVE);
         Pattern numberRegex = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
         Pattern emailRegex = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", Pattern.CASE_INSENSITIVE);
-        Pattern telRegex = Pattern.compile("[^+0-9]", Pattern.CASE_INSENSITIVE);
+        Pattern telRegex = Pattern.compile("^[+]?[0-9]*$", Pattern.CASE_INSENSITIVE);
         Matcher nomeMatcher = specialCharRegex.matcher(nome);
         Matcher nomeMatcherNumber = numberRegex.matcher(nome);
         Matcher cognomeMatcher = specialCharRegex.matcher(cognome);
@@ -75,7 +75,7 @@ public final class Utilities {
             return new AbstractMap.SimpleEntry<>(false, "Il contatto telefonico supera la lunghezza massima di 15 caratteri.");
         }
 
-        if (telefonoMatcher.find()) {
+        if (!telefonoMatcher.find()) {
             return new AbstractMap.SimpleEntry<>(false, "Il contatto telefonico contiene caratteri non validi.");
         }
 

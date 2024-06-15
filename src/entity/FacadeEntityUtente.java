@@ -86,15 +86,6 @@ public class FacadeEntityUtente {
     }
 
     /**
-     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate sui suoi viaggi
-     * @return prenotazioni ArrayList di DTO prenotazioni
-     */
-    public ArrayList<MyDto> visualizzaPrenotazioni() throws VisualizzaPrenotazioniFailedException {
-
-        return GestoreUtenti.getInstance().visualizzaPrenotazioni();
-    }
-
-    /**
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate ad altri viaggi
      * @return prenotazioni ArrayList di DTO prenotazioni
      */
@@ -154,6 +145,16 @@ public class FacadeEntityUtente {
      */
     public ArrayList<MyDto> visualizzaViaggiCondivisi(){
         return GestoreUtenti.getInstance().visualizzaViaggiCondivisi();
+    }
+
+    /**
+     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate su uno dei suoi viaggi.
+     * @param idViaggio l'identificativo del viaggio di cui visualizzare la prenotazione.
+     * @return prenotazioni ArrayList di DTO prenotazioni
+     */
+    public ArrayList<MyDto> visualizzaPrenotazioni(long idViaggio) throws VisualizzaPrenotazioniFailedException {
+
+        return GestoreUtenti.getInstance().visualizzaPrenotazioni(idViaggio);
     }
 
     /**

@@ -441,10 +441,38 @@ public class MainWindow extends JFrame {
     }
 
     private void visualizzaPrenotazioni(long idViaggio) {
-        /* TODO: idViaggio 0 significa nessun viaggio selezionato, la ricerca dovrebbe tornare null e si
-            dovrebbe svuotare da sola la tabella */
-        // String[][] data = ControllerUtente.getInstance().visualizzaPrenotazioni();
-        String[] columnNames = {"Id prenotazione", "Passeggero", "Viaggio", "Stato"};
+        String[] columnNames = {"Id prenotazione", "Passeggero", "Stato"};
+        String[][] data;
+        ArrayList<String> rows = new ArrayList<>();
+
+        if (idViaggio == 0) {
+            data = new String[0][0];
+        } else {
+            AbstractMap.SimpleEntry<Boolean, Object> result =
+                    ControllerUtente.getInstance().visualizzaPrenotazioni(idViaggio);
+            if (Boolean.FALSE.equals(result.getKey())) {
+                JOptionPane.showMessageDialog(mainWindowPanel, result.getValue(), "Errore",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            ArrayList<MyDto> listaPrenotazioni = (ArrayList<MyDto>) result.getValue();
+            for (MyDto prenotazione : listaPrenotazioni) {
+                rows.add(prenotazione.getCampo1());
+                rows.add(prenotazione.getCampo2());
+                rows.add(prenotazione.getCampo3());
+            }
+
+            data = new String[rows.size() / columnNames.length][columnNames.length];
+        }
+
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++)
+            {
+                data[i][j] = rows.get(i * columnNames.length + j);
+            }
+        }
+
+        populateTable(prenotazioniTable, columnNames, data);
     }
 
     private void gestisciPrenotazione(long idPrenotazione) {
