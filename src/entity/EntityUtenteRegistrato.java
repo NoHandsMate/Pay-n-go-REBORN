@@ -220,6 +220,11 @@ public class EntityUtenteRegistrato {
         entityValutazione.salvaInDB();
     }
 
+    /**
+     * Funzione d'ausilio a <close> generaReportUtenti </close> che permette di visualizzare tutte le valutazioni di
+     * un utente
+     * @return un ArrayList di entity con le valutazioni dell'utente in caso di successo
+     */
     public ArrayList<EntityValutazione> visualizzaValutazioni() throws DatabaseException {
         this.popolaValutazioni();
         return this.valutazioni;

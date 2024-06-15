@@ -182,6 +182,11 @@ public class ControllerUtente {
         return new AbstractMap.SimpleEntry<>(true, viaggiTrovatiDTO);
     }
 
+    /**
+     * Funzione che permette all'utente registrato di prenotare un viaggio
+     * @param idViaggio l'id del viaggio che si intende prenotare
+     * @return un messaggio di info sull'esito della prenotazione
+     */
     public AbstractMap.SimpleEntry<Boolean, String> prenotaViaggio(long idViaggio) {
          try {
              FacadeEntityUtente.getInstance().prenotaViaggio(idViaggio);

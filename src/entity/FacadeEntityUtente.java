@@ -116,6 +116,10 @@ public class FacadeEntityUtente {
         return GestoreViaggi.getInstance().ricercaViaggio(luogoPartenza, luogoDestinazione, dataPartenza);
     }
 
+    /**
+     * Funzione che permette all'utente registrato di prenotare un viaggio
+     * @param idViaggio l'id del viaggio che si intende prenotare
+     */
     public void prenotaViaggio(long idViaggio) throws PrenotaViaggioFailedException {
         GestoreUtenti.getInstance().prenotaViaggio(idViaggio);
     }

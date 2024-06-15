@@ -39,6 +39,12 @@ public class FacadeEntityGestore {
         return GestoreUtenti.getInstance().generaReportUtenti();
     }
 
+    /**
+     * Funzione d'ausilio a <close> generaReportUtenti </close> che permette di visualizzare tutte le valutazioni di
+     * un utente
+     * @param idUtente l'utente del quale si vogliono visualizzare le valutazioni
+     * @return un ArrayList di DTO con le valutazioni dell'utente
+     */
     public ArrayList<MyDto> visualizzaValutazioniUtente(long idUtente) throws VisualizzaValutazioniFailedException {
         return GestoreUtenti.getInstance().visualizzaValutazioniUtente(idUtente);
     }
