@@ -29,14 +29,13 @@ public class DBManager {
         return uniqueInstance;
     }
 
+
     /**
      * Metodo per ottenere una nuova connessione al Database.
      * @return la connessione instaurata.
      * @throws ClassNotFoundException se la classe non viene trovata.
      * @throws SQLException in caso di errore nella chiusura della connessione.
      */
-
-
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         Connection conn = null;
         Class.forName(driver);

@@ -176,7 +176,6 @@ public class PrenotazioneDAO {
      * @param accettata lo stato della prenotazione
      * @throws DatabaseException se non è stato possibile aggiornare la prenotazione nel database.
      */
-
     private int aggiornaInDB(boolean accettata) throws DatabaseException {
 
         String query = String.format("UPDATE prenotazioni SET (accettata = %b WHERE (idPrenotazione = %d);",
