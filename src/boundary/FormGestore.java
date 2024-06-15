@@ -1,5 +1,6 @@
 package boundary;
 
+import control.ControllerGestore;
 import control.ControllerUtente;
 import dto.MyDto;
 
@@ -9,6 +10,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.AbstractMap;
+import java.util.ArrayList;
 
 public class FormGestore extends JFrame {
     private JPanel gestorePanel;
@@ -23,6 +28,7 @@ public class FormGestore extends JFrame {
     private JLabel incassiLabel;
 
     private final JButton[] tabButtons = {homeTabButton, reportUtentiTabButton, reportIncassiTabButton};
+    private static final String NATURALDATEFORMAT = "dd/MM/yyyy - HH:mm:ss";
 
     /**
      * FormGestore è il pannello di amministratore dedicato al gestore dell'applicazione. È possibile accedervi
@@ -63,10 +69,17 @@ public class FormGestore extends JFrame {
         contentTab.addChangeListener(e -> {
             if (contentTab.getSelectedIndex() == 1) {
                 generaReportUtenti();
+            } else if (contentTab.getSelectedIndex() == 2) {
+                generaReportIncassi();
             }
         });
 
-        utentiTable.getSelectionModel().addListSelectionListener(selectionEvent -> visualizzaValutazioniUtente());
+        utentiTable.getSelectionModel().addListSelectionListener(selectionEvent -> {
+            int selectedRow = utentiTable.getSelectedRow();
+            if (selectedRow != -1) {
+                visualizzaValutazioniUtente(Long.parseLong((String) utentiTable.getValueAt(selectedRow, 0)));
+            } else visualizzaValutazioniUtente(0); // idUtente nullo per svuotare la tabella.
+        });
     }
 
     /**
@@ -101,19 +114,85 @@ public class FormGestore extends JFrame {
      * valutazione sintetica degli stessi.
      */
     private void generaReportUtenti() {
-        /* TODO: qualcosa del tipo String[][] data = Controller.getInstance().generaReportUtenti() */
-
-        String[][] data = {{String.valueOf(1), "Matteo Arnese", "matteo.arnese@github.com", String.valueOf(4.65f)},
-                {String.valueOf(2), "Emanuele Barbato", "e@barb.com", String.valueOf(3.69f)}};
         String[] columnNames = {"Id Utente", "Nome e cognome", "Email", "Valutazione media"};
+
+        AbstractMap.SimpleEntry<Boolean, Object> result = ControllerGestore.getInstance().generaReportUtenti();
+        if (Boolean.FALSE.equals(result.getKey())) {
+            JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        ArrayList<MyDto> listaUtenti = (ArrayList<MyDto>)result.getValue();
+        ArrayList<String> rows = new ArrayList<>();
+        for (MyDto utente : listaUtenti) {
+            rows.add(utente.getCampo1());
+            rows.add(utente.getCampo2());
+            rows.add(utente.getCampo3());
+            rows.add(utente.getCampo4());
+        }
+
+        String[][] data = new String[rows.size() / columnNames.length][columnNames.length];
+
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++)
+            {
+                data[i][j] = rows.get(i * columnNames.length + j);
+            }
+        }
+
+        populateTable(utentiTable, columnNames, data);
     }
 
     /**
      * Funzione che, insieme con <code>generaReportUtenti</code>, implementa il caso d'uso
      * <code>generaReportUtenti</code>. Restituisce a schermo la lista delle valutazioni relative a ogni utente.
      */
-    private void visualizzaValutazioniUtente() {
-        /* TODO: implementa */
+    private void visualizzaValutazioniUtente(long idUtente) {
+        String[] columnNames = {"Id valutazione", "Numero stelle", "Descrizione"};
+        String[][] data;
+        ArrayList<String> rows = new ArrayList<>();
+        if (idUtente == 0) {
+            data = new String[0][0];
+        } else {
+            AbstractMap.SimpleEntry<Boolean, Object> result =
+                    ControllerGestore.getInstance().visualizzaValutazioniUtente(idUtente);
+            if (Boolean.FALSE.equals(result.getKey())) {
+                JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            ArrayList<MyDto> listaValutazioni = (ArrayList<MyDto>) result.getValue();
+            for (MyDto valutazione : listaValutazioni) {
+                rows.add(valutazione.getCampo1());
+                rows.add(valutazione.getCampo2());
+                rows.add(valutazione.getCampo3());
+            }
+
+            data = new String[rows.size() / columnNames.length][columnNames.length];
+        }
+
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++)
+            {
+                data[i][j] = rows.get(i * columnNames.length + j);
+            }
+        }
+
+        populateTable(valutazioniTable, columnNames, data);
+    }
+
+    /**
+     * Funzione che implementa il caso d'uso <code>generaReportIncassi</code>. Restituisce a schermo il totale degli
+     * incassi del sistema.
+     */
+    private void generaReportIncassi() {
+        AbstractMap.SimpleEntry<Boolean, Object> result = ControllerGestore.getInstance().generaReportIncassi();
+        if (Boolean.FALSE.equals(result.getKey())) {
+            JOptionPane.showMessageDialog(contentTab, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
+            incassiLabel.setText("Non è stato possibile generare il report incassi.");
+            return;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(NATURALDATEFORMAT);
+        incassiLabel.setText(String.format("Gli incassi totali del sistema al giorno %s sono: %.2f €",
+                LocalDateTime.now().format(formatter), (float) result.getValue()));
     }
 
     /**

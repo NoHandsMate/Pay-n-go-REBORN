@@ -12,6 +12,7 @@ public class EntityValutazione {
     public EntityValutazione() {}
 
     public EntityValutazione(ValutazioneDAO valutazioneDAO) {
+        this.id = valutazioneDAO.getIdValutazione();
         this.numeroStelle = valutazioneDAO.getNumeroStelle();
         this.descrizione = valutazioneDAO.getDescrizione();
     }

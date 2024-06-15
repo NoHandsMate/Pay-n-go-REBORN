@@ -42,13 +42,13 @@ public class ValutazioneDAO {
      * @throws DatabaseException se si è verificato un errore nella creazione dell'oggetto ValutazioneDAO.
      */
     public void createValutazione(int numeroStelle, String descrizione, long idUtente) throws DatabaseException{
-
-        if (cercaInDB(numeroStelle, descrizione,idUtente) != 0)
+        String descrizioneFormatted = descrizione.replace("'", "\\'");
+        if (cercaInDB(numeroStelle, descrizioneFormatted, idUtente) != 0)
             throw new DatabaseException("Esiste già una valutazione identica.",true);
-        if (salvaInDB(numeroStelle, descrizione,idUtente) == 0)
+        if (salvaInDB(numeroStelle, descrizioneFormatted, idUtente) == 0)
             throw new DatabaseException("Non è stata aggiunta alcuna valutazione al database.",false);
 
-        this.idValutazione = cercaInDB(numeroStelle,descrizione,idUtente);
+        this.idValutazione = cercaInDB(numeroStelle,descrizioneFormatted,idUtente);
         this.numeroStelle = numeroStelle;
         this.descrizione = descrizione;
         this.idUtente = idUtente;
@@ -73,6 +73,7 @@ public class ValutazioneDAO {
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
             while (rs.next()) {
                 ValutazioneDAO v = new ValutazioneDAO();
+                v.idValutazione = rs.getLong("idValutazione");
                 v.numeroStelle = rs.getInt("numeroStelle");
                 v.descrizione = rs.getString("descrizione");
                 v.idUtente = rs.getLong("utente");

@@ -9,6 +9,7 @@ import exceptions.ReportIncassiFailedException;
 import exceptions.ReportUtentiFailedException;
 
 import dto.*;
+import exceptions.VisualizzaValutazioniFailedException;
 
 
 public class ControllerGestore {
@@ -31,9 +32,7 @@ public class ControllerGestore {
      * @return reportIncassi float che rappresenta l'incasso complessivo
      */
     public AbstractMap.SimpleEntry<Boolean, Object> generaReportIncassi(){
-
         Float reportIncassi;
-
         try {
 
              reportIncassi = FacadeEntityGestore.getInstance().generaReportIncassi();
@@ -50,17 +49,24 @@ public class ControllerGestore {
      * @return reportUtenti un ArrayList di ArrayList di DTO (matrice) che rappresenta il report
      */
     public AbstractMap.SimpleEntry<Boolean, Object> generaReportUtenti(){
-
-        ArrayList<ArrayList<MyDto>> reportUtenti;
-
+        ArrayList<MyDto> reportUtenti;
         try {
-
            reportUtenti = FacadeEntityGestore.getInstance().generaReportUtenti();
         } catch (ReportUtentiFailedException e) {
             return new AbstractMap.SimpleEntry<>(false, e.getMessage());
         }
 
-        return new AbstractMap.SimpleEntry<>(true,reportUtenti);
+        return new AbstractMap.SimpleEntry<>(true, reportUtenti);
     }
 
+    public AbstractMap.SimpleEntry<Boolean, Object> visualizzaValutazioniUtente(long idUtente) {
+        ArrayList<MyDto> valutazioniUtente;
+        try {
+            valutazioniUtente = FacadeEntityGestore.getInstance().visualizzaValutazioniUtente(idUtente);
+        } catch (VisualizzaValutazioniFailedException e) {
+            return new AbstractMap.SimpleEntry<>(false, e.getMessage());
+        }
+
+        return new AbstractMap.SimpleEntry<>(true, valutazioniUtente);
+    }
 }

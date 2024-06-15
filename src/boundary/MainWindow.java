@@ -14,8 +14,10 @@ import java.util.regex.Pattern;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DateTimePicker;
+import control.ControllerGestore;
 import control.ControllerUtente;
 import dto.*;
+import utility.Utilities;
 
 public class MainWindow extends JFrame {
     private JPanel mainWindowPanel;
@@ -205,7 +207,13 @@ public class MainWindow extends JFrame {
     }
 
     private void aggiornaDatiPersonali() {
-        AbstractMap.SimpleEntry<Boolean, String> result = validateAggiornaDatiPersonaliInput();
+        AbstractMap.SimpleEntry<Boolean, String> result = Utilities.validateDatiPersonali(nomeField.getText(),
+                cognomeField.getText(),
+                emailField.getText(),
+                passwordField.getPassword(),
+                telefonoField.getText(),
+                autoField.getText(),
+                (Integer) postiSpinner.getValue());
         if (Boolean.FALSE.equals(result.getKey())) {
             JOptionPane.showMessageDialog(rootPane, result.getValue(),
                     "Errore", JOptionPane.ERROR_MESSAGE);
@@ -220,70 +228,6 @@ public class MainWindow extends JFrame {
                 JOptionPane.showMessageDialog(rootPane, result.getValue(), "OK", JOptionPane.INFORMATION_MESSAGE);
             }
         }
-    }
-
-    private AbstractMap.SimpleEntry<Boolean, String> validateAggiornaDatiPersonaliInput() {
-        if (nomeField.getText().isBlank() || cognomeField.getText().isBlank() ||
-                emailField.getText().isBlank() || passwordField.getPassword().length == 0 ||
-                telefonoField.getText().isBlank()) {
-            return new AbstractMap.SimpleEntry<>(false, "Riempi i campi obbligatori");
-        }
-
-        if (!autoField.getText().isBlank() && (Integer) postiSpinner.getValue() == 0 ||
-                (autoField.getText().isBlank() && (Integer) postiSpinner.getValue() != 0)) {
-            return new AbstractMap.SimpleEntry<>(false, "Il valore dei posti disponibili è incorretto");
-        }
-
-        Pattern specialCharRegex = Pattern.compile("[^a-zA-Z]", Pattern.CASE_INSENSITIVE);
-        Pattern numberRegex = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
-        Pattern telRegex = Pattern.compile("[^+0-9]", Pattern.CASE_INSENSITIVE);
-        Matcher nomeMatcher = specialCharRegex.matcher(nomeField.getText());
-        Matcher nomeMatcherNumber = numberRegex.matcher(nomeField.getText());
-        Matcher cognomeMatcher = specialCharRegex.matcher(cognomeField.getText());
-        Matcher cognomeMatcherNumber = numberRegex.matcher(cognomeField.getText());
-        Matcher telefonoMatcher = telRegex.matcher(telefonoField.getText());
-
-
-        if (nomeField.getText().length() > 50) {
-            return new AbstractMap.SimpleEntry<>(false, "Il nome supera la lunghezza massima di 50 caratteri");
-        }
-
-        if (nomeMatcher.find() || nomeMatcherNumber.find()) {
-            return new AbstractMap.SimpleEntry<>(false, "Il nome contiene caratteri non validi");
-        }
-
-        if (cognomeField.getText().length() > 50) {
-            return new AbstractMap.SimpleEntry<>(false, "Il cognome supera la lunghezza massima di 50 caratteri");
-        }
-
-        if (cognomeMatcher.find() || cognomeMatcherNumber.find()) {
-            return new AbstractMap.SimpleEntry<>(false, "Il cognome contiene caratteri non validi");
-        }
-
-        if (emailField.getText().length() > 50) {
-            return new AbstractMap.SimpleEntry<>(false, "L'email supera la lunghezza massima di 50 caratteri");
-        }
-
-        if (emailField.getText().indexOf('@') == -1) {
-            return new AbstractMap.SimpleEntry<>(false, "L'email non è valida");
-        }
-
-        if (telefonoField.getText().length() > 15) {
-            return new AbstractMap.SimpleEntry<>(false, "Il contatto telefonico supera la lunghezza massima di 15 caratteri");
-        }
-
-        if (telefonoMatcher.find()) {
-            return new AbstractMap.SimpleEntry<>(false, "Il contatto telefonico contiene caratteri non validi");
-        }
-
-        if (passwordField.getPassword().length > 50 || passwordField.getPassword().length < 4) {
-            return new AbstractMap.SimpleEntry<>(false, "La password deve essere compresa tra 4 e 50 caratteri");
-        }
-
-        if (autoField.getText().length() > 50) {
-            return new AbstractMap.SimpleEntry<>(false, "Il modello dell'automobile supera la lunghezza massima di 50 caratteri");
-        }
-        return new AbstractMap.SimpleEntry<>(true, "OK");
     }
 
     private void condividiViaggio() {
@@ -462,16 +406,29 @@ public class MainWindow extends JFrame {
     }
 
     private void visualizzaViaggiCondivisi() {
-        /* TODO: qualcosa del genere */
-        ControllerUtente.getInstance().visualizzaPrenotazioni();
-        // String data[][] = ControllerUtente.getInstance().visualizzaViaggiCondivisi();
-
         String[] columnNames = {"Id viaggio", "Partenza", "Destinazione", "Data e ora partenza",
                 "Data e ora arrivo", "Contributo spese"};
-        String[][] data = {{String.valueOf(3), "Roma", "Napoli", "05/04/2024 15:30:00", "05/04/2024 17:10:00", String.valueOf(1.49f)},
-                {String.valueOf(4), "Torino", "Roma", "14/05/2024 10:30:00", "14/05/2024 18:00:00", String.valueOf(3.49f)},
-                {String.valueOf(5), "Casoria", "Bacoli", "25/06/2024 08:30:00", "25/06/2024 09:20:00", String.valueOf(1.49f)}};
+        String[][] data;
 
+        ArrayList<String> rows = new ArrayList<>();
+        ArrayList<MyDto> listaValutazioni = ControllerUtente.getInstance().visualizzaViaggiCondivisi();
+        for (MyDto valutazione : listaValutazioni) {
+            rows.add(valutazione.getCampo1());
+            rows.add(valutazione.getCampo2());
+            rows.add(valutazione.getCampo3());
+            rows.add(valutazione.getCampo4());
+            rows.add(valutazione.getCampo5());
+            rows.add(valutazione.getCampo6());
+        }
+
+        data = new String[rows.size() / columnNames.length][columnNames.length];
+
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++)
+            {
+                data[i][j] = rows.get(i * columnNames.length + j);
+            }
+        }
         populateTable(viaggiCondivisiTable, columnNames, data);
     }
 

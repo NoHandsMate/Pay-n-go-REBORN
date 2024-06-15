@@ -3,6 +3,9 @@ package entity;
 import exceptions.ReportIncassiFailedException;
 import exceptions.ReportUtentiFailedException;
 import dto.*;
+import exceptions.ValutazioneFailedException;
+import exceptions.VisualizzaValutazioniFailedException;
+
 import java.util.ArrayList;
 
 public class FacadeEntityGestore {
@@ -32,7 +35,11 @@ public class FacadeEntityGestore {
      * sistema
      * @return reportUtenti un ArrayList di ArrayList di DTO (matrice) che rappresenta il report
      */
-    public ArrayList<ArrayList<MyDto>> generaReportUtenti() throws ReportUtentiFailedException {
+    public ArrayList<MyDto> generaReportUtenti() throws ReportUtentiFailedException {
         return GestoreUtenti.getInstance().generaReportUtenti();
+    }
+
+    public ArrayList<MyDto> visualizzaValutazioniUtente(long idUtente) throws VisualizzaValutazioniFailedException {
+        return GestoreUtenti.getInstance().visualizzaValutazioniUtente(idUtente);
     }
 }

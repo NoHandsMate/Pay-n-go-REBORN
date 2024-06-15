@@ -78,38 +78,60 @@ public class GestoreUtenti {
      * @return reportUtenti un ArrayList di ArrayList di DTO (matrice) che rappresenta il report
      * @throws ReportUtentiFailedException se la generazione del report utenti fallisce
      */
-    public ArrayList<ArrayList<MyDto>> generaReportUtenti() throws ReportUtentiFailedException {
-
-        //ArrayList di ArrayList di DTO: ogni utente può avere una serie di valutazioni
-        ArrayList<ArrayList<MyDto>> reportUtenti = new ArrayList<>();
-
+    public ArrayList<MyDto> generaReportUtenti() throws ReportUtentiFailedException {
+        ArrayList<MyDto> reportUtenti = new ArrayList<>();
         try{
             ArrayList<UtenteRegistratoDAO> utentiRegistratiDAO = UtenteRegistratoDAO.getUtentiRegistrati();
-            ArrayList<ValutazioneDAO> valutazioniDAO = ValutazioneDAO.getValutazioni();
 
             for(UtenteRegistratoDAO utenteRegistratoDAO : utentiRegistratiDAO){
-                ArrayList<MyDto> reportUtente = new ArrayList<>();
+                EntityUtenteRegistrato utenteRegistrato = new EntityUtenteRegistrato(utenteRegistratoDAO);
+                utenteRegistrato.popolaValutazioni();
+                ArrayList<EntityValutazione> listaValutazioni = utenteRegistrato.getValutazioni();
                 MyDto utente = new MyDto();
-                utente.setCampo1(utenteRegistratoDAO.getNome());
-                utente.setCampo2(utenteRegistratoDAO.getCognome());
-                reportUtente.add(utente);
-                for(ValutazioneDAO valutazioneDAO : valutazioniDAO){
-                    if(valutazioneDAO.getIdUtente() == utenteRegistratoDAO.getIdUtenteRegistrato()){
-                        MyDto valutazione = new MyDto();
-                        valutazione.setCampo1(valutazioneDAO.getDescrizione());
-                        valutazione.setCampo2(String.valueOf(valutazioneDAO.getNumeroStelle()));
-                        reportUtente.add(valutazione);
+                float mediaStelle = 0f;
+                int numValutazioni = listaValutazioni.size();
+                if (numValutazioni > 0) {
+                    for (EntityValutazione valutazione : listaValutazioni) {
+                        mediaStelle = mediaStelle + valutazione.getNumeroStelle();
                     }
+                    mediaStelle = mediaStelle / numValutazioni;
+                    utente.setCampo4(String.format("%.2f", mediaStelle).replace(',', '.'));
                 }
-                reportUtenti.add(reportUtente);
+                else {
+                    utente.setCampo4("Nessuna valutazione");
+                }
+                utente.setCampo1(String.valueOf(utenteRegistrato.getId()));
+                utente.setCampo2(String.format("%s %s", utenteRegistrato.getNome(), utenteRegistrato.getCognome()));
+                utente.setCampo3(utenteRegistrato.getEmail());
+                reportUtenti.add(utente);
             }
         } catch (DatabaseException e) {
             if (e.isVisible())
                 throw new ReportUtentiFailedException("Generazione report utenti fallita: " + e.getMessage());
             throw new ReportUtentiFailedException("Generazione report utenti fallita.");
-
         }
         return reportUtenti;
+    }
+
+    public ArrayList<MyDto> visualizzaValutazioniUtente(long idUtente) throws VisualizzaValutazioniFailedException {
+        ArrayList<MyDto> valutazioniUtente = new ArrayList<>();
+        try {
+            UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(idUtente);
+            EntityUtenteRegistrato utenteRegistrato = new EntityUtenteRegistrato(utenteDAO);
+            ArrayList<EntityValutazione> listaValutazioni = utenteRegistrato.visualizzaValutazioni();
+            for (EntityValutazione valutazione : listaValutazioni) {
+                MyDto valutazioneDTO = new MyDto();
+                valutazioneDTO.setCampo1(String.valueOf(valutazione.getId()));
+                valutazioneDTO.setCampo2(String.valueOf(valutazione.getNumeroStelle()));
+                valutazioneDTO.setCampo3(valutazione.getDescrizione());
+                valutazioniUtente.add(valutazioneDTO);
+            }
+        } catch (DatabaseException e) {
+            if (e.isVisible())
+                throw new VisualizzaValutazioniFailedException("Generazione report valutazioni fallita: " + e.getMessage());
+            throw new VisualizzaValutazioniFailedException("Generazione report valutazioni fallita.");
+        }
+        return valutazioniUtente;
     }
 
     /**
@@ -300,12 +322,13 @@ public class GestoreUtenti {
         ArrayList<MyDto> viaggiCondivisiDto = new ArrayList<>();
         for(EntityViaggio viaggio : viaggiCondivisi){
             MyDto viaggioDTO = new MyDto();
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(NATURALDATEFORMAT);
             viaggioDTO.setCampo1(String.valueOf(viaggio.getId()));
             viaggioDTO.setCampo2(viaggio.getLuogoPartenza());
-            viaggioDTO.setCampo3(viaggio.getLuogoDestinazione());
-            viaggioDTO.setCampo4(viaggio.getDataPartenza().toString());
-            viaggioDTO.setCampo4(viaggio.getDataArrivo().toString());
-            viaggioDTO.setCampo5(String.valueOf(viaggio.getContributoSpese()));
+            viaggioDTO.setCampo3(viaggio.getDataPartenza().format(dateTimeFormatter));
+            viaggioDTO.setCampo4(viaggio.getLuogoDestinazione());
+            viaggioDTO.setCampo5(viaggio.getDataArrivo().format(dateTimeFormatter));
+            viaggioDTO.setCampo6(String.format("%.2f", viaggio.getContributoSpese()).replace(',', '.'));
             viaggiCondivisiDto.add(viaggioDTO);
         }
         return viaggiCondivisiDto;
@@ -339,5 +362,4 @@ public class GestoreUtenti {
                 sessioneCorrente.getAutomobile(),
                 String.valueOf(sessioneCorrente.getPostiDisponibili()));
     }
-
 }

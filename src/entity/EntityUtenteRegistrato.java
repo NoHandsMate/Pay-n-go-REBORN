@@ -203,17 +203,27 @@ public class EntityUtenteRegistrato {
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO(idPrenotazione);
         EntityPrenotazione prenotazione = new EntityPrenotazione(prenotazioneDAO);
 
-        if(prenotazione.getViaggioPrenotato().getDataPartenza().isAfter(LocalDateTime.now())) {
+        if (prenotazione.getViaggioPrenotato().getDataPartenza().isAfter(LocalDateTime.now())) {
             throw new DatabaseException("Impossibile valutare un utente il cui viaggio non è ancora iniziato",true);
         }
 
+        long idValutato;
+        if (prenotazione.getPasseggero().id == this.id)
+            idValutato = prenotazione.getViaggioPrenotato().getAutista().id;
+        else
+            idValutato = prenotazione.getPasseggero().id;
+
         entityValutazione.setNumeroStelle(numeroStelle);
         entityValutazione.setDescrizione(text);
-        entityValutazione.setIdUtenteValutato(prenotazione.getPasseggero().getId());
+        entityValutazione.setIdUtenteValutato(idValutato);
 
         entityValutazione.salvaInDB();
     }
 
+    public ArrayList<EntityValutazione> visualizzaValutazioni() throws DatabaseException {
+        this.popolaValutazioni();
+        return this.valutazioni;
+    }
 
     /**
      * Funzione di utilità ad aggiornaDatiPersonali che permette di eliminare i viaggi condivisi fino a quel momento,

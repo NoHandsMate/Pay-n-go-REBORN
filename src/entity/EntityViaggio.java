@@ -39,7 +39,7 @@ public class EntityViaggio {
         ArrayList<PrenotazioneDAO> listaPrenotazioni = PrenotazioneDAO.getPrenotazioni();
         this.prenotazioni = new ArrayList<>();
         for (PrenotazioneDAO prenotazioneDAO : listaPrenotazioni) {
-            if(prenotazioneDAO.getIdPrenotazione() == this.id) {
+            if(prenotazioneDAO.getIdViaggioPrenotato() == this.id) {
                 EntityPrenotazione prenotazione = new EntityPrenotazione(prenotazioneDAO);
                 this.prenotazioni.add(prenotazione);
             }

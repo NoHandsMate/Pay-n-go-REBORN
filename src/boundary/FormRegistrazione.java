@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import control.ControllerUtente;
+import utility.Utilities;
 
 
 public class FormRegistrazione extends JFrame {
@@ -30,7 +31,13 @@ public class FormRegistrazione extends JFrame {
         getContentPane().add(new JScrollPane(registrazionePanel), BorderLayout.CENTER);
         getRootPane().setDefaultButton(registratiButton);
         registratiButton.addActionListener(actionEvent -> {
-          AbstractMap.SimpleEntry<Boolean, String> result = validateInput();
+          AbstractMap.SimpleEntry<Boolean, String> result = Utilities.validateDatiPersonali(nomeField.getText(),
+                  cognomeField.getText(),
+                  emailField.getText(),
+                  passwordField.getPassword(),
+                  telefonoField.getText(),
+                  autoField.getText(),
+                  (Integer) postiSpinner.getValue());
 
           if (Boolean.FALSE.equals(result.getKey())) {
               JOptionPane.showMessageDialog(rootPane, result.getValue(),
@@ -53,69 +60,5 @@ public class FormRegistrazione extends JFrame {
           }
 
         });
-    }
-
-    private AbstractMap.SimpleEntry<Boolean, String> validateInput() {
-        if (nomeField.getText().isBlank() || cognomeField.getText().isBlank() ||
-            emailField.getText().isBlank() || passwordField.getPassword().length == 0 ||
-            telefonoField.getText().isBlank()) {
-            return new AbstractMap.SimpleEntry<>(false, "Riempi i campi obbligatori");
-        }
-
-        if (!autoField.getText().isBlank() && (Integer) postiSpinner.getValue() == 0 ||
-            (autoField.getText().isBlank() && (Integer) postiSpinner.getValue() != 0)) {
-            return new AbstractMap.SimpleEntry<>(false, "Il valore dei posti disponibili è incorretto");
-        }
-
-        Pattern specialCharRegex = Pattern.compile("[^a-z A-Z]", Pattern.CASE_INSENSITIVE);
-        Pattern numberRegex = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
-        Pattern telRegex = Pattern.compile("[^+0-9]", Pattern.CASE_INSENSITIVE);
-        Matcher nomeMatcher = specialCharRegex.matcher(nomeField.getText());
-        Matcher nomeMatcherNumber = numberRegex.matcher(nomeField.getText());
-        Matcher cognomeMatcher = specialCharRegex.matcher(cognomeField.getText());
-        Matcher cognomeMatcherNumber = numberRegex.matcher(cognomeField.getText());
-        Matcher telefonoMatcher = telRegex.matcher(telefonoField.getText());
-
-
-        if (nomeField.getText().length() > 50) {
-            return new AbstractMap.SimpleEntry<>(false, "Il nome supera la lunghezza massima di 50 caratteri");
-        }
-
-        if (nomeMatcher.find() || nomeMatcherNumber.find()) {
-            return new AbstractMap.SimpleEntry<>(false, "Il nome contiene caratteri non validi");
-        }
-
-        if (cognomeField.getText().length() > 50) {
-            return new AbstractMap.SimpleEntry<>(false, "Il cognome supera la lunghezza massima di 50 caratteri");
-        }
-
-        if (cognomeMatcher.find() || cognomeMatcherNumber.find()) {
-            return new AbstractMap.SimpleEntry<>(false, "Il cognome contiene caratteri non validi");
-        }
-
-        if (emailField.getText().length() > 50) {
-            return new AbstractMap.SimpleEntry<>(false, "L'email supera la lunghezza massima di 50 caratteri");
-        }
-
-        if (emailField.getText().indexOf('@') == -1) {
-           return new AbstractMap.SimpleEntry<>(false, "L'email non è valida");
-        }
-
-        if (telefonoField.getText().length() > 15) {
-            return new AbstractMap.SimpleEntry<>(false, "Il contatto telefonico supera la lunghezza massima di 15 caratteri");
-        }
-
-        if (telefonoMatcher.find()) {
-            return new AbstractMap.SimpleEntry<>(false, "Il contatto telefonico contiene caratteri non validi");
-        }
-
-        if (passwordField.getPassword().length > 50 || passwordField.getPassword().length < 4) {
-            return new AbstractMap.SimpleEntry<>(false, "La password deve essere compresa tra 4 e 50 caratteri");
-        }
-
-        if (autoField.getText().length() > 50) {
-            return new AbstractMap.SimpleEntry<>(false, "Il modello dell'automobile supera la lunghezza massima di 50 caratteri");
-        }
-        return new AbstractMap.SimpleEntry<>(true, "OK");
     }
 }
