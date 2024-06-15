@@ -3,6 +3,7 @@ package entity;
 import database.*;
 import exceptions.*;
 
+import javax.xml.crypto.Data;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -101,6 +102,10 @@ public class EntityUtenteRegistrato {
      */
     public void condividiViaggio(String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
                                  LocalDateTime dataArrivo, float contributoSpese) throws DatabaseException {
+
+        if (this.automobile.isBlank() || this.postiDisponibili == 0) {
+            throw new DatabaseException("Non puoi condividere un viaggio se non possiedi un automobile", true);
+        }
 
         EntityViaggio viaggioCondiviso = new EntityViaggio();
         viaggioCondiviso.setLuogoPartenza(luogoPartenza);
