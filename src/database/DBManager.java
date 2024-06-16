@@ -6,15 +6,39 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Classe del package database nel modello BCED, essa implementa il Database Manager.
+ */
 public class DBManager {
 
-    // Credenziali di accesso al Database.
-    public static final String url = "jdbc:mysql://localhost:3306/";
-    public static final String dbName = "payngo";
-    public static final String driver = "com.mysql.cj.jdbc.Driver";
-    public static final String userName = "admin";
-    public static final String password = "payngo";
+    /**
+     * Url di accesso al database.
+     */
+    public static final String URL = "jdbc:mysql://localhost:3306/";
 
+    /**
+     * Nome del database.
+     */
+    public static final String DBNAME = "payngo";
+
+    /**
+     * Nome del driver JDBC.
+     */
+    public static final String DRIVER = "com.mysql.cj.jdbc.Driver";
+
+    /**
+     * Username per l'accesso al database.
+     */
+    public static final String USERNAME = "admin";
+
+    /**
+     * Password di accesso al database.
+     */
+    public static final String PASSWORD = "payngo";
+
+    /**
+     * L'unica istanza di DBManager che implementa il pattern Singleton.
+     */
     private static DBManager uniqueInstance;
 
     /**
@@ -22,13 +46,16 @@ public class DBManager {
       */
     private DBManager() {}
 
+    /**
+     * Funzione statica per richiamare l'unica istanza di DBManager o crearne una se non esiste già.
+     * @return l'istanza singleton di DBManager.
+     */
     public static DBManager getInstance() {
         if (uniqueInstance == null) {
             uniqueInstance = new DBManager();
         }
         return uniqueInstance;
     }
-
 
     /**
      * Metodo per ottenere una nuova connessione al Database.
@@ -38,8 +65,8 @@ public class DBManager {
      */
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         Connection conn = null;
-        Class.forName(driver);
-        conn = DriverManager.getConnection(url+dbName,userName,password);
+        Class.forName(DRIVER);
+        conn = DriverManager.getConnection(URL+DBNAME,USERNAME,PASSWORD);
 
         return conn;
     }

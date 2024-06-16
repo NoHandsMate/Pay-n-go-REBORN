@@ -109,7 +109,7 @@ public class EntityPrenotazione {
 
     /**
      * Getter del viaggio prenotato.
-     * @return viaggio prenotato.
+     * @return il viaggio prenotato.
      */
     public EntityViaggio getViaggioPrenotato() {
         return viaggioPrenotato;

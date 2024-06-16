@@ -41,13 +41,13 @@ public final class Utilities {
             return new AbstractMap.SimpleEntry<>(false, "Il valore dei posti disponibili è incorretto.");
         }
 
-        Pattern specialCharRegex = Pattern.compile("[^a-zA-Z]", Pattern.CASE_INSENSITIVE);
+        Pattern userNamesCharRegex = Pattern.compile("[^a-zA-Z ,.'-]", Pattern.CASE_INSENSITIVE);
         Pattern numberRegex = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
         Pattern emailRegex = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", Pattern.CASE_INSENSITIVE);
         Pattern telRegex = Pattern.compile("^[+]?[0-9]*$", Pattern.CASE_INSENSITIVE);
-        Matcher nomeMatcher = specialCharRegex.matcher(nome);
+        Matcher nomeMatcher = userNamesCharRegex.matcher(nome);
         Matcher nomeMatcherNumber = numberRegex.matcher(nome);
-        Matcher cognomeMatcher = specialCharRegex.matcher(cognome);
+        Matcher cognomeMatcher = userNamesCharRegex.matcher(cognome);
         Matcher cognomeMatcherNumber = numberRegex.matcher(cognome);
         Matcher emailMatcher = emailRegex.matcher(email);
         Matcher telefonoMatcher = telRegex.matcher(telefono);

@@ -5,15 +5,38 @@ import exceptions.DatabaseException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Classe del package database nel modello BCED, essa implementa la DAO delle prenotazioni.
+ */
 public class PrenotazioneDAO {
 
+    /**
+     * L'identificativo della prenotazione.
+     */
     private long idPrenotazione;
+
+    /**
+     * L'identificativo del passeggero della prenotazione.
+     */
     private long idPasseggero;
+
+    /**
+     * L'identificativo del viaggio prenotato.
+     */
     private long idViaggioPrenotato;
+
+    /**
+     * Flag che indica se la prenotazione è "In attesa" o "Accettata" (<code>false</code> o <code>true</code>
+     * rispettivamente).
+     */
     private boolean accettata;
 
+    /**
+     * Logger che stampa tutte le query eseguite sul database e gli eventuali messaggi di errore.
+     */
     private static final Logger logger = Logger.getLogger("loggerPrenotazioneDAO");
 
     /**
@@ -37,8 +60,6 @@ public class PrenotazioneDAO {
      * Funzione per impostare tutti i parametri dell'oggetto PrenotazioneDAO dato e salvare tale istanza nel database.
      * @param idPasseggero l'identificativo dell'utente passeggero.
      * @param idViaggioPrenotato l'identificativo del viaggio prenotato.
-     * @return true in vaso di successo (in tal caso l'oggetto sarà stato valorizzato con i parametri dati), false
-     * altrimenti (l'oggetto non sarà valorizzato).
      * @throws DatabaseException se si è verificato un errore nella creazione dell'oggetto PrenotazioneDAO.
      */
     public void createPrenotazione(long idPasseggero,
@@ -77,9 +98,10 @@ public class PrenotazioneDAO {
 
     /**
      * Funzione per prelevare tutte le prenotazioni dal database.
+     * @return la lista di tutte le prenotazioni del database.
      * @throws DatabaseException se non è stato possibile selezionare tutte le prenotazioni dal database.
      */
-    public static ArrayList<PrenotazioneDAO> getPrenotazioni() throws DatabaseException {
+    public static List<PrenotazioneDAO> getPrenotazioni() throws DatabaseException {
         String query = "SELECT * from prenotazioni";
         ArrayList<PrenotazioneDAO> prenotazioni = new ArrayList<>();
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
@@ -156,7 +178,8 @@ public class PrenotazioneDAO {
      * @return il numero di righe inserite nel database.
      * @throws DatabaseException se non è stato possibile salvare la prenotazione nel database.
      */
-    private int salvaInDB(long idPasseggero, long idViaggioPrenotato) throws DatabaseException {
+    private int salvaInDB(long idPasseggero,
+                          long idViaggioPrenotato) throws DatabaseException {
         String query = String.format("INSERT INTO prenotazioni (passeggero, viaggioPrenotato) VALUES (%d, %d);",
                 idPasseggero, idViaggioPrenotato);
         logger.info(query);
@@ -172,12 +195,12 @@ public class PrenotazioneDAO {
     }
 
     /**
-     *
-     * @param accettata lo stato della prenotazione
+     * Funzione privata per aggiornare i dati di una prenotazione nel database.
+     * @param accettata il nuovo stato della prenotazione.
+     * @return il numero di righe modificate nel database.
      * @throws DatabaseException se non è stato possibile aggiornare la prenotazione nel database.
      */
     private int aggiornaInDB(boolean accettata) throws DatabaseException {
-
         String query = String.format("UPDATE prenotazioni SET accettata = %b WHERE (idPrenotazione = %d);",
                 accettata,this.idPrenotazione);
         logger.info(query);
@@ -211,18 +234,34 @@ public class PrenotazioneDAO {
         return rs;
     }
 
+    /**
+     * Getter dell'identificativo della prenotazione.
+     * @return l'identificativo della prenotazione.
+     */
     public long getIdPrenotazione() {
         return idPrenotazione;
     }
 
+    /**
+     * Getter dell'identificativo del passeggero della prenotazione.
+     * @return l'identificativo del passeggero della prenotazione.
+     */
     public long getIdPasseggero() {
         return idPasseggero;
     }
 
+    /**
+     * Getter dell'identificativo del viaggio prenotato.
+     * @return l'identificativo del viaggio prenotato.
+     */
     public long getIdViaggioPrenotato() {
         return idViaggioPrenotato;
     }
 
+    /**
+     * Getter del flag di accettazione della prenotazione.
+     * @return il flag di accettazione della prenotazione.
+     */
     public boolean isAccettata() {
         return accettata;
     }

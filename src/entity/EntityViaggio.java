@@ -81,7 +81,7 @@ public class EntityViaggio {
      * @throws DatabaseException se si verifica un errore nel caricamento delle prenotazioni del viaggio.
      */
     public void popolaPrenotazioni() throws DatabaseException {
-        ArrayList<PrenotazioneDAO> listaPrenotazioni = PrenotazioneDAO.getPrenotazioni();
+        List<PrenotazioneDAO> listaPrenotazioni = PrenotazioneDAO.getPrenotazioni();
         this.prenotazioni = new ArrayList<>();
         for (PrenotazioneDAO prenotazioneDAO : listaPrenotazioni) {
             if(prenotazioneDAO.getIdViaggioPrenotato() == this.id) {

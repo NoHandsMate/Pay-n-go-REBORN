@@ -51,7 +51,7 @@ public class GestoreViaggi {
     public Float generaReportIncassi() throws ReportIncassiFailedException {
 
         float reportIncassi = 0f;
-        ArrayList<ViaggioDAO> listaDAOViaggi;
+        List<ViaggioDAO> listaDAOViaggi;
         try {
             listaDAOViaggi = GestoreViaggi.caricaViaggiDaDB();
             for (ViaggioDAO viaggioDAO : listaDAOViaggi) {
@@ -76,7 +76,7 @@ public class GestoreViaggi {
      * @param luogoPartenza il luogo di partenza del viaggio da ricercare.
      * @param luogoDestinazione il luogo di destinazione del viaggio da ricercare.
      * @param dataPartenza la data di partenza del viaggio da ricercare.
-     * @return ArrayList di DTO che rappresentano l'insieme di viaggi che rispettano i filtri.
+     * @return lista di DTO che rappresentano l'insieme di viaggi che rispettano i filtri.
      * @throws RicercaViaggioFailedException se non è stato possibile effettuare la ricerca del viaggio.
      */
     public List<MyDto> ricercaViaggio(String luogoPartenza, String luogoDestinazione,
@@ -84,7 +84,7 @@ public class GestoreViaggi {
 
         ArrayList<MyDto> viaggiTrovati = new ArrayList<>();
         try {
-            ArrayList<ViaggioDAO> listaViaggi = ViaggioDAO.getViaggi();
+            List<ViaggioDAO> listaViaggi = ViaggioDAO.getViaggi();
             for (ViaggioDAO viaggio : listaViaggi) {
 
                 EntityViaggio entityViaggio = new EntityViaggio(viaggio);
@@ -127,9 +127,7 @@ public class GestoreViaggi {
      * @return lista di DAO rappresentante tutti i viaggi presenti all'interno del database.
      * @throws DatabaseException se si verifica un errore durante il caricamento di tutti i viaggi dal database.
      */
-    private static ArrayList<ViaggioDAO> caricaViaggiDaDB() throws DatabaseException{
-        ArrayList<ViaggioDAO> listaDAOViaggi;
-        listaDAOViaggi = ViaggioDAO.getViaggi();
-        return listaDAOViaggi;
+    private static List<ViaggioDAO> caricaViaggiDaDB() throws DatabaseException{
+        return ViaggioDAO.getViaggi();
     }
 }
