@@ -9,6 +9,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.AbstractMap;
 
+/**
+ * Classe del package boundary nel modello BCED, essa implementa un'interfaccia utilizzabile dagli utenti registrati per
+ * valutare gli altri utenti.
+ */
 public class ValutaUtente extends JDialog {
     private final long idPrenotazione;
     private JPanel contentPane;
@@ -24,10 +28,9 @@ public class ValutaUtente extends JDialog {
     private JLabel valutaUtenteLabel;
     private int numeroStelle;
 
-    private static final String STARVOID = "resources/starVoid.png";
-    private static final String STARFULL = "resources/starFull.png";
-    private static final String STARHOVER = "resources/starHover.png";
-
+    private static final String STARVOID = "./resources/starVoid.png";
+    private static final String STARFULL = "./resources/starFull.png";
+    private static final String STARHOVER = "./resources/starHover.png";
 
     private final JPanel[] starPanels = {oneStarPanel, twoStarPanel, threeStarPanel, fourStarPanel, fiveStarPanel};
 

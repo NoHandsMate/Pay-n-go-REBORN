@@ -3,13 +3,14 @@ package boundary;
 import javax.swing.*;
 import java.awt.*;
 import java.util.AbstractMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import control.ControllerUtente;
 import utility.Utilities;
 
-
+/**
+ * Classe del package boundary nel modello BCED, essa implementa l'interfaccia utilizzabile dagli utenti per registrarsi
+ * al sistema.
+ */
 public class FormRegistrazione extends JFrame {
     private JTextField nomeField;
     private JTextField cognomeField;
@@ -30,6 +31,8 @@ public class FormRegistrazione extends JFrame {
         setResizable(false);
         getContentPane().add(new JScrollPane(registrazionePanel), BorderLayout.CENTER);
         getRootPane().setDefaultButton(registratiButton);
+        postiSpinner.setModel(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+
         registratiButton.addActionListener(actionEvent -> {
           AbstractMap.SimpleEntry<Boolean, String> result = Utilities.validateDatiPersonali(nomeField.getText(),
                   cognomeField.getText(),

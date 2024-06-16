@@ -5,19 +5,57 @@ import exceptions.DatabaseException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Classe del package database nel modello BCED, essa implementa la DAO degli utenti registrati.
+ */
 public class UtenteRegistratoDAO {
 
+    /**
+     * L'identificativo del'utente registrato.
+     */
     private long idUtenteRegistrato;
+
+    /**
+     * Il nome dell'utente registrato.
+     */
     private String nome;
+
+    /**
+     * Il cognome dell'utente registrato.
+     */
     private String cognome;
+
+    /**
+     * Il contatto telefonico dell'utente registrato.
+     */
     private String contattoTelefonico;
+
+    /**
+     * L'indirizzo email dell'utente registrato.
+     */
     private String email;
+
+    /**
+     * L'automobile dell'utente registrato.
+     */
     private String automobile;
+
+    /**
+     * Il numero di posti disponibili nell'automobile dell'utente registrato.
+     */
     private int postiDisponibili;
+
+    /**
+     * La password dell'utente registrato.
+     */
     private String password;
 
+    /**
+     * Logger che stampa tutte le query eseguite sul database e gli eventuali messaggi di errore.
+     */
     private static final Logger logger = Logger.getLogger("loggerUtenteRegistratoDAO");
 
     /**
@@ -112,9 +150,10 @@ public class UtenteRegistratoDAO {
 
     /**
      * Funzione per prelevare tutti gli utenti registrati dal database.
+     * @return la lista di tutti gli utenti del database.
      * @throws DatabaseException se non è stato possibile selezionare tutti gli utenti registrati dal database.
      */
-    public static ArrayList<UtenteRegistratoDAO> getUtentiRegistrati() throws DatabaseException {
+    public static List<UtenteRegistratoDAO> getUtentiRegistrati() throws DatabaseException {
         String query = "SELECT * from utentiregistrati";
         ArrayList<UtenteRegistratoDAO> utentiRegistrati = new ArrayList<>();
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
@@ -143,8 +182,11 @@ public class UtenteRegistratoDAO {
      * @param password la password da utilizzare per la ricerca
      * @throws DatabaseException se si è verificato un errore nella ricerca
      */
-    public void readUtenteRegistrato(String email, String password) throws DatabaseException {
-        String query = String.format("SELECT * from utentiregistrati WHERE (email = '%s' AND password = '%s')", email, password);
+    public void readUtenteRegistrato(String email,
+                                     String password) throws DatabaseException {
+        String passwordFormatted = password.replace("'", "\\'");
+        String query = String.format("SELECT * from utentiregistrati WHERE (email = '%s' AND password = '%s')", email,
+                passwordFormatted);
         logger.info(query);
 
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
@@ -204,7 +246,8 @@ public class UtenteRegistratoDAO {
     /**
      * Funzione privata per cercare uno specifico utente registrato nel database.
      * @param email l'email associata all'utente registrato.
-     * @return l'id del viaggio (positivo) in caso di viaggio trovato, 0 in caso di viaggio non trovato.
+     * @return l'id dell'utente registrato (positivo) in caso di utente registrato trovato, 0 in caso di utente
+     * registrato non trovato.
      * @throws DatabaseException se si è verificato un errore nella ricerca del viaggio nel database.
      */
     private long cercaInDB(String email) throws DatabaseException {
@@ -242,11 +285,14 @@ public class UtenteRegistratoDAO {
                               String automobile,
                               int postiDisponibili,
                               String password) throws DatabaseException {
-        String query;
-        query = String.format("INSERT INTO utentiregistrati (nome, cognome, contattoTelefonico, " +
+        String nomeFormatted = nome.replace("'", "\\'");
+        String cognomeFormatted = cognome.replace("'", "\\'");
+        String automobileFormatted = automobile.replace("'", "\\'");
+        String passwordFormatted = password.replace("'", "\\'");
+        String query = String.format("INSERT INTO utentiregistrati (nome, cognome, contattoTelefonico, " +
                         "email, automobile, postiDisponibili, password) VALUES " +
-                        "('%s', '%s', '%s', '%s', '%s', %d, '%s');", nome, cognome, contattoTelefonico, email,
-                        automobile, postiDisponibili, password);
+                        "('%s', '%s', '%s', '%s', '%s', %d, '%s');", nomeFormatted, cognomeFormatted,
+                        contattoTelefonico, email, automobileFormatted, postiDisponibili, passwordFormatted);
 
         logger.info(query);
         int rs;
@@ -270,6 +316,7 @@ public class UtenteRegistratoDAO {
      * @param automobile l'automobile dell'utente registrato.
      * @param postiDisponibili il numero di posti disponibili nell'automobile dell'utente registrato.
      * @param password la password (bcrypt) dell'utente registrato.
+     * @return il numero di righe modificate nel database.
      * @throws DatabaseException se non è stato possibile aggiornare l'utente registrato nel database.
      */
     private int aggiornaInDB(String nome,
@@ -279,10 +326,15 @@ public class UtenteRegistratoDAO {
                              String automobile,
                              int postiDisponibili,
                              String password) throws DatabaseException {
+        String nomeFormatted = nome.replace("'", "\\'");
+        String cognomeFormatted = cognome.replace("'", "\\'");
+        String automobileFormatted = automobile.replace("'", "\\'");
+        String passwordFormatted = password.replace("'", "\\'");
         String query = String.format("UPDATE utentiregistrati SET nome = '%s', cognome = '%s', " +
                         "contattoTelefonico = '%s', email = '%s', automobile = '%s', postiDisponibili = %d, " +
-                        "password = '%s' WHERE (idUtenteRegistrato = %d);", nome, cognome, contattoTelefonico, email,
-                automobile, postiDisponibili, password, this.idUtenteRegistrato);
+                        "password = '%s' WHERE (idUtenteRegistrato = %d);", nomeFormatted, cognomeFormatted,
+                        contattoTelefonico, email, automobileFormatted, postiDisponibili, passwordFormatted,
+                        this.idUtenteRegistrato);
         logger.info(query);
         int rs;
         try {
@@ -325,35 +377,66 @@ public class UtenteRegistratoDAO {
         return rs;
     }
 
+    /**
+     * Getter dell'identificativo dell'utente registrato.
+     * @return l'identificativo dell'utente registrato.
+     */
     public long getIdUtenteRegistrato() {
         return idUtenteRegistrato;
     }
 
-
+    /**
+     * Getter del nome dell'utente registrato.
+     * @return il nome dell'utente registrato.
+     */
     public String getNome() {
         return nome;
     }
 
+    /**
+     * Getter del cognome dell'utente registrato.
+     * @return il cognome dell'utente registrato.
+     */
     public String getCognome() {
         return cognome;
     }
 
+    /**
+     * Getter del contatto telefonico dell'utente registrato.
+     * @return il contatto telefonico dell'utente registrato.
+     */
     public String getContattoTelefonico() {
         return contattoTelefonico;
     }
 
+    /**
+     * Getter dell'email dell'utente registrato.
+     * @return l'email dell'utente registrato.
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Getter della password dell'utente registrato.
+     * @return la password dell'utente registrato.
+     */
     public String getAutomobile() {
         return automobile;
     }
 
+    /**
+     * Getter dell'automobile dell'utente registrato.
+     * @return l'automobile dell'utente registrato.
+     */
     public int getPostiDisponibili() {
         return postiDisponibili;
     }
 
+    /**
+     * Getter del numero di posti disponibili nell'automobile dell'utente registrato.
+     * @return il numero di posti disponibili nell'automobile dell'utente registrato.
+     */
     public String getPassword() {
         return password;
     }

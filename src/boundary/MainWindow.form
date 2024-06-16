@@ -511,7 +511,7 @@
                   <background color="-14671840"/>
                   <font name="Lucida Sans Typewriter" size="16"/>
                   <foreground color="-1"/>
-                  <text value="Contributo spese richiesto"/>
+                  <text value="Contributo spese richiesto (€)"/>
                 </properties>
               </component>
               <component id="a5f05" class="javax.swing.JTextField" binding="condividiLuogoPartenzaField">

@@ -7,20 +7,57 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Classe del package database nel modello BCED, essa implementa la DAO dei viaggi.
+ */
 public class ViaggioDAO {
 
+    /**
+     * L'identificativo del viaggio.
+     */
     private long idViaggio;
+
+    /**
+     * Il luogo di partenza del viaggio.
+     */
     private String luogoPartenza;
+
+    /**
+     * Il luogo di destinazione del viaggio.
+     */
     private String luogoDestinazione;
+
+    /**
+     * La data e ora di partenza del viaggio.
+     */
     private LocalDateTime dataPartenza;
+
+    /**
+     * La data e ora di arrivo del viaggio.
+     */
     private LocalDateTime dataArrivo;
+
+    /**
+     * Il contributo spese del viaggio.
+     */
     private float contributoSpese;
+
+    /**
+     * L'identificativo dell'autista del viaggio.
+     */
     private long idAutista;
 
+    /**
+     * Costante utilizzata da DateTimeFormatter per la conversione da stringa a data simbolica.
+     */
     private static final String DATETIMEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    /**
+     * Logger che stampa tutte le query eseguite sul database e gli eventuali messaggi di errore.
+     */
     private static final Logger logger = Logger.getLogger("loggerViaggioDAO");
 
     /**
@@ -77,13 +114,12 @@ public class ViaggioDAO {
             throw new DatabaseException("Non è stato trovato un viaggio corrispondente.",true);
     }
 
-
     /**
      * Funzione per caricare dal database la lista dei viaggi memorizzati
      * @return la lista di viaggiDAO
      * @throws DatabaseException se si è verificato un errore nel caricamento dal database dei viaggi
      */
-    public static ArrayList<ViaggioDAO> getViaggi() throws DatabaseException {
+    public static List<ViaggioDAO> getViaggi() throws DatabaseException {
         String query = "SELECT * from viaggi";
         logger.info(query);
         ArrayList<ViaggioDAO> viaggiSalvati = new ArrayList<>();
@@ -106,6 +142,7 @@ public class ViaggioDAO {
 
         return viaggiSalvati;
     }
+
     /**
      * Funzione privata per caricare i dati di un viaggio dal database.
      * @param idViaggio l'identificativo del viaggio.
@@ -154,12 +191,15 @@ public class ViaggioDAO {
                            float contributoSpese,
                            long idAutista) throws DatabaseException {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATETIMEFORMAT);
+        String luogoPartenzaFormatted = luogoPartenza.replace("'", "\\'");
+        String luogoDestinazioneFormatted = luogoDestinazione.replace("'", "\\'");
         String dataPartenzaS = dataPartenza.format(dateTimeFormatter);
         String dataArrivoS = dataArrivo.format(dateTimeFormatter);
         String contributoSpeseS = String.format("%.2f", contributoSpese).replace(",", ".");
         String query = String.format("SELECT * FROM viaggi WHERE (luogoPartenza = '%s' AND luogoDestinazione = '%s' " +
                 "AND dataPartenza = '%s' AND dataArrivo = '%s' AND contributoSpese LIKE %s AND autista = %d);",
-                luogoPartenza, luogoDestinazione, dataPartenzaS, dataArrivoS, contributoSpeseS, idAutista);
+                luogoPartenzaFormatted, luogoDestinazioneFormatted, dataPartenzaS, dataArrivoS, contributoSpeseS,
+                idAutista);
         logger.info(query);
         long newIdViaggio;
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
@@ -184,7 +224,7 @@ public class ViaggioDAO {
      * @param contributoSpese il contributo spese per la prenotazione del viaggio.
      * @param idAutista l'identificativo dell'autista.
      * @return il numero di righe inserite nel database.
-     * @throws DatabaseException se non è stato possibile salvare il viaggio nel database.
+     * @throws DatabaseException se si è verificato un errore nel salvataggio del viaggio nel database.
      */
     private int salvaInDB(String luogoPartenza,
                           String luogoDestinazione,
@@ -193,12 +233,14 @@ public class ViaggioDAO {
                           float contributoSpese,
                           long idAutista) throws DatabaseException{
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATETIMEFORMAT);
+        String luogoPartenzaFormatted = luogoPartenza.replace("'", "\\'");
+        String luogoDestinazioneFormatted = luogoDestinazione.replace("'", "\\'");
         String dataPartenzaS = dataPartenza.format(dateTimeFormatter);
         String dataArrivoS = dataArrivo.format(dateTimeFormatter);
         String contributoSpeseS = String.format("%.2f", contributoSpese).replace(",", ".");
         String query = String.format("INSERT INTO viaggi (luogoPartenza, luogoDestinazione, dataPartenza, " +
-                "dataArrivo, contributoSpese, autista) VALUES ('%s', '%s', '%s', '%s', %s, %d);", luogoPartenza,
-                luogoDestinazione, dataPartenzaS, dataArrivoS, contributoSpeseS, idAutista);
+                "dataArrivo, contributoSpese, autista) VALUES ('%s', '%s', '%s', '%s', %s, %d);", luogoPartenzaFormatted,
+                luogoDestinazioneFormatted, dataPartenzaS, dataArrivoS, contributoSpeseS, idAutista);
         logger.info(query);
         int rs;
         try {
@@ -236,30 +278,58 @@ public class ViaggioDAO {
         return rs;
     }
 
+    /**
+     * Getter dell'identificativo del viaggio.
+     * @return l'identificativo del viaggio.
+     */
     public long getIdViaggio() {
         return idViaggio;
     }
 
+    /**
+     * Getter del luogo di partenza del viaggio.
+     * @return il luogo di partenza del viaggio.
+     */
     public String getLuogoPartenza() {
         return luogoPartenza;
     }
 
+    /**
+     * Getter del luogo di destinazione del viaggio.
+     * @return il luogo di destinazione del viaggio.
+     */
     public String getLuogoDestinazione() {
         return luogoDestinazione;
     }
 
+    /**
+     * Getter della data e ora di partenza del viaggio.
+     * @return la data e ora di partenza del viaggio.
+     */
     public LocalDateTime getDataPartenza() {
         return dataPartenza;
     }
 
+    /**
+     * Getter della data e ora di arrivo del viaggio.
+     * @return la data e ora di arrivo del viaggio.
+     */
     public LocalDateTime getDataArrivo() {
         return dataArrivo;
     }
 
+    /**
+     * Getter del contributo spese del viaggio.
+     * @return il contributo spese del viaggio.
+     */
     public float getContributoSpese() {
         return contributoSpese;
     }
 
+    /**
+     * Getter dell'identificativo dell'autista del viaggio.
+     * @return l'identificativo dell'autista del viaggio.
+     */
     public long getIdAutista() {
         return idAutista;
     }

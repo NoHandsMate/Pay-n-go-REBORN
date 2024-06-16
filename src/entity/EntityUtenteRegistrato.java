@@ -1,34 +1,83 @@
 package entity;
 
-import database.*;
-import exceptions.*;
+import database.PrenotazioneDAO;
+import database.UtenteRegistratoDAO;
+import database.ValutazioneDAO;
+import database.ViaggioDAO;
+import exceptions.DatabaseException;
 
-import javax.xml.crypto.Data;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Classe del package entity nel modello BCED, essa implementa l'entità utente registrato.
+ */
 public class EntityUtenteRegistrato {
+
+    /**
+     * L'identificativo del'utente registrato.
+     */
     private long id;
+
+    /**
+     * Il nome dell'utente registrato.
+     */
     private String nome;
+
+    /**
+     * Il cognome dell'utente registrato.
+     */
     private String cognome;
+
+    /**
+     * Il contatto telefonico dell'utente registrato.
+     */
     private String contattoTelefonico;
+
+    /**
+     * L'indirizzo email dell'utente registrato.
+     */
     private String email;
+
+    /**
+     * La password dell'utente registrato.
+     */
     private String password;
+
+    /**
+     * L'automobile dell'utente registrato.
+     */
     private String automobile;
+
+    /**
+     * Il numero di posti disponibili nell'automobile dell'utente registrato.
+     */
     private int postiDisponibili;
+
+    /**
+     * I viaggi condivisi dell'utente registrato.
+     */
     private ArrayList<EntityViaggio> viaggiCondivisi;
+
+    /**
+     * Le prenotazioni effettuate dall'utente registrato.
+     */
     private ArrayList<EntityPrenotazione> prenotazioni;
+
+    /**
+     * Le valutazioni relative all'utente registrato.
+     */
     private ArrayList<EntityValutazione> valutazioni;
 
     /**
-     * Costruttore di default, crea un'EntityUtenteRegistrato vuota da popolare successivamente.
+     * Costruttore di default di EntityUtenteRegistrato, crea un'entità vuota.
      */
     public EntityUtenteRegistrato() {}
 
-
     /**
-     * Costruttore di EntityUtenteRegistrato a partire da una utenteRegistratoDAO popolata
-     * @param utenteRegistratoDAO che permette di popolare l'istanza corrente di EntityUtenteRegistrato
+     * Costruttore di EntityUtenteRegistrato che popola l'istanza a partire da UtenteRegistratoDAO.
+     * @param utenteRegistratoDAO che permette di popolare l'istanza corrente di EntityUtenteRegistrato.
      */
     public EntityUtenteRegistrato(UtenteRegistratoDAO utenteRegistratoDAO) {
         this.id = utenteRegistratoDAO.getIdUtenteRegistrato();
@@ -41,13 +90,12 @@ public class EntityUtenteRegistrato {
         this.postiDisponibili = utenteRegistratoDAO.getPostiDisponibili();
     }
 
-
     /**
-     * Funzione che carica dal database le prenotazioni effettuate dall'utente
-     * @throws DatabaseException nel caso in cui ci sia stato un errore nel DB durante il prelievo delle prenotazioni
+     * Funzione che permette di popolare un utente registrato con le prenotazioni effettuate.
+     * @throws DatabaseException se si verifica un errore nel caricamento delle prenotazioni.
      */
     public void popolaPrenotazioni() throws DatabaseException {
-        ArrayList<PrenotazioneDAO> listaPrenotazioni = PrenotazioneDAO.getPrenotazioni();
+        List<PrenotazioneDAO> listaPrenotazioni = PrenotazioneDAO.getPrenotazioni();
         this.prenotazioni = new ArrayList<>();
         for (PrenotazioneDAO prenotazioneDAO : listaPrenotazioni) {
             if (prenotazioneDAO.getIdPasseggero() == this.id) {
@@ -61,13 +109,12 @@ public class EntityUtenteRegistrato {
         }
     }
 
-
     /**
-     * Funzione che carica dal database le valutazioni dell'utente
-     * @throws DatabaseException nel caso in cui ci sia stato un errore nel DB durante il prelievo delle valutazioni
+     * Funzione che permette di popolare un utente registrato con le valutazioni associate.
+     * @throws DatabaseException se si verifica un errore nel caricamento delle valutazioni.
      */
     public void popolaValutazioni() throws DatabaseException {
-        ArrayList<ValutazioneDAO> listaValutazioni = ValutazioneDAO.getValutazioni();
+        List<ValutazioneDAO> listaValutazioni = ValutazioneDAO.getValutazioni();
         this.valutazioni = new ArrayList<>();
         for (ValutazioneDAO valutazioneDAO : listaValutazioni) {
             if (valutazioneDAO.getIdUtente() == this.id) {
@@ -75,16 +122,14 @@ public class EntityUtenteRegistrato {
                 this.valutazioni.add(valutazione);
             }
         }
-
     }
 
-
     /**
-     * Funzione che carica dal database i viaggi condivisi dall'utente
-     * @throws DatabaseException nel caso in cui ci sia stato un errore nel DB durante il prelievo delle valutazioni
+     * Funzione che permette di popolare un utente registrato con i viaggi condivisi.
+     * @throws DatabaseException se si verifica un errore nel caricamento dei viaggi.
      */
     public void popolaViaggiCondivisi() throws DatabaseException {
-        ArrayList<ViaggioDAO> viaggi = ViaggioDAO.getViaggi();
+        List<ViaggioDAO> viaggi = ViaggioDAO.getViaggi();
         this.viaggiCondivisi = new ArrayList<>();
         for (ViaggioDAO viaggioDAO : viaggi) {
             if (viaggioDAO.getIdAutista() == this.id) {
@@ -92,20 +137,22 @@ public class EntityUtenteRegistrato {
                 this.viaggiCondivisi.add(viaggio);
             }
         }
-
     }
 
     /**
-     * Funzione che permette all'utente corrente di condividere un nuovo viaggio
-     * @param luogoPartenza il luogo di partenza del viaggio da condividere
-     * @param luogoDestinazione il luogo di destinazione del viaggio da condividere
-     * @param dataPartenza la data di partenza del viaggio da condividere
-     * @param dataArrivo la data di arrivo del viaggio da condividere
-     * @param contributoSpese il contributo spese per ogni passeggero del viaggio da condividere
-     * @throws DatabaseException se la condivisione del viaggio fallisce
+     * Funzione che permette all'utente registrato di condividere un nuovo viaggio.
+     * @param luogoPartenza il luogo di partenza del viaggio da condividere.
+     * @param luogoDestinazione il luogo di destinazione del viaggio da condividere.
+     * @param dataPartenza la data di partenza del viaggio da condividere.
+     * @param dataArrivo la data di arrivo del viaggio da condividere.
+     * @param contributoSpese il contributo spese per ogni passeggero del viaggio da condividere.
+     * @throws DatabaseException se non è stato possibile condividere il viaggio.
      */
-    public void condividiViaggio(String luogoPartenza, String luogoDestinazione, LocalDateTime dataPartenza,
-                                 LocalDateTime dataArrivo, float contributoSpese) throws DatabaseException {
+    public void condividiViaggio(String luogoPartenza,
+                                 String luogoDestinazione,
+                                 LocalDateTime dataPartenza,
+                                 LocalDateTime dataArrivo,
+                                 float contributoSpese) throws DatabaseException {
 
         if (this.automobile.isBlank() || this.postiDisponibili == 0) {
             throw new DatabaseException("Non puoi condividere un viaggio se non possiedi un automobile", true);
@@ -120,21 +167,25 @@ public class EntityUtenteRegistrato {
         viaggioCondiviso.setAutista(this);
 
         viaggioCondiviso.salvaInDB();
-
     }
+
     /**
-     * Funzione che permette all'utente corrente di aggiornare i propri dati personali
-     * @param nome il nuovo nome dell'utente corrente
-     * @param cognome il nuovo cognome dell'utente corrente
-     * @param email il nuovo indirizzo email dell'utente corrente
-     * @param auto la nuova automobile dell'utente corrente
-     * @param password la nuova password dell'utente corrente
-     * @param postiDisponibili il nuovo numero di posti disponibili dell'utente corrente
-     * @param contattoTelefonico il nuovo numero di telefono dell'utente corrente
-     * @throws DatabaseException se l'aggiornamento dei dati personali fallisce
+     * Funzione che permette all'utente registrato di aggiornare i propri dati personali.
+     * @param nome il nuovo nome dell'utente registrato.
+     * @param cognome il nuovo cognome dell'utente registrato.
+     * @param email il nuovo indirizzo email dell'utente registrato.
+     * @param auto la nuova automobile dell'utente registrato.
+     * @param password la nuova password dell'utente registrato.
+     * @param postiDisponibili il nuovo numero di posti disponibili dell'utente registrato.
+     * @param contattoTelefonico il nuovo numero di telefono dell'utente registrato.
+     * @throws DatabaseException se non è stato possibile aggiornare i dati personali.
      */
-    public void aggiornaDatiPersonali(String nome, String cognome, String email,
-                                      String auto, char[] password, Integer postiDisponibili,
+    public void aggiornaDatiPersonali(String nome,
+                                      String cognome,
+                                      String email,
+                                      String auto,
+                                      char[] password,
+                                      Integer postiDisponibili,
                                       String contattoTelefonico) throws DatabaseException {
 
         if (!this.automobile.equals(auto) || this.postiDisponibili != postiDisponibili) {
@@ -157,11 +208,13 @@ public class EntityUtenteRegistrato {
     }
 
     /**
-     * Funzione che permette all'utente corrente di visualizzare le prenotazioni effettuate sui suoi viaggi
-     * @return prenotazioni ArrayList di Entity prenotazioni, vuoto se non presenti
+     * Funzione che permette all'utente di visualizzare le prenotazioni effettuate su un suo viaggio.
+     * @param idViaggio l'identificativo del viaggio di cui visualizzare le prenotazioni.
+     * @return una lista di prenotazioni effettuate sul viaggio dell'utente.
+     * @throws DatabaseException se non è stato possibile ottenere la lista di prenotazioni.
      */
-    public ArrayList<EntityPrenotazione> visualizzaPrenotazioni(long idViaggio) throws DatabaseException{
-        ArrayList<EntityPrenotazione> listaPrenotazioni = new ArrayList<>();
+    public List<EntityPrenotazione> visualizzaPrenotazioni(long idViaggio) throws DatabaseException{
+        List<EntityPrenotazione> listaPrenotazioni = new ArrayList<>();
         for(EntityViaggio viaggio : this.viaggiCondivisi){
             if (viaggio.getId() == idViaggio){
                 viaggio.popolaPrenotazioni();
@@ -172,9 +225,9 @@ public class EntityUtenteRegistrato {
     }
 
     /**
-     * Funzione che permette all'utente corrente di prenotare un viaggio
-     * @param idViaggio l'id del viaggio che si intende prenotare
-     * @throws DatabaseException nel caso in cui la prenotazione non vada a buon fine
+     * Funzione che permette all'utente registrato di prenotare un viaggio.
+     * @param idViaggio l'identificativo del viaggio che si intende prenotare.
+     * @throws DatabaseException se non è stato possibile prenotare il viaggio.
      */
     public void prenotaViaggio(long idViaggio) throws DatabaseException {
         ViaggioDAO viaggioDAO = new ViaggioDAO(idViaggio);
@@ -205,7 +258,6 @@ public class EntityUtenteRegistrato {
         entityPrenotazione.setViaggioPrenotato(entityViaggio);
 
         entityPrenotazione.salvaInDB();
-
     }
 
     /**
@@ -215,7 +267,8 @@ public class EntityUtenteRegistrato {
      * @param accettata lo stato attuale della prenotazione
      * @throws DatabaseException se la gestione della prenotazione nel database fallisce
      */
-    public void gestisciPrenotazione(long idPrenotazione,boolean accettata) throws DatabaseException {
+    public void gestisciPrenotazione(long idPrenotazione,
+                                     boolean accettata) throws DatabaseException {
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO(idPrenotazione);
         if(accettata) {
             prenotazioneDAO.updatePrenotazione(true);
@@ -225,13 +278,18 @@ public class EntityUtenteRegistrato {
     }
 
     /**
-     * Funzione che permette all'utente corrente di valutare un altro utente
-     * @param idPrenotazione l'id della prenotazione della cui si vuole valutare l'utente
-     * @param numeroStelle il numero di stelle da assegnare
-     * @param text la descrizione della valutazione
-     * @throws DatabaseException se il salvataggio della valutazione nel database fallisce
+     * Funzione che permette all'utente registrato, data una prenotazione, di valutare l'altro utente riferito dalla
+     * stessa. Di conseguenza, se l'utente registrato è l'autista del viaggio associato alla prenotazione si valuterà il
+     * passeggero; se l'utente registrato è il passeggero associato alla prenotazione si valuterà l'autista del viaggio
+     * associato alla prenotazione.
+     * @param idPrenotazione l'identificativo della prenotazione a cui si fa riferimento.
+     * @param numeroStelle il numero di stelle da assegnare.
+     * @param text la descrizione della valutazione.
+     * @throws DatabaseException se non è stato possibile valutare l'utente.
      */
-    public void valutaUtente(long idPrenotazione, int numeroStelle, String text) throws DatabaseException {
+    public void valutaUtente(long idPrenotazione,
+                             int numeroStelle,
+                             String text) throws DatabaseException {
         EntityValutazione entityValutazione = new EntityValutazione();
 
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO(idPrenotazione);
@@ -247,27 +305,30 @@ public class EntityUtenteRegistrato {
         else
             idValutato = prenotazione.getPasseggero().id;
 
+        UtenteRegistratoDAO utenteValutatoDAO = new UtenteRegistratoDAO(idValutato);
+        EntityUtenteRegistrato utenteValutato = new EntityUtenteRegistrato(utenteValutatoDAO);
         entityValutazione.setNumeroStelle(numeroStelle);
         entityValutazione.setDescrizione(text);
-        entityValutazione.setIdUtenteValutato(idValutato);
+        entityValutazione.setUtenteValutato(utenteValutato);
 
         entityValutazione.salvaInDB();
     }
 
     /**
-     * Funzione d'ausilio a <close> generaReportUtenti </close> che permette di visualizzare tutte le valutazioni di
-     * un utente
-     * @return un ArrayList di entity con le valutazioni dell'utente in caso di successo
+     * Funzione che permette di visualizzare i dettagli di tutte le valutazioni associate all'utente registrato.
+     * @return l'elenco valutazioni dell'utente.
+     * @throws DatabaseException se non è stato possibile creare l'elenco delle valutazioni dell'utente registrato.
      */
-    public ArrayList<EntityValutazione> visualizzaValutazioni() throws DatabaseException {
+    public List<EntityValutazione> visualizzaValutazioni() throws DatabaseException {
         this.popolaValutazioni();
         return this.valutazioni;
     }
 
     /**
-     * Funzione di utilità ad aggiornaDatiPersonali che permette di eliminare i viaggi condivisi fino a quel momento,
-     * quando l'utente aggiorna la sua automobile o il numero di posti disponibili
-     * @throws DatabaseException se l'eliminazione dei viaggi dal database non va a buon fine
+     * Funzione di utilità ad {@link #aggiornaDatiPersonali(String, String, String, String, char[], Integer, String)
+     * aggiornaDatiPersonali} che permette di eliminare i viaggi condivisi fino a quel momento, quando l'utente aggiorna
+     * la sua automobile o il numero di posti disponibili.
+     * @throws DatabaseException se non è stato possibile eliminare i viaggi condivisi.
      */
     private void eliminaViaggiCondivisi() throws DatabaseException {
         for (EntityViaggio viaggio : this.viaggiCondivisi) {
@@ -277,10 +338,10 @@ public class EntityUtenteRegistrato {
         this.viaggiCondivisi = new ArrayList<>();
     }
 
-
     /**
-     * Funzione di utilità ad aggiornaDatiPersonali che permette di aggiornare la DAO in ingresso con i dati dell'entity
-     * @param utenteRegistratoDAO DAO da aggiornare con i dati dell'entity
+     * Funzione di utilità ad {@link #aggiornaDatiPersonali(String, String, String, String, char[], Integer, String)
+     * aggiornaDatiPersonali} che permette di aggiornare l'utente registrato con i dati memorizzati nella DAO.
+     * @param utenteRegistratoDAO che permette di aggiornare l'istanza corrente di EntityUtenteRegistrato.
      */
     private void aggiornaDati(UtenteRegistratoDAO utenteRegistratoDAO) {
         this.nome = utenteRegistratoDAO.getNome();
@@ -292,88 +353,179 @@ public class EntityUtenteRegistrato {
         this.postiDisponibili = utenteRegistratoDAO.getPostiDisponibili();
     }
 
+    /**
+     * Getter dell'identificativo dell'utente registrato.
+     * @return l'identificativo dell'utente registrato.
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * Setter dell'identificativo dell'utente registrato.
+     * @param id il nuovo identificativo dell'utente registrato.
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    /**
+     * Getter del nome dell'utente registrato.
+     * @return il nome dell'utente registrato.
+     */
     public String getNome() {
         return nome;
     }
 
+    /**
+     * Setter del nome dell'utente registrato.
+     * @param nome il nuovo nome dell'utente registrato.
+     */
     public void setNome(String nome) {
         this.nome = nome;
     }
 
+    /**
+     * Getter del cognome dell'utente registrato.
+     * @return il cognome dell'utente registrato.
+     */
     public String getCognome() {
         return cognome;
     }
 
+    /**
+     * Setter del cognome dell'utente registrato.
+     * @param cognome il nuovo cognome dell'utente registrato.
+     */
     public void setCognome(String cognome) {
         this.cognome = cognome;
     }
 
+    /**
+     * Getter del contatto telefonico dell'utente registrato.
+     * @return il contatto telefonico dell'utente registrato.
+     */
     public String getContattoTelefonico() {
         return contattoTelefonico;
     }
 
+    /**
+     * Setter del contatto telefonico dell'utente registrato.
+     * @param contattoTelefonico il nuovo contatto telefonico dell'utente registrato.
+     */
     public void setContattoTelefonico(String contattoTelefonico) {
         this.contattoTelefonico = contattoTelefonico;
     }
 
+    /**
+     * Getter dell'email dell'utente registrato.
+     * @return l'email dell'utente registrato.
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Setter dell'email dell'utente registrato.
+     * @param email la nuova email dell'utente registrato.
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * Getter della password dell'utente registrato.
+     * @return la password dell'utente registrato.
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Setter della password dell'utente registrato.
+     * @param password la nuova password dell'utente registrato.
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * Getter dell'automobile dell'utente registrato.
+     * @return l'automobile dell'utente registrato.
+     */
     public String getAutomobile() {
         return automobile;
     }
 
+    /**
+     * Setter dell'automobile dell'utente registrato.
+     * @param automobile la nuova automobile dell'utente registrato.
+     */
     public void setAutomobile(String automobile) {
         this.automobile = automobile;
     }
 
+    /**
+     * Getter del numero di posti disponibili nell'automobile dell'utente registrato.
+     * @return il numero di posti disponibili nell'automobile dell'utente registrato.
+     */
     public int getPostiDisponibili() {
         return postiDisponibili;
     }
 
+    /**
+     * Setter del numero di posti disponibili nell'automobile dell'utente registrato.
+     * @param postiDisponibili il nuovo numero di posti disponibili nell'automobile dell'utente registrato.
+     */
     public void setPostiDisponibili(int postiDisponibili) {
         this.postiDisponibili = postiDisponibili;
     }
 
-    public ArrayList<EntityValutazione> getValutazioni() {
+    /**
+     * Getter delle valutazioni relative all'utente registrato.
+     * @return la lista di valutazioni relative all'utente registrato.
+     */
+    public List<EntityValutazione> getValutazioni() {
         return valutazioni;
     }
 
-    public void setValutazioni(ArrayList<EntityValutazione> valutazioni) {
-        this.valutazioni = valutazioni;
+    /**
+     * Setter delle valutazioni relative all'utente registrato.
+     * @param valutazioni la nuova lista di valutazioni relative all'utente registrato.
+     */
+    public void setValutazioni(List<EntityValutazione> valutazioni) {
+        this.valutazioni = (ArrayList<EntityValutazione>) valutazioni;
     }
 
-    public ArrayList<EntityPrenotazione> getPrenotazioni() {
+    /**
+     * Getter delle prenotazioni effettuate dall'utente registrato.
+     * @return la lista di prenotazioni effettuate dall'utente registrato.
+     */
+    public List<EntityPrenotazione> getPrenotazioni() {
         return prenotazioni;
     }
 
-    public void setPrenotazioni(ArrayList<EntityPrenotazione> prenotazioni) {
-        this.prenotazioni = prenotazioni;
+    /**
+     * Setter delle prenotazioni effettuate dall'utente registrato.
+     * @param prenotazioni la nuova lista di prenotazioni effettuate dall'utente registrato.
+     */
+    public void setPrenotazioni(List<EntityPrenotazione> prenotazioni) {
+        this.prenotazioni = (ArrayList<EntityPrenotazione>) prenotazioni;
     }
 
-    public ArrayList<EntityViaggio> getViaggiCondivisi() {
+    /**
+     * Getter dei viaggi condivisi dall'utente registrato.
+     * @return la lista dei viaggi condivisi dall'utente registrato.
+     */
+    public List<EntityViaggio> getViaggiCondivisi() {
         return viaggiCondivisi;
     }
 
-    public void setViaggiCondivisi(ArrayList<EntityViaggio> viaggiCondivisi) {
-        this.viaggiCondivisi = viaggiCondivisi;
+    /**
+     * Setter dei viaggi condivisi dall'utente registrato.
+     * @param viaggiCondivisi la nuova lista dei viaggi condivisi dall'utente registrato.
+     */
+    public void setViaggiCondivisi(List<EntityViaggio> viaggiCondivisi) {
+        this.viaggiCondivisi = (ArrayList<EntityViaggio>) viaggiCondivisi;
     }
-
 }

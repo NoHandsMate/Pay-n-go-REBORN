@@ -5,15 +5,37 @@ import exceptions.DatabaseException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Classe del package database nel modello BCED, essa implementa la DAO delle valutazioni.
+ */
 public class ValutazioneDAO {
 
+    /**
+     * L'identificativo della valutazione.
+     */
     private long idValutazione;
+
+    /**
+     * Il numero di stelle della valutazione.
+     */
     private int numeroStelle;
+
+    /**
+     * La descrizione della valutazione.
+     */
     private String descrizione;
+
+    /**
+     * L'identificativo dell'utente a cui si riferisce la valutazione.
+     */
     private long idUtente;
 
+    /**
+     * Logger che stampa tutte le query eseguite sul database e gli eventuali messaggi di errore.
+     */
     private static final Logger logger = Logger.getLogger("loggerValutazioneDAO");
 
     /**
@@ -25,6 +47,7 @@ public class ValutazioneDAO {
      * Costruttore di ValutazioneDAO che popola l'istanza in base all'id fornito con i dati già memorizzati nel
      * database.
      * @param idValutazione l'identificativo della valutazione.
+     * @throws DatabaseException se non è stato possibile creare un'istanza di ValutazioneDAO.
      */
     public ValutazioneDAO(long idValutazione) throws DatabaseException {
         if (!caricaDaDB(idValutazione))
@@ -37,18 +60,17 @@ public class ValutazioneDAO {
      * @param numeroStelle il numero di stelle della valutazione.
      * @param descrizione la descrizione della valutazione.
      * @param idUtente l'identificativo dell'utente valutato.
-     * @return true in vaso di successo (in tal caso l'oggetto sarà stato valorizzato con i parametri dati), false
-     * altrimenti (l'oggetto non sarà valorizzato).
      * @throws DatabaseException se si è verificato un errore nella creazione dell'oggetto ValutazioneDAO.
      */
-    public void createValutazione(int numeroStelle, String descrizione, long idUtente) throws DatabaseException{
-        String descrizioneFormatted = descrizione.replace("'", "\\'");
-        if (cercaInDB(numeroStelle, descrizioneFormatted, idUtente) != 0)
+    public void createValutazione(int numeroStelle,
+                                  String descrizione,
+                                  long idUtente) throws DatabaseException{
+        if (cercaInDB(numeroStelle, descrizione, idUtente) != 0)
             throw new DatabaseException("Esiste già una valutazione identica.",true);
-        if (salvaInDB(numeroStelle, descrizioneFormatted, idUtente) == 0)
+        if (salvaInDB(numeroStelle, descrizione, idUtente) == 0)
             throw new DatabaseException("Non è stata aggiunta alcuna valutazione al database.",false);
 
-        this.idValutazione = cercaInDB(numeroStelle,descrizioneFormatted,idUtente);
+        this.idValutazione = cercaInDB(numeroStelle,descrizione,idUtente);
         this.numeroStelle = numeroStelle;
         this.descrizione = descrizione;
         this.idUtente = idUtente;
@@ -65,9 +87,10 @@ public class ValutazioneDAO {
 
     /**
      * Funzione per prelevare tutte le valutazioni dal database.
+     * @return la lista di tutte le valutazioni del database.
      * @throws DatabaseException se non è stato possibile selezionare tutte le valutazioni dal database.
      */
-    public static ArrayList<ValutazioneDAO> getValutazioni() throws DatabaseException {
+    public static List<ValutazioneDAO> getValutazioni() throws DatabaseException {
         String query = "SELECT * from valutazioni";
         ArrayList<ValutazioneDAO> valutazioni = new ArrayList<>();
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
@@ -89,6 +112,7 @@ public class ValutazioneDAO {
      * Funzione privata per caricare i dati di una valutazione dal database.
      * @param id l'identificativo della valutazione.
      * @return true in caso di successo, false altrimenti.
+     * @throws DatabaseException se si è verificato un errore nel caricamento della valutazione dal database.
      */
     private boolean caricaDaDB(long id) throws DatabaseException {
         String query = String.format("SELECT * from valutazioni WHERE (id = %d);", id);
@@ -119,8 +143,10 @@ public class ValutazioneDAO {
 
     private long cercaInDB(int numeroStelle, String descrizione, long idUtente)
             throws DatabaseException {
+        String descrizioneFormatted = descrizione.replace("'", "\\'");
         String query = String.format("SELECT * FROM valutazioni WHERE (idValutazione = %d AND numeroStelle = %d " +
-                        "AND descrizione = '%s' AND utente = %d);",this.idValutazione,numeroStelle, descrizione, idUtente);
+                        "AND descrizione = '%s' AND utente = %d);", this.idValutazione, numeroStelle,
+                descrizioneFormatted, idUtente);
         logger.info(query);
         long newIdValutazione;
         try (ResultSet rs = DBManager.getInstance().selectQuery(query)) {
@@ -140,11 +166,15 @@ public class ValutazioneDAO {
      * @param numeroStelle il numero di stelle della valutazione.
      * @param descrizione la descrizione della valutazione.
      * @param idUtente l'identificativo dell'utente valutato.
-     * @return true in caso di successo, false altrimenti.
+     * @return il numero di righe inserite nel database.
+     * @throws DatabaseException se si è verificato un errore nel salvataggio della valutazione nel database.
      */
-    private int salvaInDB(int numeroStelle, String descrizione, long idUtente) throws DatabaseException{
+    private int salvaInDB(int numeroStelle,
+                          String descrizione,
+                          long idUtente) throws DatabaseException{
+        String descrizioneFormatted = descrizione.replace("'", "\\'");
         String query = String.format("INSERT INTO valutazioni (numeroStelle, descrizione, utente) VALUES " +
-                "(%d, '%s', %d);",numeroStelle, descrizione, idUtente);
+                "(%d, '%s', %d);",numeroStelle, descrizioneFormatted, idUtente);
         logger.info(query);
         int rs;
         try {
@@ -159,7 +189,8 @@ public class ValutazioneDAO {
 
     /**
      * Funzione privata per eliminare una valutazione dal database.
-     * @return true in caso di successo, false altrimenti.
+     * @return il numero di righe eliminate nel database.
+     * @throws DatabaseException se non è stato possibile eliminare la valutazione dal database.
      */
     private int eliminaDaDB() throws DatabaseException {
         String query = String.format("DELETE FROM valutazioni WHERE (idValutazioni = %d);", this.idValutazione);
@@ -175,18 +206,34 @@ public class ValutazioneDAO {
         return rs;
     }
 
+    /**
+     * Getter dell'identificativo della valutazione.
+     * @return l'identificativo della valutazione.
+     */
     public long getIdValutazione() {
         return idValutazione;
     }
 
+    /**
+     * Getter del numero di stelle della valutazione.
+     * @return il numero di stelle della valutazione.
+     */
     public int getNumeroStelle() {
         return numeroStelle;
     }
 
+    /**
+     * Getter della descrizione della valutazione.
+     * @return la descrizione della valutazione.
+     */
     public String getDescrizione() {
         return descrizione;
     }
 
+    /**
+     * Getter dell'identificativo dell'utente a cui si riferisce la valutazione.
+     * @return l'identificativo dell'utente a cui si riferisce la valutazione.
+     */
     public long getIdUtente() {
         return idUtente;
     }

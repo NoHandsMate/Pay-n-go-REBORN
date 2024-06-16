@@ -2,9 +2,6 @@ package boundary;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -12,15 +9,20 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DateTimePicker;
+
 import control.ControllerUtente;
-import dto.*;
+import dto.MyDto;
 import utility.Utilities;
 
+/**
+ * Classe del package boundary nel modello BCED, essa implementa la Main Window utilizzabile dagli utenti registrati per
+ * effettuare gran parte delle operazioni.
+ */
 public class MainWindow extends JFrame {
     private JPanel mainWindowPanel;
     private JTabbedPane contentTab;
@@ -71,6 +73,7 @@ public class MainWindow extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
         getContentPane().add(new JScrollPane(mainWindowPanel), BorderLayout.CENTER);
+        postiSpinner.setModel(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
         contentTab.setUI(new BasicTabbedPaneUI() {
             @Override
             protected int calculateTabAreaHeight(int tabPlacement, int runCount, int maxTabHeight) {
@@ -176,7 +179,7 @@ public class MainWindow extends JFrame {
     }
 
     private void createUIComponents() {
-        circularLogoPanel = new ImagePanel("resources/payngo-circlogo.png", 42, 42);
+        circularLogoPanel = new ImagePanel("./resources/payngo-circlogo.png", 42, 42);
     }
 
     private void setTabActive(int index) {
@@ -192,24 +195,6 @@ public class MainWindow extends JFrame {
                 tabButtons[i].setForeground(Color.WHITE);
             }
         }
-    }
-
-    private void populateTable(JTable table, Object[] columnNames, Object[][] data) {
-        TableModel tableModel = new DefaultTableModel(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        table.setModel(tableModel);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
-        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
-        headerRenderer.setBackground(new Color(48, 48, 48));
-        headerRenderer.setOpaque(true);
-        table.getTableHeader().setDefaultRenderer(headerRenderer);
-        table.getTableHeader().setReorderingAllowed(false);
-        table.getTableHeader().setResizingAllowed(false);
     }
 
     private void populateAccountTab() {
@@ -280,10 +265,10 @@ public class MainWindow extends JFrame {
             return new AbstractMap.SimpleEntry<>(false, "Riempi i campi obbligatori");
         }
 
-        Pattern specialCharRegex = Pattern.compile("[^a-z A-Z]", Pattern.CASE_INSENSITIVE);
+        Pattern placeCharRegex = Pattern.compile("[^a-zA-Z0-9 ,.'-]", Pattern.CASE_INSENSITIVE);
         Pattern floatRegex = Pattern.compile("^[+]?([0-9]*[.])?[0-9]+$", Pattern.CASE_INSENSITIVE);
-        Matcher condividiLuogoPartenzaMatcher = specialCharRegex.matcher(condividiLuogoPartenzaField.getText());
-        Matcher condividiLuogoDestinazioneMatcher = specialCharRegex.matcher(condividiLuogoDestinazioneField.getText());
+        Matcher condividiLuogoPartenzaMatcher = placeCharRegex.matcher(condividiLuogoPartenzaField.getText());
+        Matcher condividiLuogoDestinazioneMatcher = placeCharRegex.matcher(condividiLuogoDestinazioneField.getText());
         Matcher condividiContributoSpeseMatcher = floatRegex.matcher(condividiContributoSpeseField.getText());
 
         if (condividiLuogoPartenzaField.getText().length() > 50) {
@@ -329,8 +314,8 @@ public class MainWindow extends JFrame {
                 dataPartenzaPicker.getDate());
 
         if (Boolean.TRUE.equals(result.getKey())) {
-            ArrayList<MyDto> viaggiTrovati = (ArrayList<MyDto>)result.getValue();
-            ArrayList<String> rows = new ArrayList<>();
+            List<MyDto> viaggiTrovati = (List<MyDto>)result.getValue();
+            List<String> rows = new ArrayList<>();
             for (MyDto viaggi : viaggiTrovati) {
                 rows.add(viaggi.getCampo1());
                 rows.add(viaggi.getCampo2());
@@ -350,13 +335,8 @@ public class MainWindow extends JFrame {
                     "Data e ora arrivo", "Contributo spese", "Autista"};
             String[][] data = new String[rows.size() / columnNames.length][columnNames.length];
 
-            for (int i = 0; i < data.length; i++) {
-                for (int j = 0; j < data[i].length; j++)
-                {
-                    data[i][j] = rows.get(i * columnNames.length + j);
-                }
-            }
-            populateTable(viaggiTrovatiTable, columnNames, data);
+            Utilities.rowToMatrix(rows, data, columnNames.length);
+            Utilities.populateTable(viaggiTrovatiTable, columnNames, data);
 
         } else {
             JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
@@ -381,14 +361,8 @@ public class MainWindow extends JFrame {
 
     private void visualizzaPrenotazioniEffettuate() {
         String[] columnNames = {"Id prenotazione", "Autista", "Viaggio", "Stato"};
-        AbstractMap.SimpleEntry<Boolean, Object> result =
-                ControllerUtente.getInstance().visualizzaPrenotazioniEffettuate();
-        if (Boolean.FALSE.equals(result.getKey())) {
-            JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        ArrayList<MyDto> prenotazioniEffettuate = (ArrayList<MyDto>)result.getValue();
-        ArrayList<String> rows = new ArrayList<>();
+        List<MyDto> prenotazioniEffettuate = ControllerUtente.getInstance().visualizzaPrenotazioniEffettuate();
+        List<String> rows = new ArrayList<>();
         for (MyDto prenotazioni : prenotazioniEffettuate) {
             rows.add(prenotazioni.getCampo1());
             rows.add(prenotazioni.getCampo2());
@@ -398,14 +372,8 @@ public class MainWindow extends JFrame {
 
         String[][] data = new String[rows.size() / columnNames.length][columnNames.length];
 
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[i].length; j++)
-            {
-                data[i][j] = rows.get(i * columnNames.length + j);
-            }
-        }
-
-        populateTable(prenotazioniEffettuateTable, columnNames, data);
+        Utilities.rowToMatrix(rows, data, columnNames.length);
+        Utilities.populateTable(prenotazioniEffettuateTable, columnNames, data);
     }
 
     private void prenotaViaggio(long idViaggio) {
@@ -428,8 +396,8 @@ public class MainWindow extends JFrame {
                 "Data e ora arrivo", "Contributo spese"};
         String[][] data;
 
-        ArrayList<String> rows = new ArrayList<>();
-        ArrayList<MyDto> listaValutazioni = ControllerUtente.getInstance().visualizzaViaggiCondivisi();
+        List<String> rows = new ArrayList<>();
+        List<MyDto> listaValutazioni = ControllerUtente.getInstance().visualizzaViaggiCondivisi();
         for (MyDto valutazione : listaValutazioni) {
             rows.add(valutazione.getCampo1());
             rows.add(valutazione.getCampo2());
@@ -441,19 +409,14 @@ public class MainWindow extends JFrame {
 
         data = new String[rows.size() / columnNames.length][columnNames.length];
 
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[i].length; j++)
-            {
-                data[i][j] = rows.get(i * columnNames.length + j);
-            }
-        }
-        populateTable(viaggiCondivisiTable, columnNames, data);
+        Utilities.rowToMatrix(rows, data, columnNames.length);
+        Utilities.populateTable(viaggiCondivisiTable, columnNames, data);
     }
 
     private void visualizzaPrenotazioni(long idViaggio) {
         String[] columnNames = {"Id prenotazione", "Passeggero", "Stato"};
         String[][] data;
-        ArrayList<String> rows = new ArrayList<>();
+        List<String> rows = new ArrayList<>();
 
         if (idViaggio == 0) {
             data = new String[0][0];
@@ -465,7 +428,7 @@ public class MainWindow extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            ArrayList<MyDto> listaPrenotazioni = (ArrayList<MyDto>) result.getValue();
+            List<MyDto> listaPrenotazioni = (List<MyDto>) result.getValue();
             for (MyDto prenotazione : listaPrenotazioni) {
                 rows.add(prenotazione.getCampo1());
                 rows.add(prenotazione.getCampo2());
@@ -473,16 +436,9 @@ public class MainWindow extends JFrame {
             }
 
             data = new String[rows.size() / columnNames.length][columnNames.length];
+            Utilities.rowToMatrix(rows, data, columnNames.length);
         }
-
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[i].length; j++)
-            {
-                data[i][j] = rows.get(i * columnNames.length + j);
-            }
-        }
-
-        populateTable(prenotazioniTable, columnNames, data);
+        Utilities.populateTable(prenotazioniTable, columnNames, data);
     }
 
     private void handlePrenotazioneButtons() {

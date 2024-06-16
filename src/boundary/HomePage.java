@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Enumeration;
 
+/**
+ * Classe del package boundary nel modello BCED, essa implementa la HomePage, landing point dell'applicazione.
+ */
 public class HomePage extends JFrame {
     private JButton registrazioneButton;
     private JButton loginButton;
@@ -63,6 +66,6 @@ public class HomePage extends JFrame {
     }
 
     private void createUIComponents() {
-        logoPanel = new ImagePanel("resources/payngo-reborn-logo.png", 2437, 1112);
+        logoPanel = new ImagePanel("./resources/payngo-reborn-logo.png", 2437, 1112);
     }
 }
