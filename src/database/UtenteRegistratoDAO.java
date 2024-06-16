@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Classe del package database nel modello BCED, essa implementa la DAO dei viaggi.
+ * Classe del package database nel modello BCED, essa implementa la DAO degli utenti registrati.
  */
 public class UtenteRegistratoDAO {
 
