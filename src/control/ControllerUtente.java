@@ -154,7 +154,8 @@ public class ControllerUtente {
     /**
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni da lui effettuate sui viaggi degli
      * altri autisti.
-     * @return la lista delle prenotazioni effettuate dall'utente corrente.
+     * @return una tupla <code>(Boolean, Object)</code>: nel caso di boolean <code>true</code> l'oggetto conterrà la
+     * lista di prenotazioni effettuate, nel caso di boolean <code>false</code> esso conterrà il messaggio di errore.
      */
     public List<MyDto> visualizzaPrenotazioniEffettuate() {
         return FacadeEntityUtente.getInstance().visualizzaPrenotazioniEffettuate();
