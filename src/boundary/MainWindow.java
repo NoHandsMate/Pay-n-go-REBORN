@@ -382,13 +382,8 @@ public class MainWindow extends JFrame {
 
     private void visualizzaPrenotazioniEffettuate() {
         String[] columnNames = {"Id prenotazione", "Autista", "Viaggio", "Stato"};
-        AbstractMap.SimpleEntry<Boolean, Object> result =
-                ControllerUtente.getInstance().visualizzaPrenotazioniEffettuate();
-        if (Boolean.FALSE.equals(result.getKey())) {
-            JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        ArrayList<MyDto> prenotazioniEffettuate = (ArrayList<MyDto>)result.getValue();
+        ArrayList<MyDto> prenotazioniEffettuate =
+                (ArrayList<MyDto>) ControllerUtente.getInstance().visualizzaPrenotazioniEffettuate();
         ArrayList<String> rows = new ArrayList<>();
         for (MyDto prenotazioni : prenotazioniEffettuate) {
             rows.add(prenotazioni.getCampo1());

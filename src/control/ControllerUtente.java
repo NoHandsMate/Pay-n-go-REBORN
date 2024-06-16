@@ -158,17 +158,8 @@ public class ControllerUtente {
      * @return una tupla <code>(Boolean, Object)</code>: nel caso di boolean <code>true</code> l'oggetto conterrà la
      * lista di prenotazioni effettuate, nel caso di boolean <code>false</code> esso conterrà il messaggio di errore.
      */
-    public AbstractMap.SimpleEntry<Boolean, Object> visualizzaPrenotazioniEffettuate() {
-
-        List<MyDto> result;
-
-        try {
-            result = FacadeEntityUtente.getInstance().visualizzaPrenotazioniEffettuate();
-        } catch (VisualizzaPrenotazioniEffettuateFailedException e) {
-            return new AbstractMap.SimpleEntry<>(false, e.getMessage());
-        }
-
-        return new AbstractMap.SimpleEntry<>(true, result);
+    public List<MyDto> visualizzaPrenotazioniEffettuate() {
+        return FacadeEntityUtente.getInstance().visualizzaPrenotazioniEffettuate();
     }
 
     /**
@@ -254,9 +245,7 @@ public class ControllerUtente {
      * @return ArrayList di DTO che racchiude le informazioni sui viaggi condivisi.
      */
     public List<MyDto> visualizzaViaggiCondivisi() {
-        List<MyDto> viaggiCondivisi;
-        viaggiCondivisi = FacadeEntityUtente.getInstance().visualizzaViaggiCondivisi();
-        return viaggiCondivisi;
+        return FacadeEntityUtente.getInstance().visualizzaViaggiCondivisi();
     }
 
     /**

@@ -5,3 +5,11 @@ GestoreViaggi.java - 136
         listaDAOPrenotazioni = PrenotazioneDAO.getPrenotazioni();
         return listaDAOPrenotazioni;
     }
+
+EntityPrenotazione.java - 52
+
+    public void popolaViaggio() throws DatabaseException {
+        PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO(this.id);
+        ViaggioDAO viaggioDAO = new ViaggioDAO(prenotazioneDAO.getIdViaggioPrenotato());
+        this.viaggioPrenotato = new EntityViaggio(viaggioDAO);
+    }

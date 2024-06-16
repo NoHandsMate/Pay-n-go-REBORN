@@ -128,7 +128,7 @@ public class PrenotazioneDAO {
      * Funzione privata per cercare una specifica prenotazione nel database.
      * @param idPasseggero l'identificativo dell'utente passeggero.
      * @param idViaggioPrenotato l'identificativo del viaggio prenotato.
-     * @return l'id della prenotazione (positivo) in caso di viaggio trovato, 0 in caso di viaggio non trovato.
+     * @return l'identificativo della prenotazione (positivo) in caso di viaggio trovato, 0 in caso di viaggio non trovato.
      * @throws DatabaseException se si è verificato un errore nella ricerca della prenotazione nel database.
      */
     private long cercaInDB(long idPasseggero,

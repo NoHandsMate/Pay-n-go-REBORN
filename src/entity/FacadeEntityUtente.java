@@ -121,10 +121,8 @@ public class FacadeEntityUtente {
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni da lui effettuate sui viaggi degli
      * altri autisti.
      * @return la lista di prenotazioni effettuate.
-     * @throws  VisualizzaPrenotazioniEffettuateFailedException se non è stato possibile ottenere la lista di
-     * prenotazioni effettuate.
      */
-    public List<MyDto> visualizzaPrenotazioniEffettuate() throws VisualizzaPrenotazioniEffettuateFailedException {
+    public List<MyDto> visualizzaPrenotazioniEffettuate() {
         return GestoreUtenti.getInstance().visualizzaPrenotazioniEffettuate();
     }
 

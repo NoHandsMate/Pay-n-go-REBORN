@@ -1,25 +1,26 @@
 package entity;
 
-import database.*;
-import exceptions.*;
+import database.UtenteRegistratoDAO;
+import database.ValutazioneDAO;
+import exceptions.DatabaseException;
 
 /**
- * Classe del package entity nel modello BCED, essa implementa l'entità prenotazione.
+ * Classe del package entity nel modello BCED, essa implementa l'entità valutazione.
  */
 public class EntityValutazione {
 
     /**
-     * L'identificativo della prenotazione.
+     * L'identificativo della valutazione.
      */
     private long id;
 
     /**
-     * Il numero di stelle della prenotazione.
+     * Il numero di stelle della valutazione.
      */
     private int numeroStelle;
 
     /**
-     * La descrizione della prenotazione.
+     * La descrizione della valutazione.
      */
     private String descrizione;
 
@@ -55,35 +56,67 @@ public class EntityValutazione {
         valutazioneDAO.createValutazione(this.numeroStelle, this.descrizione, this.utenteValutato.getId());
     }
 
+    /**
+     * Getter dell'identificativo della valutazione.
+     * @return l'identificativo della valutazione.
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * Setter dell'identificativo della valutazione.
+     * @param id il nuovo identificativo della valutazione.
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * Getter del numero di stelle della valutazione.
+     * @return il numero di stelle della valutazione.
+     */
     public int getNumeroStelle() {
         return numeroStelle;
     }
 
+    /**
+     * Setter del numero di stelle della valutazione.
+     * @param numeroStelle il nuovo numero di stelle della valutazione.
+     */
     public void setNumeroStelle(int numeroStelle) {
         this.numeroStelle = numeroStelle;
     }
 
+    /**
+     * Getter della descrizione della valutazione.
+     * @return la descrizione della valutazione.
+     */
     public String getDescrizione() {
         return descrizione;
     }
 
+    /**
+     * Setter della descrizione della valutazione.
+     * @param descrizione la nuova descrizione della valutazione.
+     */
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
     }
 
-    public EntityUtenteRegistrato getIdUtenteValutato() {
+    /**
+     * Getter dell'utente a cui si riferisce la valutazione.
+     * @return l'utente a cui si riferisce la valutazione.
+     */
+    public EntityUtenteRegistrato getUtenteValutato() {
         return utenteValutato;
     }
 
-    public void setIdUtenteValutato(EntityUtenteRegistrato utenteValutato) {
+    /**
+     * Setter dell'utente a cui si riferisce la valutazione.
+     * @param utenteValutato il nuovo utente a cui si riferisce la valutazione.
+     */
+    public void setUtenteValutato(EntityUtenteRegistrato utenteValutato) {
         this.utenteValutato = utenteValutato;
     }
 }

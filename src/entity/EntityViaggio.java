@@ -1,7 +1,9 @@
 package entity;
 
-import database.*;
-import exceptions.*;
+import database.PrenotazioneDAO;
+import database.UtenteRegistratoDAO;
+import database.ViaggioDAO;
+import exceptions.DatabaseException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

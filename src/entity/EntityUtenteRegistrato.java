@@ -247,9 +247,11 @@ public class EntityUtenteRegistrato {
         else
             idValutato = prenotazione.getPasseggero().id;
 
+        UtenteRegistratoDAO utenteValutatoDAO = new UtenteRegistratoDAO(idValutato);
+        EntityUtenteRegistrato utenteValutato = new EntityUtenteRegistrato(utenteValutatoDAO);
         entityValutazione.setNumeroStelle(numeroStelle);
         entityValutazione.setDescrizione(text);
-        entityValutazione.setIdUtenteValutato(idValutato);
+        entityValutazione.setUtenteValutato(utenteValutato);
 
         entityValutazione.salvaInDB();
     }

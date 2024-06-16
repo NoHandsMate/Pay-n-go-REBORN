@@ -236,33 +236,24 @@ public class GestoreUtenti {
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni da lui effettuate sui viaggi degli
      * altri autisti.
      * @return la lista di prenotazioni effettuate.
-     * @throws  VisualizzaPrenotazioniEffettuateFailedException se non è stato possibile ottenere la lista di
-     * prenotazioni effettuate.
      */
-    public List<MyDto> visualizzaPrenotazioniEffettuate() throws VisualizzaPrenotazioniEffettuateFailedException {
+    public List<MyDto> visualizzaPrenotazioniEffettuate() {
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
         ArrayList<EntityPrenotazione> prenotazioniUtente = utenteCorrente.getPrenotazioni();
         ArrayList<MyDto> prenotazioni = new ArrayList<>();
-        try {
-            for (EntityPrenotazione prenotazione : prenotazioniUtente) {
-                prenotazione.popolaViaggio();
-                MyDto prenotazioneDto = new MyDto();
-                prenotazioneDto.setCampo1(String.valueOf(prenotazione.getId()));
-                prenotazioneDto.setCampo2(prenotazione.getViaggioPrenotato().getAutista().getNome() + " " +
-                        prenotazione.getViaggioPrenotato().getAutista().getCognome());
-                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(NATURALDATEFORMAT);
-                prenotazioneDto.setCampo3(String.format("%d: %s -> %s - %s", prenotazione.getViaggioPrenotato().getId(),
-                        prenotazione.getViaggioPrenotato().getLuogoPartenza(),
-                        prenotazione.getViaggioPrenotato().getLuogoDestinazione(),
-                        prenotazione.getViaggioPrenotato().getDataPartenza().format(dateTimeFormatter)));
-                prenotazioneDto.setCampo4(prenotazione.isAccettata()? "Accettata" : "In attesa");
-                prenotazioni.add(prenotazioneDto);
-            }
-        } catch (DatabaseException e) {
-            if(e.isVisible())
-                throw new VisualizzaPrenotazioniEffettuateFailedException(
-                        "Visualizzazione prenotazioni effettuate fallita: " + e.getMessage());
-            throw new VisualizzaPrenotazioniEffettuateFailedException("Visualizzazione prenotazioni effettuate fallita.");
+
+        for (EntityPrenotazione prenotazione : prenotazioniUtente) {
+            MyDto prenotazioneDto = new MyDto();
+            prenotazioneDto.setCampo1(String.valueOf(prenotazione.getId()));
+            prenotazioneDto.setCampo2(prenotazione.getViaggioPrenotato().getAutista().getNome() + " " +
+                    prenotazione.getViaggioPrenotato().getAutista().getCognome());
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(NATURALDATEFORMAT);
+            prenotazioneDto.setCampo3(String.format("%d: %s -> %s - %s", prenotazione.getViaggioPrenotato().getId(),
+                    prenotazione.getViaggioPrenotato().getLuogoPartenza(),
+                    prenotazione.getViaggioPrenotato().getLuogoDestinazione(),
+                    prenotazione.getViaggioPrenotato().getDataPartenza().format(dateTimeFormatter)));
+            prenotazioneDto.setCampo4(prenotazione.isAccettata()? "Accettata" : "In attesa");
+            prenotazioni.add(prenotazioneDto);
         }
         return prenotazioni;
     }
