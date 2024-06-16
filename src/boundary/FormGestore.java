@@ -89,7 +89,7 @@ public class FormGestore extends JFrame {
      * Creazione degli ImagePanel per la visualizzazione delle immagini.
      */
     private void createUIComponents() {
-        circularLogoPanel = new ImagePanel("resources/payngo-circlogo.png", 32, 32);
+        circularLogoPanel = new ImagePanel("./resources/payngo-circlogo.png", 32, 32);
     }
 
     /**
