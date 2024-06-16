@@ -1,6 +1,12 @@
 package utility;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import java.awt.*;
 import java.util.AbstractMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -98,5 +104,45 @@ public final class Utilities {
         }
 
         return new AbstractMap.SimpleEntry<>(true, "OK");
+    }
+
+    /**
+     * Funzione che converte una lista monodimensionale di stringhe in una matrice bidimensionale di un numero di
+     * colonne variabile.
+     * @param rows la lista monodimensionale di stringhe.
+     * @param matrix la matrice bidimensionale di stringhe, già inizializzata.
+     * @param columns il numero di colonne della matrice.
+     */
+    public static void rowToMatrix(List<String> rows, String[][] matrix, int columns) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++)
+            {
+                matrix[i][j] = rows.get(i * columns + j);
+            }
+        }
+    }
+
+    /**
+     * Funzione di utilità che consente di popolare una JTable con uno stile standard.
+     * @param table la tabella da popolare.
+     * @param columnNames i nome delle colonne da attribuire alla tabella.
+     * @param data i dati da inserire nella tabella.
+     */
+    public static void populateTable(JTable table, Object[] columnNames, Object[][] data) {
+        TableModel tableModel = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        table.setModel(tableModel);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
+        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
+        headerRenderer.setBackground(new Color(48, 48, 48));
+        headerRenderer.setOpaque(true);
+        table.getTableHeader().setDefaultRenderer(headerRenderer);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getTableHeader().setResizingAllowed(false);
     }
 }

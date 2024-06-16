@@ -9,6 +9,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.AbstractMap;
 
+/**
+ * Classe del package boundary nel modello BCED, essa implementa un'interfaccia utilizzabile dagli utenti registrati per
+ * valutare gli altri utenti.
+ */
 public class ValutaUtente extends JDialog {
     private final long idPrenotazione;
     private JPanel contentPane;

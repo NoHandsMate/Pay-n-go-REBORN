@@ -6,8 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.AbstractMap;
 
+/**
+ * Classe del package boundary nel modello BCED, essa implementa la l'interfaccia utilizzabile dagli utenti registrati
+ * per gestire una prenotazione su un viaggio da loro condiviso.
+ */
 public class GestisciPrenotazione extends JDialog {
-    private long idPrenotazione;
+    private final long idPrenotazione;
     private JPanel contentPane;
     private JButton accettaButton;
     private JButton rifiutaButton;

@@ -3,18 +3,21 @@ package boundary;
 import control.ControllerGestore;
 import control.ControllerUtente;
 import dto.MyDto;
+import utility.Utilities;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Classe del package boundary nel modello BCED, essa implementa l'interfaccia utilizzabile dal gestore
+ * dell'applicazione per effettuare le operazioni di reportistica.
+ */
 public class FormGestore extends JFrame {
     private JPanel gestorePanel;
     private JTabbedPane contentTab;
@@ -121,8 +124,8 @@ public class FormGestore extends JFrame {
             JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        ArrayList<MyDto> listaUtenti = (ArrayList<MyDto>)result.getValue();
-        ArrayList<String> rows = new ArrayList<>();
+        List<MyDto> listaUtenti = (List<MyDto>)result.getValue();
+        List<String> rows = new ArrayList<>();
         for (MyDto utente : listaUtenti) {
             rows.add(utente.getCampo1());
             rows.add(utente.getCampo2());
@@ -132,14 +135,8 @@ public class FormGestore extends JFrame {
 
         String[][] data = new String[rows.size() / columnNames.length][columnNames.length];
 
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[i].length; j++)
-            {
-                data[i][j] = rows.get(i * columnNames.length + j);
-            }
-        }
-
-        populateTable(utentiTable, columnNames, data);
+        Utilities.rowToMatrix(rows, data, columnNames.length);
+        Utilities.populateTable(utentiTable, columnNames, data);
     }
 
     /**
@@ -149,7 +146,7 @@ public class FormGestore extends JFrame {
     private void visualizzaValutazioniUtente(long idUtente) {
         String[] columnNames = {"Id valutazione", "Numero stelle", "Descrizione"};
         String[][] data;
-        ArrayList<String> rows = new ArrayList<>();
+        List<String> rows = new ArrayList<>();
         if (idUtente == 0) {
             data = new String[0][0];
         } else {
@@ -159,7 +156,7 @@ public class FormGestore extends JFrame {
                 JOptionPane.showMessageDialog(rootPane, result.getValue(), "Errore", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            ArrayList<MyDto> listaValutazioni = (ArrayList<MyDto>) result.getValue();
+            List<MyDto> listaValutazioni = (List<MyDto>) result.getValue();
             for (MyDto valutazione : listaValutazioni) {
                 rows.add(valutazione.getCampo1());
                 rows.add(valutazione.getCampo2());
@@ -169,14 +166,8 @@ public class FormGestore extends JFrame {
             data = new String[rows.size() / columnNames.length][columnNames.length];
         }
 
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < data[i].length; j++)
-            {
-                data[i][j] = rows.get(i * columnNames.length + j);
-            }
-        }
-
-        populateTable(valutazioniTable, columnNames, data);
+        Utilities.rowToMatrix(rows, data, columnNames.length);
+        Utilities.populateTable(valutazioniTable, columnNames, data);
     }
 
     /**
@@ -193,29 +184,5 @@ public class FormGestore extends JFrame {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(NATURALDATEFORMAT);
         incassiLabel.setText(String.format("Gli incassi totali del sistema al giorno %s sono: %.2f €",
                 LocalDateTime.now().format(formatter), (float) result.getValue()));
-    }
-
-    /**
-     * Funzione di utilità che consente di popolare le tabelle con uno stile standard.
-     * @param table la tabella da popolare.
-     * @param columnNames i nome delle colonne da attribuire alla tabella.
-     * @param data i dati da inserire nella tabella.
-     */
-    private void populateTable(JTable table, Object[] columnNames, Object[][] data) {
-        TableModel tableModel = new DefaultTableModel(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        table.setModel(tableModel);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setFont(new Font("Lucida Sans Typewriter", Font.PLAIN, 16));
-        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
-        headerRenderer.setBackground(new Color(48, 48, 48));
-        headerRenderer.setOpaque(true);
-        table.getTableHeader().setDefaultRenderer(headerRenderer);
-        table.getTableHeader().setReorderingAllowed(false);
-        table.getTableHeader().setResizingAllowed(false);
     }
 }

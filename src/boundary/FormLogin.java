@@ -2,12 +2,15 @@ package boundary;
 
 import control.ControllerUtente;
 import dto.MyDto;
-import entity.Sessione;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.AbstractMap;
 
+/**
+ * Classe del package boundary nel modello BCED, essa implementa l'interfaccia utilizzabile dagli utenti registrati per
+ * effettuare il login.
+ */
 public class FormLogin extends JFrame {
     private JPanel loginPanel;
     private JTextField emailField;
