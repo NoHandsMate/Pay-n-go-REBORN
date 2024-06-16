@@ -188,6 +188,7 @@ public class EntityUtenteRegistrato {
                                       Integer postiDisponibili,
                                       String contattoTelefonico) throws DatabaseException {
 
+        boolean rimuoviViaggiFlag = false;
         if (!this.automobile.equals(auto) || this.postiDisponibili != postiDisponibili) {
 
             for (EntityViaggio entityViaggio : this.viaggiCondivisi) {
@@ -199,12 +200,16 @@ public class EntityUtenteRegistrato {
                     }
                 }
             }
-            this.eliminaViaggiCondivisi();
+            rimuoviViaggiFlag = true;
         }
 
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(this.id);
         utenteDAO.updateUtenteRegistrato(nome, cognome, contattoTelefonico, email, auto, postiDisponibili, new String(password));
         aggiornaDati(utenteDAO);
+
+        if (rimuoviViaggiFlag)
+            this.eliminaViaggiCondivisi();
+
     }
 
     /**
