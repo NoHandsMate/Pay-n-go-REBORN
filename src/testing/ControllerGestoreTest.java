@@ -2,7 +2,6 @@ package testing;
 
 import control.ControllerGestore;
 import control.ControllerUtente;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,16 +9,15 @@ import java.util.AbstractMap;
 
 import static org.junit.Assert.*;
 
+/**
+ * Casi di test di ControllerGestore
+ */
 public class ControllerGestoreTest {
 
     @Before
     public void setUp() throws Exception {
         char [] password = {'p', 'a', 'y', 'n', 'g', 'o'};
         ControllerUtente.getInstance().loginUtente("administrator@payngo.com", password);
-    }
-
-    @After
-    public void tearDown() throws Exception {
     }
 
     @Test
