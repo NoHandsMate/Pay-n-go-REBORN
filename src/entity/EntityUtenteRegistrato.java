@@ -269,7 +269,28 @@ public class EntityUtenteRegistrato {
      */
     public void gestisciPrenotazione(long idPrenotazione,
                                      boolean accettata) throws DatabaseException {
+
+        int numPrenotazioniAccettate = 0;
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO(idPrenotazione);
+        EntityPrenotazione prenotazioneEntity = new EntityPrenotazione(prenotazioneDAO);
+        EntityViaggio viaggio = prenotazioneEntity.getViaggioPrenotato();
+
+        for (EntityPrenotazione prenotazione : viaggio.getPrenotazioni()) {
+            if (prenotazione.isAccettata()) {
+                numPrenotazioniAccettate++;
+            }
+        }
+
+        if(numPrenotazioniAccettate + 1 > this.postiDisponibili && accettata) {
+            for(EntityPrenotazione prenotazione : viaggio.getPrenotazioni()){
+                if(!prenotazione.isAccettata()) {
+                    PrenotazioneDAO prenotazioneDaEliminare = new PrenotazioneDAO(prenotazione.getId());
+                    prenotazioneDaEliminare.deletePrenotazione();
+                }
+            }
+            throw new DatabaseException("Impossibile accettare ulteriori prenotazioni per il viaggio selezionato",true);
+        }
+
         if(accettata) {
             prenotazioneDAO.updatePrenotazione(true);
         }else{
