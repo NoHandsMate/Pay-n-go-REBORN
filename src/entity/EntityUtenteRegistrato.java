@@ -27,7 +27,7 @@ public class EntityUtenteRegistrato {
 
 
     /**
-     * Costruttore di EntityUtenteRegistrato a partire da una utenteRegistratoDAO popolata
+     * Costruttore di EntityUtenteRegistrato che popola l'istanza a partire da UtenteRegistratoDAO.
      * @param utenteRegistratoDAO che permette di popolare l'istanza corrente di EntityUtenteRegistrato
      */
     public EntityUtenteRegistrato(UtenteRegistratoDAO utenteRegistratoDAO) {
