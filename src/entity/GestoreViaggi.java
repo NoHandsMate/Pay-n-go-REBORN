@@ -1,10 +1,10 @@
 package entity;
 
 import database.ViaggioDAO;
-import dto.MyDto;
 import exceptions.DatabaseException;
 import exceptions.ReportIncassiFailedException;
 import exceptions.RicercaViaggioFailedException;
+import dto.MyDto;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

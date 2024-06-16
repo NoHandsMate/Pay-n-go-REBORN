@@ -2,8 +2,8 @@ package entity;
 
 import exceptions.ReportIncassiFailedException;
 import exceptions.ReportUtentiFailedException;
-import dto.MyDto;
 import exceptions.VisualizzaValutazioniFailedException;
+import dto.MyDto;
 
 import java.util.List;
 

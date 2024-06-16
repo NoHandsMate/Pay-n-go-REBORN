@@ -7,9 +7,8 @@ import java.util.List;
 import entity.FacadeEntityGestore;
 import exceptions.ReportIncassiFailedException;
 import exceptions.ReportUtentiFailedException;
-
-import dto.*;
 import exceptions.VisualizzaValutazioniFailedException;
+import dto.MyDto;
 
 /**
  * Classe del package controller nel modello BCED, essa implementa tutte le funzionalità utilizzabili dal gestore
