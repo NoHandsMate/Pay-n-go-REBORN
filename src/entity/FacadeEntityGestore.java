@@ -2,7 +2,7 @@ package entity;
 
 import exceptions.ReportIncassiFailedException;
 import exceptions.ReportUtentiFailedException;
-import dto.*;
+import dto.MyDto;
 import exceptions.VisualizzaValutazioniFailedException;
 
 import java.util.List;
@@ -54,11 +54,12 @@ public class FacadeEntityGestore {
     }
 
     /**
-     * Funzione che, dopo aver visualizzato il report di valutazione sommario di
-     * {@link #visualizzaValutazioniUtente(long) visualizzaValutazioniUtente}, permette di visualizzare i dettagli di
-     * tutte le valutazioni associate a un determinato utente.
+     * Funzione che, dopo aver visualizzato il report di valutazione sommario di {@link #generaReportUtenti()
+     * generaReportUtenti}, permette di visualizzare i dettagli di tutte le valutazioni associate a un utente.
      * @param idUtente l'identificativo dell'utente del quale si vogliono visualizzare le valutazioni.
      * @return l'elenco valutazioni dell'utente.
+     * @throws VisualizzaValutazioniFailedException se non è stato possibile creare l'elenco delle valutazioni
+     * dell'utente.
      */
     public List<MyDto> visualizzaValutazioniUtente(long idUtente) throws VisualizzaValutazioniFailedException {
         return GestoreUtenti.getInstance().visualizzaValutazioniUtente(idUtente);

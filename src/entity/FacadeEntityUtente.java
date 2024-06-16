@@ -163,9 +163,10 @@ public class FacadeEntityUtente {
     }
 
     /**
-     * Funzione che permette all'utente registrato, data una prenotazione, di valutare l'altro utente riferito dalla
-     * stessa. Di conseguenza, se si è l'autista del viaggio associato alla prenotazione si valuterà il passeggero; se
-     * si è il passeggero associato alla prenotazione si valuterà l'autista del viaggio associato alla prenotazione.
+     * Funzione che permette all'utente corrente, data una prenotazione, di valutare l'altro utente riferito dalla
+     * stessa. Di conseguenza, se l'utente corrente è l'autista del viaggio associato alla prenotazione si valuterà il
+     * passeggero; se l'utente corrente è il passeggero associato alla prenotazione si valuterà l'autista del viaggio
+     * associato alla prenotazione.
      * @param idPrenotazione l'identificativo della prenotazione a cui si fa riferimento.
      * @param numeroStelle il numero di stelle da assegnare.
      * @param text la descrizione della valutazione.

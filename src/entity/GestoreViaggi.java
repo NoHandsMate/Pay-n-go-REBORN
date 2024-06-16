@@ -110,16 +110,15 @@ public class GestoreViaggi {
      * @return il DTO contenente tutte le informazioni del viaggio.
      */
     private MyDto caricaViaggioDTO(EntityViaggio viaggio, EntityUtenteRegistrato utenteRegistrato) {
-        MyDto viaggioDTO = new MyDto();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(NATURALDATEFORMAT);
-        viaggioDTO.setCampo1(String.valueOf(viaggio.getId()));
-        viaggioDTO.setCampo2(viaggio.getLuogoPartenza());
-        viaggioDTO.setCampo3(viaggio.getLuogoDestinazione());
-        viaggioDTO.setCampo4(viaggio.getDataPartenza().format(dateTimeFormatter));
-        viaggioDTO.setCampo5(viaggio.getDataArrivo().format(dateTimeFormatter));
-        viaggioDTO.setCampo6(String.valueOf(viaggio.getContributoSpese()));
-        viaggioDTO.setCampo7(String.format("%s %s", utenteRegistrato.getNome(), utenteRegistrato.getCognome()));
-        return viaggioDTO;
+        return new MyDto(String.valueOf(viaggio.getId()),
+                viaggio.getLuogoPartenza(),
+                viaggio.getLuogoDestinazione(),
+                viaggio.getDataPartenza().format(dateTimeFormatter),
+                viaggio.getDataArrivo().format(dateTimeFormatter),
+                String.format("%.2f €", viaggio.getContributoSpese()).replace(',', '.'),
+                String.format("%s %s", utenteRegistrato.getNome(), utenteRegistrato.getCognome()),
+                null);
     }
 
     /**

@@ -2,7 +2,7 @@ package entity;
 
 import exceptions.*;
 import database.UtenteRegistratoDAO;
-import dto.*;
+import dto.MyDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -110,14 +110,14 @@ public class GestoreUtenti {
      * @throws ReportUtentiFailedException se non è stato possibile generare il report di valutazione sommario.
      */
     public List<MyDto> generaReportUtenti() throws ReportUtentiFailedException {
-        ArrayList<MyDto> reportUtenti = new ArrayList<>();
+        List<MyDto> reportUtenti = new ArrayList<>();
         try{
-            ArrayList<UtenteRegistratoDAO> utentiRegistratiDAO = UtenteRegistratoDAO.getUtentiRegistrati();
+            List<UtenteRegistratoDAO> utentiRegistratiDAO = UtenteRegistratoDAO.getUtentiRegistrati();
 
             for(UtenteRegistratoDAO utenteRegistratoDAO : utentiRegistratiDAO){
                 EntityUtenteRegistrato utenteRegistrato = new EntityUtenteRegistrato(utenteRegistratoDAO);
                 utenteRegistrato.popolaValutazioni();
-                ArrayList<EntityValutazione> listaValutazioni = utenteRegistrato.getValutazioni();
+                List<EntityValutazione> listaValutazioni = utenteRegistrato.getValutazioni();
                 MyDto utente = new MyDto();
                 float mediaStelle = 0f;
                 int numValutazioni = listaValutazioni.size();
@@ -145,20 +145,19 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione che, dopo aver visualizzato il report di valutazione sommario di
-     * {@link #visualizzaValutazioniUtente(long) visualizzaValutazioniUtente}, permette di visualizzare i dettagli di
-     * tutte le valutazioni associate a un determinato utente.
+     * Funzione che, dopo aver visualizzato il report di valutazione sommario di {@link #generaReportUtenti()
+     * generaReportUtenti}, permette di visualizzare i dettagli di tutte le valutazioni associate a un utente.
      * @param idUtente l'identificativo dell'utente del quale si vogliono visualizzare le valutazioni.
      * @return l'elenco valutazioni dell'utente.
      * @throws VisualizzaValutazioniFailedException se non è stato possibile creare l'elenco delle valutazioni
      * dell'utente.
      */
     public List<MyDto> visualizzaValutazioniUtente(long idUtente) throws VisualizzaValutazioniFailedException {
-        ArrayList<MyDto> valutazioniUtente = new ArrayList<>();
+        List<MyDto> valutazioniUtente = new ArrayList<>();
         try {
             UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(idUtente);
             EntityUtenteRegistrato utenteRegistrato = new EntityUtenteRegistrato(utenteDAO);
-            ArrayList<EntityValutazione> listaValutazioni = utenteRegistrato.visualizzaValutazioni();
+            List<EntityValutazione> listaValutazioni = utenteRegistrato.visualizzaValutazioni();
             for (EntityValutazione valutazione : listaValutazioni) {
                 MyDto valutazioneDTO = new MyDto();
                 valutazioneDTO.setCampo1(String.valueOf(valutazione.getId()));
@@ -168,7 +167,8 @@ public class GestoreUtenti {
             }
         } catch (DatabaseException e) {
             if (e.isVisible())
-                throw new VisualizzaValutazioniFailedException("Generazione report valutazioni fallita: " + e.getMessage());
+                throw new VisualizzaValutazioniFailedException("Generazione report valutazioni fallita: " +
+                        e.getMessage());
             throw new VisualizzaValutazioniFailedException("Generazione report valutazioni fallita.");
         }
         return valutazioniUtente;
@@ -239,8 +239,8 @@ public class GestoreUtenti {
      */
     public List<MyDto> visualizzaPrenotazioniEffettuate() {
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
-        ArrayList<EntityPrenotazione> prenotazioniUtente = utenteCorrente.getPrenotazioni();
-        ArrayList<MyDto> prenotazioni = new ArrayList<>();
+        List<EntityPrenotazione> prenotazioniUtente = utenteCorrente.getPrenotazioni();
+        List<MyDto> prenotazioni = new ArrayList<>();
 
         for (EntityPrenotazione prenotazione : prenotazioniUtente) {
             MyDto prenotazioneDto = new MyDto();
@@ -296,9 +296,10 @@ public class GestoreUtenti {
     }
 
     /**
-     * Funzione che permette all'utente registrato, data una prenotazione, di valutare l'altro utente riferito dalla
-     * stessa. Di conseguenza, se si è l'autista del viaggio associato alla prenotazione si valuterà il passeggero; se
-     * si è il passeggero associato alla prenotazione si valuterà l'autista del viaggio associato alla prenotazione.
+     * Funzione che permette all'utente corrente, data una prenotazione, di valutare l'altro utente riferito dalla
+     * stessa. Di conseguenza, se l'utente corrente è l'autista del viaggio associato alla prenotazione si valuterà il
+     * passeggero; se l'utente corrente è il passeggero associato alla prenotazione si valuterà l'autista del viaggio
+     * associato alla prenotazione.
      * @param idPrenotazione l'identificativo della prenotazione a cui si fa riferimento.
      * @param numeroStelle il numero di stelle da assegnare.
      * @param text la descrizione della valutazione.
@@ -326,17 +327,18 @@ public class GestoreUtenti {
      */
     public List<MyDto> visualizzaViaggiCondivisi(){
         EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
-        ArrayList<EntityViaggio> viaggiCondivisi = utenteCorrente.getViaggiCondivisi();
-        ArrayList<MyDto> viaggiCondivisiDto = new ArrayList<>();
+        List<EntityViaggio> viaggiCondivisi = utenteCorrente.getViaggiCondivisi();
+        List<MyDto> viaggiCondivisiDto = new ArrayList<>();
         for(EntityViaggio viaggio : viaggiCondivisi){
-            MyDto viaggioDTO = new MyDto();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(NATURALDATEFORMAT);
-            viaggioDTO.setCampo1(String.valueOf(viaggio.getId()));
-            viaggioDTO.setCampo2(viaggio.getLuogoPartenza());
-            viaggioDTO.setCampo3(viaggio.getLuogoDestinazione());
-            viaggioDTO.setCampo4(viaggio.getDataPartenza().format(dateTimeFormatter));
-            viaggioDTO.setCampo5(viaggio.getDataArrivo().format(dateTimeFormatter));
-            viaggioDTO.setCampo6(String.format("%.2f", viaggio.getContributoSpese()).replace(',', '.'));
+            MyDto viaggioDTO = new MyDto(String.valueOf(viaggio.getId()),
+                    viaggio.getLuogoPartenza(),
+                    viaggio.getLuogoDestinazione(),
+                    viaggio.getDataPartenza().format(dateTimeFormatter),
+                    viaggio.getDataArrivo().format(dateTimeFormatter),
+                    String.format("%.2f €", viaggio.getContributoSpese()).replace(',', '.'),
+                    null,
+                    null);
             viaggiCondivisiDto.add(viaggioDTO);
         }
         return viaggiCondivisiDto;
@@ -349,8 +351,8 @@ public class GestoreUtenti {
      * @throws VisualizzaPrenotazioniFailedException se non è stato possibile ottenere la lista di prenotazioni.
      */
     public List<MyDto> visualizzaPrenotazioni(long idViaggio) throws VisualizzaPrenotazioniFailedException{
-        ArrayList<EntityPrenotazione> prenotazioni;
-        ArrayList<MyDto> prenotazioniDTO = new ArrayList<>();
+        List<EntityPrenotazione> prenotazioni;
+        List<MyDto> prenotazioniDTO = new ArrayList<>();
         try {
             EntityUtenteRegistrato utenteCorrente = Sessione.getInstance().getUtenteCorrente();
             prenotazioni = utenteCorrente.visualizzaPrenotazioni(idViaggio);

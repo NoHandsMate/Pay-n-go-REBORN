@@ -59,35 +59,66 @@ public class EntityPrenotazione {
         prenotazioneDAO.createPrenotazione(this.passeggero.getId(), this.viaggioPrenotato.getId());
     }
 
+    /**
+     * Getter dell'identificativo della prenotazione.
+     * @return l'identificativo della prenotazione.
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * Setter dell'identificativo della prenotazione.
+     * @param id il nuovo identificativo della prenotazione.
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * Getter del passeggero della prenotazione.
+     * @return il passeggero della prenotazione.
+     */
     public EntityUtenteRegistrato getPasseggero() {
         return passeggero;
     }
 
+    /**
+     * Setter del passeggero della prenotazione.
+     * @param passeggero il nuovo passeggero della prenotazione.
+     */
     public void setPasseggero(EntityUtenteRegistrato passeggero) {
         this.passeggero = passeggero;
     }
 
-
+    /**
+     * Getter del flag di accettazione della prenotazione.
+     * @return il flag di accettazione della prenotazione.
+     */
     public boolean isAccettata() {
         return accettata;
     }
 
+    /**
+     * Setter del flag di accettazione della prenotazione.
+     * @param accettata il nuovo flag di accettazione della prenotazione.
+     */
     public void setAccettata(boolean accettata) {
         this.accettata = accettata;
     }
 
+    /**
+     * Getter del viaggio prenotato.
+     * @return viaggio prenotato.
+     */
     public EntityViaggio getViaggioPrenotato() {
         return viaggioPrenotato;
     }
 
+    /**
+     * Setter del viaggio prenotato.
+     * @param viaggioPrenotato il nuovo viaggio prenotato.
+     */
     public void setViaggioPrenotato(EntityViaggio viaggioPrenotato) {
         this.viaggioPrenotato = viaggioPrenotato;
     }

@@ -1,14 +1,13 @@
 package control;
 
+import dto.MyDto;
+import entity.FacadeEntityUtente;
+import exceptions.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.List;
-
-import entity.FacadeEntityUtente;
-import exceptions.*;
-import dto.*;
 
 /**
  * Classe del package controller nel modello BCED, essa implementa tutte le funzionalità utilizzabili da un utente
@@ -219,9 +218,10 @@ public class ControllerUtente {
     }
 
     /**
-     * Funzione che permette all'utente registrato, data una prenotazione, di valutare l'altro utente riferito dalla
-     * stessa. Di conseguenza, se si è l'autista del viaggio associato alla prenotazione si valuterà il passeggero; se
-     * si è il passeggero associato alla prenotazione si valuterà l'autista del viaggio associato alla prenotazione.
+     * Funzione che permette all'utente corrente, data una prenotazione, di valutare l'altro utente riferito dalla
+     * stessa. Di conseguenza, se l'utente corrente è l'autista del viaggio associato alla prenotazione si valuterà il
+     * passeggero; se l'utente corrente è il passeggero associato alla prenotazione si valuterà l'autista del viaggio
+     * associato alla prenotazione.
      * @param idPrenotazione l'identificativo della prenotazione a cui si fa riferimento.
      * @param numeroStelle il numero di stelle da assegnare.
      * @param text la descrizione della valutazione.
