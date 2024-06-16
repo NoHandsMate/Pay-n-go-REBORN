@@ -6,7 +6,7 @@ import dto.MyDto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -68,12 +68,10 @@ public class ControllerUtenteTest {
     @org.junit.Test
     public void condividiViaggio() {
         AbstractMap.SimpleEntry<Boolean, String> result;
-        result = ControllerUtente.getInstance().condividiViaggio("Milano",
-                "Roma",
-                LocalDateTime.of(2024, 4, 25, 18, 35, 0),
+        result = ControllerUtente.getInstance().condividiViaggio("Milano", "Roma",
+                LocalDateTime.of(2024, 4, 25, 14, 35, 0),
                 LocalDateTime.of(2024, 4, 25, 20, 54, 2),
                 3);
-
         assertTrue("Condividi viaggio fallita", result.getKey());
     }
 
@@ -104,16 +102,15 @@ public class ControllerUtenteTest {
 
     @org.junit.Test
     public void visualizzaPrenotazioniEffettuate() {
-        AbstractMap.SimpleEntry<Boolean, Object> result;
+        List<MyDto> result;
         result = ControllerUtente.getInstance().visualizzaPrenotazioniEffettuate();
-
-        assertTrue("Visualizza prenotazioni effettuate fallita", result.getKey());
+        assertNotNull("Visualizza prenotazioni effettuate fallita", result);
     }
 
     @org.junit.Test
     public void prenotaViaggio() {
         AbstractMap.SimpleEntry<Boolean, String> result;
-        result = ControllerUtente.getInstance().prenotaViaggio(18);
+        result = ControllerUtente.getInstance().prenotaViaggio(45);
 
         assertTrue("Prenotazione viaggio fallita", result.getKey());
     }
@@ -138,10 +135,10 @@ public class ControllerUtenteTest {
     public void visualizzaViaggiCondivisi() {
         ControllerUtente.getInstance().condividiViaggio("Milano",
                 "Roma",
-                LocalDateTime.of(2024, 4, 25, 18, 35, 0),
+                LocalDateTime.of(2024, 4, 25, 14, 35, 0),
                 LocalDateTime.of(2024, 4, 25, 20, 54, 2),
                 3);
-        ArrayList<MyDto> viaggiCondivisi;
+        List<MyDto> viaggiCondivisi;
         viaggiCondivisi = ControllerUtente.getInstance().visualizzaViaggiCondivisi();
         assertNotNull(viaggiCondivisi.getFirst().getCampo2());
     }
