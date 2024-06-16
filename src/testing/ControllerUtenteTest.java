@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -104,10 +105,9 @@ public class ControllerUtenteTest {
 
     @org.junit.Test
     public void visualizzaPrenotazioniEffettuate() {
-        AbstractMap.SimpleEntry<Boolean, Object> result;
+        List<MyDto> result;
         result = ControllerUtente.getInstance().visualizzaPrenotazioniEffettuate();
-
-        assertTrue("Visualizza prenotazioni effettuate fallita", result.getKey());
+        assertNotNull("Visualizza prenotazioni effettuate fallita", result);
     }
 
     @org.junit.Test
