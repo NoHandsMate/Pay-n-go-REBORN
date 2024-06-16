@@ -8,10 +8,24 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+/**
+ * Estensione di JPanel che consente la visualizzazione di un'immagine.
+ */
 public class ImagePanel extends JPanel {
 
+    /**
+     * L'immagine da visualizzare.
+     */
     private transient BufferedImage pngLogoImage;
+
+    /**
+     * La larghezza in pixel dell'immagine.
+     */
     private int imageWidth;
+
+    /**
+     * L'altezza in pixel dell'immagine.
+     */
     private int imageHeight;
 
     /**

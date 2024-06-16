@@ -116,25 +116,26 @@ public class GestoreUtenti {
 
             for(UtenteRegistratoDAO utenteRegistratoDAO : utentiRegistratiDAO){
                 EntityUtenteRegistrato utenteRegistrato = new EntityUtenteRegistrato(utenteRegistratoDAO);
-                utenteRegistrato.popolaValutazioni();
-                List<EntityValutazione> listaValutazioni = utenteRegistrato.getValutazioni();
-                MyDto utente = new MyDto();
-                float mediaStelle = 0f;
-                int numValutazioni = listaValutazioni.size();
-                if (numValutazioni > 0) {
-                    for (EntityValutazione valutazione : listaValutazioni) {
-                        mediaStelle = mediaStelle + valutazione.getNumeroStelle();
+                if (utenteRegistrato.getId() != 1) {
+                    utenteRegistrato.popolaValutazioni();
+                    List<EntityValutazione> listaValutazioni = utenteRegistrato.getValutazioni();
+                    MyDto utente = new MyDto();
+                    float mediaStelle = 0f;
+                    int numValutazioni = listaValutazioni.size();
+                    if (numValutazioni > 0) {
+                        for (EntityValutazione valutazione : listaValutazioni) {
+                            mediaStelle = mediaStelle + valutazione.getNumeroStelle();
+                        }
+                        mediaStelle = mediaStelle / numValutazioni;
+                        utente.setCampo4(String.format("%.2f", mediaStelle).replace(',', '.'));
+                    } else {
+                        utente.setCampo4("Nessuna valutazione");
                     }
-                    mediaStelle = mediaStelle / numValutazioni;
-                    utente.setCampo4(String.format("%.2f", mediaStelle).replace(',', '.'));
+                    utente.setCampo1(String.valueOf(utenteRegistrato.getId()));
+                    utente.setCampo2(String.format("%s %s", utenteRegistrato.getNome(), utenteRegistrato.getCognome()));
+                    utente.setCampo3(utenteRegistrato.getEmail());
+                    reportUtenti.add(utente);
                 }
-                else {
-                    utente.setCampo4("Nessuna valutazione");
-                }
-                utente.setCampo1(String.valueOf(utenteRegistrato.getId()));
-                utente.setCampo2(String.format("%s %s", utenteRegistrato.getNome(), utenteRegistrato.getCognome()));
-                utente.setCampo3(utenteRegistrato.getEmail());
-                reportUtenti.add(utente);
             }
         } catch (DatabaseException e) {
             if (e.isVisible())

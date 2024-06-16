@@ -154,8 +154,7 @@ public class ControllerUtente {
     /**
      * Funzione che permette all'utente corrente di visualizzare le prenotazioni da lui effettuate sui viaggi degli
      * altri autisti.
-     * @return una tupla <code>(Boolean, Object)</code>: nel caso di boolean <code>true</code> l'oggetto conterrà la
-     * lista di prenotazioni effettuate, nel caso di boolean <code>false</code> esso conterrà il messaggio di errore.
+     * @return la lista di prenotazioni effettuate dall'utente corrente.
      */
     public List<MyDto> visualizzaPrenotazioniEffettuate() {
         return FacadeEntityUtente.getInstance().visualizzaPrenotazioniEffettuate();
@@ -242,7 +241,7 @@ public class ControllerUtente {
 
     /**
      * Funzione che permette all'utente corrente di visualizzare i propri viaggi condivisi.
-     * @return ArrayList di DTO che racchiude le informazioni sui viaggi condivisi.
+     * @return lista di DTO che racchiude le informazioni sui viaggi condivisi.
      */
     public List<MyDto> visualizzaViaggiCondivisi() {
         return FacadeEntityUtente.getInstance().visualizzaViaggiCondivisi();
