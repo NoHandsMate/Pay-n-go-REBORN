@@ -14,6 +14,8 @@ import static org.junit.Assert.*;
 
 /**
  * Casi di test di ControllerUtente
+ * Potrebbe essere necessario aumentare il limite di connessioni contemporanee per eseguire tutti i test
+ * contemporaneamente. Noi abbiamo impostato il limite a 5000 (scelta decisamente conservativa).
  */
 public class ControllerUtenteTest {
 
@@ -28,7 +30,7 @@ public class ControllerUtenteTest {
     }
 
     /**
-     * Si prova a ottenere l'istanza di Controller Utente. Esito atteso: istanza non nulla.
+     * Si prova a ottenere l'istanza di ControllerUtente. Esito atteso: istanza non nulla.
      */
     @Test
     public void getInstance() {

@@ -14,17 +14,26 @@ import static org.junit.Assert.*;
  */
 public class ControllerGestoreTest {
 
+    /**
+     * Setup del testing di ControllerGestore
+     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         char [] password = {'p', 'a', 'y', 'n', 'g', 'o'};
         ControllerUtente.getInstance().loginUtente("administrator@payngo.com", password);
     }
 
+    /**
+     * Si prova a ottenere l'istanza di ControllerGestore. Esito atteso: istanza non nulla.
+     */
     @Test
     public void getInstance() {
         assertNotNull("Non è possibile richiamare ControllerGestore", ControllerUtente.getInstance());
     }
 
+    /**
+     * Si prova a generare il report di incassi. Esito atteso: report generato.
+     */
     @Test
     public void generaReportIncassi() {
         AbstractMap.SimpleEntry<Boolean, Object> result;
@@ -32,6 +41,9 @@ public class ControllerGestoreTest {
         assertTrue("Report incassi fallito.", result.getKey());
     }
 
+    /**
+     * Si prova a generare il report utenti. Esito atteso: report generato.
+     */
     @Test
     public void generaReportUtenti() {
         AbstractMap.SimpleEntry<Boolean, Object> result;
@@ -39,10 +51,13 @@ public class ControllerGestoreTest {
         assertTrue("Report utenti fallito.", result.getKey());
     }
 
+    /**
+     * Si prova a ottenere i dettagli delle valutazioni di un utente. Esito atteso: report generato.
+     */
     @Test
     public void visualizzaValutazioniUtente() {
         AbstractMap.SimpleEntry<Boolean, Object> result;
-        result = ControllerGestore.getInstance().visualizzaValutazioniUtente(1);
+        result = ControllerGestore.getInstance().visualizzaValutazioniUtente(2);
         assertTrue("Report incassi fallito.", result.getKey());
     }
 }
