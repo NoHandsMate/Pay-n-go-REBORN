@@ -279,6 +279,7 @@ public class EntityUtenteRegistrato {
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO(idPrenotazione);
         EntityPrenotazione prenotazioneEntity = new EntityPrenotazione(prenotazioneDAO);
         EntityViaggio viaggio = prenotazioneEntity.getViaggioPrenotato();
+        viaggio.popolaPrenotazioni();
 
         for (EntityPrenotazione prenotazione : viaggio.getPrenotazioni()) {
             if (prenotazione.isAccettata()) {
@@ -286,20 +287,21 @@ public class EntityUtenteRegistrato {
             }
         }
 
-        if(numPrenotazioniAccettate + 1 > this.postiDisponibili && accettata) {
+        if(accettata) {
+            prenotazioneDAO.updatePrenotazione(true);
+            numPrenotazioniAccettate++;
+        }else{
+            prenotazioneDAO.deletePrenotazione();
+        }
+
+        if (numPrenotazioniAccettate == this.postiDisponibili) {
+            viaggio.popolaPrenotazioni();
             for(EntityPrenotazione prenotazione : viaggio.getPrenotazioni()){
                 if(!prenotazione.isAccettata()) {
                     PrenotazioneDAO prenotazioneDaEliminare = new PrenotazioneDAO(prenotazione.getId());
                     prenotazioneDaEliminare.deletePrenotazione();
                 }
             }
-            throw new DatabaseException("Impossibile accettare ulteriori prenotazioni per il viaggio selezionato",true);
-        }
-
-        if(accettata) {
-            prenotazioneDAO.updatePrenotazione(true);
-        }else{
-            prenotazioneDAO.deletePrenotazione();
         }
     }
 
