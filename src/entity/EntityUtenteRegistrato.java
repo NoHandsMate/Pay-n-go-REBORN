@@ -188,6 +188,7 @@ public class EntityUtenteRegistrato {
                                       Integer postiDisponibili,
                                       String contattoTelefonico) throws DatabaseException {
 
+        boolean rimuoviViaggiFlag = false;
         if (!this.automobile.equals(auto) || this.postiDisponibili != postiDisponibili) {
 
             for (EntityViaggio entityViaggio : this.viaggiCondivisi) {
@@ -199,12 +200,16 @@ public class EntityUtenteRegistrato {
                     }
                 }
             }
-            this.eliminaViaggiCondivisi();
+            rimuoviViaggiFlag = true;
         }
 
         UtenteRegistratoDAO utenteDAO = new UtenteRegistratoDAO(this.id);
         utenteDAO.updateUtenteRegistrato(nome, cognome, contattoTelefonico, email, auto, postiDisponibili, new String(password));
         aggiornaDati(utenteDAO);
+
+        if (rimuoviViaggiFlag)
+            this.eliminaViaggiCondivisi();
+
     }
 
     /**
@@ -269,11 +274,34 @@ public class EntityUtenteRegistrato {
      */
     public void gestisciPrenotazione(long idPrenotazione,
                                      boolean accettata) throws DatabaseException {
+
+        int numPrenotazioniAccettate = 0;
         PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO(idPrenotazione);
+        EntityPrenotazione prenotazioneEntity = new EntityPrenotazione(prenotazioneDAO);
+        EntityViaggio viaggio = prenotazioneEntity.getViaggioPrenotato();
+        viaggio.popolaPrenotazioni();
+
+        for (EntityPrenotazione prenotazione : viaggio.getPrenotazioni()) {
+            if (prenotazione.isAccettata()) {
+                numPrenotazioniAccettate++;
+            }
+        }
+
         if(accettata) {
             prenotazioneDAO.updatePrenotazione(true);
+            numPrenotazioniAccettate++;
         }else{
             prenotazioneDAO.deletePrenotazione();
+        }
+
+        if (numPrenotazioniAccettate == this.postiDisponibili) {
+            viaggio.popolaPrenotazioni();
+            for(EntityPrenotazione prenotazione : viaggio.getPrenotazioni()){
+                if(!prenotazione.isAccettata()) {
+                    PrenotazioneDAO prenotazioneDaEliminare = new PrenotazioneDAO(prenotazione.getId());
+                    prenotazioneDaEliminare.deletePrenotazione();
+                }
+            }
         }
     }
 
