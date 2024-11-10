@@ -1,3 +1,3 @@
 # Pay-n-Go-REBORN
 
-## Trello board: https://trello.com/invite/b/KjmA160E/ATTIeb6c50fd46da3ecef575259f15b2ab4b06A1873E/progettois
+## The following project was carried out for the Software Engineering exam during the academic year 2023/2024. This project involved creating a carpooling platform that allows to create a connection among people who are traveling in the same direction and want to share a ride. It allows users to either offer rides or find available seats in someone else's car, enabling them to split travel costs, reduce environmental impact, and enjoy a more social journey. The platform typically includes features for scheduling, route planning, pricing, and communication, as well as ratings and profiles to enhance trust and safety among users. The project was realized starting with the creation of documentation and it was implemented in Java with the use of JDBC for database integration.
